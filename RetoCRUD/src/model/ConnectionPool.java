@@ -1,17 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package model;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.time.Duration;
-import javax.sql.DataSource;
+import java.util.ResourceBundle;
 
 /**
  * ConnectionPool class for managing database connections.
@@ -19,27 +11,27 @@ import javax.sql.DataSource;
  * 
  * Author: acer
  */
-public class ConnectionPool {
+public class ConnectionPool
+{
 
-    private static BasicDataSource dataSource;
+    private static final BasicDataSource DATASOURCE;
 
-    private static final String DB = "crud";
-    private static final String URL = "jdbc:mysql://localhost:3306/" + DB + "?serverTimezone=UTC&useSSL=false";
-    private static final String USER = "root";
-    private static final String PASS = "abcd*1234";
+    static
+    {
+        DATASOURCE = new BasicDataSource();
+        
+        ResourceBundle configFile = ResourceBundle.getBundle("config.configClass");
 
-    static {
-        dataSource = new BasicDataSource();
-        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl(URL);
-        dataSource.setUsername(USER);
-        dataSource.setPassword(PASS);
+        DATASOURCE.setUrl(configFile.getString("Conn"));
+        DATASOURCE.setUsername(configFile.getString("DBUser"));
+        DATASOURCE.setPassword(configFile.getString("DBPass"));
+        DATASOURCE.setDriverClassName(configFile.getString("Driver"));
 
-        dataSource.setInitialSize(5);
-        dataSource.setMaxTotal(10);
-        dataSource.setMinIdle(2);
-        dataSource.setMaxIdle(5);
-        dataSource.setMaxWaitMillis(10000); // 10 seconds
+        DATASOURCE.setInitialSize(5);
+        DATASOURCE.setMaxTotal(10);
+        DATASOURCE.setMinIdle(2);
+        DATASOURCE.setMaxIdle(5);
+        DATASOURCE.setMaxWaitMillis(10000); // 10 seconds
     }
 
     /**
@@ -48,7 +40,8 @@ public class ConnectionPool {
      * @return Connection object
      * @throws SQLException if connection cannot be obtained
      */
-    public static Connection getConnection() throws SQLException {
-        return dataSource.getConnection();
+    public static Connection getConnection() throws SQLException
+    {
+        return DATASOURCE.getConnection();
     }
 }

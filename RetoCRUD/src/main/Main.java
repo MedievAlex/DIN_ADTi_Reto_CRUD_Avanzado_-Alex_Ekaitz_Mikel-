@@ -1,22 +1,14 @@
 
 package main;
-import controller.Controller;
-import java.time.LocalDate;
-import java.util.Map;
-import java.util.TreeMap;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import utilities.Utilities;
 
-
-
-
-public class Main extends Application {
-
+public class Main extends Application
+{
     /**
      * Starts the JavaFX application by loading the login window.
      *
@@ -24,7 +16,8 @@ public class Main extends Application {
      * @throws Exception if the FXML file cannot be loaded
      */
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) throws Exception
+    {
         Parent root = FXMLLoader.load(getClass().getResource("/view/LogInWindow.fxml"));
         Scene scene = new Scene(root);
         stage.setTitle("Login Application");
@@ -37,8 +30,8 @@ public class Main extends Application {
      *
      * @param args command-line arguments (not used)
      */
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         launch(args);
     }
-
 }

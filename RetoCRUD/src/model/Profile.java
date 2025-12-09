@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package model;
 
 /**
@@ -12,7 +7,8 @@ package model;
  * 
  * @author acer
  */
-public abstract class Profile {
+public abstract class Profile
+{
     private String username;
     private String password;
     private String email;
@@ -23,8 +19,16 @@ public abstract class Profile {
 
     /**
      * Constructs a profile with the specified attributes.
+     * @param username
+     * @param password
+     * @param email
+     * @param userCode
+     * @param name
+     * @param telephone
+     * @param surname
      */
-    public Profile(String username, String password, String email, int userCode, String name, String telephone, String surname) {
+    public Profile(String username, String password, String email, int userCode, String name, String telephone, String surname)
+    {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -37,7 +41,8 @@ public abstract class Profile {
     /**
      * Default constructor initializing attributes with default values.
      */
-    public Profile() {
+    public Profile()
+    {
         this.username = "";
         this.password = "";
         this.email = "";
@@ -64,7 +69,8 @@ public abstract class Profile {
     public void setSurname(String surname) { this.surname = surname; }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "Profile{" + "username=" + username + ", password=" + password + ", email=" + email +
                 ", userCode=" + userCode + ", name=" + name + ", telephone=" + telephone + ", surname=" + surname + '}';
     }

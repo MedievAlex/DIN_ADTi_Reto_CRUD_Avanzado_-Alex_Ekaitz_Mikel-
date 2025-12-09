@@ -1,18 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller;
-
-import controller.Controller;
-import java.net.URL;
-import java.util.ResourceBundle;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.ToggleGroup;
-
-import exception.passwordequalspassword;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -31,8 +17,8 @@ import javafx.scene.control.Label;
  * Controller for the Delete Account window for regular Users.
  * This controller allows a user to delete their own account.
  */
-public class DeleteAccountController implements Initializable {
-
+public class DeleteAccountController implements Initializable
+{
     // Label displaying the username of the logged-in user
     @FXML
     private Label LabelUsername;
@@ -57,7 +43,8 @@ public class DeleteAccountController implements Initializable {
      * Sets the Controller instance.
      * @param cont Controller object
      */
-    public void setCont(Controller cont) {
+    public void setCont(Controller cont)
+    {
         this.cont = cont;
     }
 
@@ -65,7 +52,8 @@ public class DeleteAccountController implements Initializable {
      * Sets the current logged-in profile and updates the username label.
      * @param profile Profile object
      */
-    public void setProfile(Profile profile) {
+    public void setProfile(Profile profile)
+    {
         this.profile = profile;
         LabelUsername.setText(profile.getUsername());
     }
@@ -75,7 +63,8 @@ public class DeleteAccountController implements Initializable {
      * Closes the current window and returns to MenuWindow.
      */
     @FXML
-    private void cancel() {
+    private void cancel()
+    {
         try {
             javafx.fxml.FXMLLoader fxmlLoader = new javafx.fxml.FXMLLoader(getClass().getResource("/view/MenuWindow.fxml"));
             javafx.scene.Parent root = fxmlLoader.load();
@@ -88,8 +77,9 @@ public class DeleteAccountController implements Initializable {
             stage.show();
             Stage currentStage = (Stage) Button_Cancel.getScene().getWindow();
             currentStage.close();
-
-        } catch (IOException ex) {
+        }
+        catch (IOException ex)
+        {
             java.util.logging.Logger.getLogger(MenuWindowController.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
     }
@@ -99,13 +89,16 @@ public class DeleteAccountController implements Initializable {
      * Confirms deletion and calls the Controller to remove the user account.
      */
     @FXML
-    private void delete() {
-        if (TextFieldPassword.getText().isEmpty()) {
+    private void delete()
+    {
+        if (TextFieldPassword.getText().isEmpty())
+        {
             javafx.scene.control.Alert error = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
             error.setTitle("Error");
             error.setHeaderText("Password required");
             error.setContentText("Please enter your password to delete the account.");
             error.showAndWait();
+
             return;
         }
 
@@ -115,21 +108,25 @@ public class DeleteAccountController implements Initializable {
         alert.setContentText("This action cannot be undone..");
 
         java.util.Optional<javafx.scene.control.ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == javafx.scene.control.ButtonType.OK) {
-            try {
+        if (result.isPresent() && result.get() == javafx.scene.control.ButtonType.OK)
+        {
+            try
+            {
                 String user, password;
                 user = LabelUsername.getText();
                 password = TextFieldPassword.getText();
                 Boolean success = cont.dropOutUser(user, password);
                 
-                if (success) {
+                if (success)
+                {
                     javafx.scene.control.Alert successAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
                     successAlert.setTitle("Deleted account");
                     successAlert.setHeaderText(null);
                     successAlert.setContentText("Your account has been successfully deleted.");
                     successAlert.showAndWait();
                     
-                    try {
+                    try
+                    {
                         javafx.fxml.FXMLLoader fxmlLoader = new javafx.fxml.FXMLLoader(getClass().getResource("/view/LogInWindow.fxml"));
                         javafx.scene.Parent root = fxmlLoader.load();
 
@@ -140,10 +137,14 @@ public class DeleteAccountController implements Initializable {
                         Stage currentStage = (Stage) Button_Delete.getScene().getWindow();
                         currentStage.close();
 
-                    } catch (IOException ex) {
+                    }
+                    catch (IOException ex)
+                    {
                         Logger.getLogger(DeleteAccountController.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } else {
+                }
+                else
+                {
                     javafx.scene.control.Alert error = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
                     error.setTitle("Error");
                     error.setHeaderText("Incorrect password");
@@ -151,8 +152,9 @@ public class DeleteAccountController implements Initializable {
                     error.showAndWait();
                 }
 
-            } catch (Exception ex) {
-                ex.printStackTrace();
+            }
+            catch (Exception ex)
+            {
                 javafx.scene.control.Alert error = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
                 error.setTitle("Error");
                 error.setHeaderText("The account could not be deleted.");
@@ -163,7 +165,8 @@ public class DeleteAccountController implements Initializable {
     }
 
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize(URL url, ResourceBundle rb)
+    {
         // Initialization logic if needed
     }
 }

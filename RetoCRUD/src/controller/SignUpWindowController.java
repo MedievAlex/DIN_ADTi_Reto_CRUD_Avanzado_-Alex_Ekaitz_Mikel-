@@ -1,15 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller;
 
-import controller.Controller;
 import javafx.scene.control.ToggleGroup;
-
 import exception.passwordequalspassword;
-
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
@@ -30,8 +22,8 @@ import model.Profile;
  * Controller for the SignUp window.
  * Handles user registration and navigation to login or main menu.
  */
-public class SignUpWindowController implements Initializable {
-
+public class SignUpWindowController implements Initializable
+{
     @FXML
     private TextField textFieldEmail, textFieldName, textFieldSurname, textFieldTelephone;
     @FXML
@@ -44,7 +36,8 @@ public class SignUpWindowController implements Initializable {
     private Controller cont;
     private ToggleGroup grupOp;
 
-    public void setCont(Controller cont) {
+    public void setCont(Controller cont)
+    {
         this.cont = cont;
     }
 
@@ -52,8 +45,10 @@ public class SignUpWindowController implements Initializable {
      * Navigates back to login window.
      */
     @FXML
-    private void login() {
-        try {
+    private void login()
+    {
+        try
+        {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/LogInWindow.fxml"));
             Parent root = fxmlLoader.load();
             controller.LogInWindowController controllerWindow = fxmlLoader.getController();
@@ -62,7 +57,9 @@ public class SignUpWindowController implements Initializable {
             stage.show();
             Stage currentStage = (Stage) buttonLogIn.getScene().getWindow();
             currentStage.close();
-        } catch (IOException ex) {
+        }
+        catch (IOException ex)
+        {
             Logger.getLogger(SignUpWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -71,7 +68,8 @@ public class SignUpWindowController implements Initializable {
      * Signs up a new user and navigates to MenuWindow if successful.
      */
     @FXML
-    private void signup() throws passwordequalspassword {
+    private void signup() throws passwordequalspassword
+    {
         String email = textFieldEmail.getText();
         String name = textFieldName.getText();
         String surname = textFieldSurname.getText();
@@ -88,9 +86,11 @@ public class SignUpWindowController implements Initializable {
 
         if (!pass.equals(passC)) throw new passwordequalspassword("No son iguales las contraseñas");
 
-        if (cont.signUp(gender, cardN, username, pass, email, name, telephone, surname)) {
+        if (cont.signUp(gender, cardN, username, pass, email, name, telephone, surname))
+        {
             Profile profile = cont.logIn(username, pass);
-            try {
+            try
+            {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MenuWindow.fxml"));
                 Parent root = fxmlLoader.load();
                 controller.MenuWindowController controllerWindow = fxmlLoader.getController();
@@ -101,14 +101,17 @@ public class SignUpWindowController implements Initializable {
                 stage.show();
                 Stage currentStage = (Stage) buttonSignUp.getScene().getWindow();
                 currentStage.close();
-            } catch (IOException ex) {
+            }
+            catch (IOException ex)
+            {
                 Logger.getLogger(SignUpWindowController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
 
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize(URL url, ResourceBundle rb)
+    {
         grupOp = new ToggleGroup();
         rButtonM.setToggleGroup(grupOp);
         rButtonW.setToggleGroup(grupOp);

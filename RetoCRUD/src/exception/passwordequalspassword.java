@@ -14,9 +14,10 @@ import javafx.scene.control.Alert.AlertType;
  * 
  * Author: acer
  */
-public class passwordequalspassword extends Exception {
-
-    public passwordequalspassword(String text) {
+public class passwordequalspassword extends Exception
+{
+    public passwordequalspassword(String text)
+    {
         super(text);
         showPopup(text);
     }
@@ -26,7 +27,8 @@ public class passwordequalspassword extends Exception {
      *
      * @param message The message to display in the alert
      */
-    private void showPopup(String message) {
+    private void showPopup(String message)
+    {
         Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle("Password error");
         alert.setHeaderText("Invalid password");
