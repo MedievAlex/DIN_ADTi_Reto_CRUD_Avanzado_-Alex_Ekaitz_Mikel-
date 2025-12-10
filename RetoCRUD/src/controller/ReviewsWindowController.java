@@ -119,6 +119,9 @@ public class ReviewsWindowController implements Initializable {
                 stage.setTitle("LISTS");
                 stage.setResizable(false);
                 stage.show();
+
+                Stage currentStage = (Stage) menu.getScene().getWindow();
+                currentStage.close();
             } catch (IOException ex) {
                 Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -138,6 +141,9 @@ public class ReviewsWindowController implements Initializable {
                 stage.setTitle("MAIN MENU");
                 stage.setResizable(false);
                 stage.show();
+
+                Stage currentStage = (Stage) menu.getScene().getWindow();
+                currentStage.close();
             } catch (IOException ex) {
                 Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -165,6 +171,9 @@ public class ReviewsWindowController implements Initializable {
             stage.setTitle("NEW REVIEW");
             stage.setResizable(false);
             stage.show();
+
+            Stage currentStage = (Stage) menu.getScene().getWindow();
+            currentStage.close();
         } catch (IOException ex) {
             Logger.getLogger(SignUpWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -100,6 +100,9 @@ public class ListWindowController implements Initializable {
                 stage.setTitle("PROFILE MENU");
                 stage.setResizable(false);
                 stage.show();
+                
+                Stage currentStage = (Stage) menu.getScene().getWindow();
+                currentStage.close();
             } catch (IOException ex) {
                 Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -119,6 +122,9 @@ public class ListWindowController implements Initializable {
                 stage.setTitle("REVIEWS");
                 stage.setResizable(false);
                 stage.show();
+                
+                Stage currentStage = (Stage) menu.getScene().getWindow();
+                currentStage.close();
             } catch (IOException ex) {
                 Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -138,6 +144,9 @@ public class ListWindowController implements Initializable {
                 stage.setTitle("MAIN MENU");
                 stage.setResizable(false);
                 stage.show();
+                
+                Stage currentStage = (Stage) menu.getScene().getWindow();
+                currentStage.close();
             } catch (IOException ex) {
                 Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
             }
