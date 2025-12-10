@@ -11,12 +11,6 @@
 
 <AnchorPane id="SignUpRoot" prefHeight="360.0" prefWidth="633.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.NewReviewWindowController">
    <children>
-      <TextArea fx:id="textAreaReview" layoutX="37.0" layoutY="108.0" prefHeight="145.0" prefWidth="559.0" />
-      <Text layoutX="37.0" layoutY="281.0" strokeType="OUTSIDE" strokeWidth="0.0" text="RATING:" wrappingWidth="82.48162841796875">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Text>
       <ToolBar layoutX="37.0" layoutY="52.0" prefHeight="40.0" prefWidth="559.0">
          <items>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="PLATFORM:">
@@ -33,8 +27,14 @@
             <ComboBox fx:id="comboBoxGame" prefHeight="26.0" prefWidth="200.0" />
          </items>
       </ToolBar>
-      <Spinner fx:id="spinnerRating" layoutX="120.0" layoutY="260.0" prefHeight="26.0" prefWidth="103.0" />
-      <Button fx:id="bttnConfirm" layoutX="500.0" layoutY="304.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" text="Confirm" />
-      <Button fx:id="bttnCancel" layoutX="37.0" layoutY="304.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" text="Cancel" />
+      <TextArea fx:id="textAreaReview" layoutX="37.0" layoutY="101.0" prefHeight="161.0" prefWidth="559.0" />
+      <Text layoutX="37.0" layoutY="293.0" strokeType="OUTSIDE" strokeWidth="0.0" text="RATING:" wrappingWidth="82.48162841796875">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <Spinner fx:id="spinnerRating" layoutX="120.0" layoutY="272.0" prefHeight="26.0" prefWidth="103.0" />
+      <Button fx:id="bttnCancel" layoutX="37.0" layoutY="310.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" text="Cancel" />
+      <Button fx:id="bttnConfirm" layoutX="500.0" layoutY="310.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" text="Confirm" />
    </children>
 </AnchorPane>

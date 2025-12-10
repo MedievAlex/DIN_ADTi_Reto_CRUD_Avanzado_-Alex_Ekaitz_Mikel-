@@ -10,7 +10,7 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TableColumn;
@@ -22,7 +22,7 @@ import javafx.scene.control.TextField;
  *
  * @author 2dami
  */
-public class ReviewWindowController implements Initializable {
+public class MainMenuWindowController implements Initializable {
 
     @FXML
     private SplitMenuButton menu;
@@ -35,6 +35,32 @@ public class ReviewWindowController implements Initializable {
     @FXML
     private MenuItem miLogOut;
     @FXML
+    private TextField searchBar;
+    @FXML
+    private Button bttnSearch;
+    @FXML
+    private CheckBox chkNintendo;
+    @FXML
+    private CheckBox chkPC;
+    @FXML
+    private CheckBox chkPlayStation;
+    @FXML
+    private CheckBox chkXbox;
+    @FXML
+    private CheckBox chkPegi3;
+    @FXML
+    private CheckBox chkPegi7;
+    @FXML
+    private CheckBox chkPegi12;
+    @FXML
+    private CheckBox chkPegi16;
+    @FXML
+    private CheckBox chkPegi18;
+    @FXML
+    private TextField txtFromDate;
+    @FXML
+    private TextField txtToDate;
+    @FXML
     private TableView<?> tableReview;
     @FXML
     private TableColumn<?, ?> tcGame;
@@ -43,17 +69,9 @@ public class ReviewWindowController implements Initializable {
     @FXML
     private TableColumn<?, ?> tcPlatform;
     @FXML
-    private TableColumn<?, ?> tcRate;
+    private TableColumn<?, ?> tcPegi;
     @FXML
-    private TableColumn<?, ?> tcReview;
-    @FXML
-    private TextField searchBar;
-    @FXML
-    private Button bttnSearch;
-    @FXML
-    private ComboBox<?> comboBoxLists;
-    @FXML
-    private Button bttnNewReview;
+    private TableColumn<?, ?> tcCheckBox;
 
     /**
      * Initializes the controller class.
