@@ -7,43 +7,67 @@
 <?import javafx.scene.control.SplitMenuButton?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" prefHeight="647.0" prefWidth="761.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ListWindowController">
+<AnchorPane id="AnchorPane" prefHeight="647.0" prefWidth="753.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ListWindowController">
    <children>
-      <SplitMenuButton fx:id="menu" layoutX="580.0" layoutY="14.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="168.0">
-        <items>
-            <MenuItem fx:id="miProfile" mnemonicParsing="false" text="PROFILE" />
-            <MenuItem fx:id="miLists" mnemonicParsing="false" text="LISTS" />
-            <MenuItem fx:id="miReviews" mnemonicParsing="false" text="REVIEWS" />
-            <MenuItem fx:id="miLogOut" mnemonicParsing="false" text="LOG OUT" />
-        </items>
-      </SplitMenuButton>
-      <Text layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="REVIEWS" textAlignment="CENTER" wrappingWidth="761.0">
+      <Pane layoutX="-1.0" layoutY="-1.0" prefHeight="122.0" prefWidth="762.0" style="-fx-background-color: #76AAE3;">
+         <children>
+            <SplitMenuButton fx:id="menu" layoutX="580.0" layoutY="14.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="168.0">
+               <items>
+                  <MenuItem fx:id="miProfile" mnemonicParsing="false" text="PROFILE" />
+                  <MenuItem fx:id="miReviews" mnemonicParsing="false" text="REVIEWS" />
+                  <MenuItem fx:id="miMainMenu" mnemonicParsing="false" text="MAIN MENU" />
+                  <MenuItem fx:id="miLogOut" mnemonicParsing="false" text="LOG OUT" />
+               </items>
+            </SplitMenuButton>
+            <Text layoutX="1.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="MY LISTS" textAlignment="CENTER" wrappingWidth="761.0">
+               <font>
+                  <Font name="System Bold" size="30.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+      <Text layoutY="164.0" strokeType="OUTSIDE" strokeWidth="0.0" text="listname" textAlignment="CENTER" wrappingWidth="761.0">
          <font>
             <Font size="30.0" />
          </font>
       </Text>
-      <ScrollPane layoutX="33.0" layoutY="167.0" prefHeight="403.0" prefWidth="696.0" AnchorPane.bottomAnchor="77.0" AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="33.0" AnchorPane.topAnchor="167.0">
+      <ScrollPane layoutX="20.8" layoutY="188.6" prefHeight="371.0" prefWidth="567.0" AnchorPane.bottomAnchor="87.39999999999998" AnchorPane.leftAnchor="20.8" AnchorPane.rightAnchor="179.19999999999993" AnchorPane.topAnchor="188.6">
          <content>
-            <TableView fx:id="tableReview" prefHeight="400.0" prefWidth="699.0">
+            <TableView fx:id="tableReview" prefHeight="374.0" prefWidth="550.0">
               <columns>
-                <TableColumn fx:id="tcGame" minWidth="-1.0" prefWidth="100.0" text="GAME" />
+                <TableColumn fx:id="tcGame" minWidth="-1.0" prefWidth="150.0" text="GAME" />
                 <TableColumn fx:id="tcRelease" minWidth="-1.0" prefWidth="100.0" text="RELEASE" />
-                  <TableColumn fx:id="tcPlatform" minWidth="-1.0" prefWidth="100.0" text="PLATFORM" />
-                  <TableColumn fx:id="tcRate" minWidth="-1.0" prefWidth="50.0" text="RATE" />
-                  <TableColumn fx:id="tcReview" prefWidth="350.0" text="REVIEW" />
+                  <TableColumn fx:id="tcPlatform" minWidth="-1.0" prefWidth="150.0" text="PLATFORM" />
+                  <TableColumn fx:id="tcPegi" minWidth="-1.0" prefWidth="108.0" text="PEGI" />
+                  <TableColumn fx:id="tcCheckBox" prefWidth="40.0" />
               </columns>
             </TableView>
          </content>
       </ScrollPane>
-      <TextField fx:id="searchBar" layoutX="33.0" layoutY="123.0" prefHeight="26.0" prefWidth="382.0" />
-      <Button fx:id="bttnSearch" layoutX="429.0" layoutY="122.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" text="Search" />
-      <ComboBox fx:id="comboBoxLists" layoutX="578.0" layoutY="123.0" prefWidth="150.0" promptText="-- My Lists --" />
-      <Button fx:id="bttnNewReview" layoutX="632.0" layoutY="594.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" text="New Review" />
+      <Text layoutX="624.0" layoutY="204.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Lists" textAlignment="CENTER" underline="true" wrappingWidth="84.85589599609375">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Text>
+      <ScrollPane layoutX="595.0" layoutY="217.0" prefHeight="344.0" prefWidth="142.0">
+         <content>
+            <VBox alignment="TOP_CENTER" prefHeight="345.0" prefWidth="126.0" spacing="5.0">
+               <children>
+                  <Button fx:id="bttnNewList" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" style="-fx-background-radius: 30px;" text="+ New List" />
+                  <Button fx:id="bttnAllGames" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" style="-fx-background-radius: 30px;" text="All My Games" />
+               </children>
+            </VBox>
+         </content>
+      </ScrollPane>
+      <Button fx:id="bttnRemove" layoutX="21.0" layoutY="573.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" text="Remove" />
+      <Button fx:id="bttnAdd" layoutX="21.0" layoutY="606.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" text="Add to List" />
+      <ComboBox fx:id="combLists" layoutX="128.0" layoutY="607.0" prefHeight="26.0" prefWidth="454.0" promptText="-- Choose a List --" />
    </children>
 
 </AnchorPane>

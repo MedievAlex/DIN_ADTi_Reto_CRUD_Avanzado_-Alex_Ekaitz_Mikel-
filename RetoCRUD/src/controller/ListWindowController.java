@@ -15,31 +15,24 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 
 /**
  * FXML Controller class
  *
  * @author 2dami
  */
-public class ReviewWindowController implements Initializable {
+public class ListWindowController implements Initializable {
 
     @FXML
     private SplitMenuButton menu;
     @FXML
     private MenuItem miProfile;
     @FXML
-    private MenuItem miLists;
+    private MenuItem miReviews;
     @FXML
     private MenuItem miMainMenu;
     @FXML
     private MenuItem miLogOut;
-    @FXML
-    private TextField searchBar;
-    @FXML
-    private Button bttnSearch;
-    @FXML
-    private ComboBox<?> combLists;
     @FXML
     private TableView<?> tableReview;
     @FXML
@@ -49,11 +42,19 @@ public class ReviewWindowController implements Initializable {
     @FXML
     private TableColumn<?, ?> tcPlatform;
     @FXML
-    private TableColumn<?, ?> tcRate;
+    private TableColumn<?, ?> tcPegi;
     @FXML
-    private TableColumn<?, ?> tcReview;
+    private TableColumn<?, ?> tcCheckBox;
     @FXML
-    private Button bttnNewReview;
+    private Button bttnNewList;
+    @FXML
+    private Button bttnAllGames;
+    @FXML
+    private Button bttnRemove;
+    @FXML
+    private Button bttnAdd;
+    @FXML
+    private ComboBox<?> combLists;
 
     /**
      * Initializes the controller class.
