@@ -87,6 +87,7 @@ public class MainMenuWindowController implements Initializable {
 
     public void setUsuario(Profile profile) {
         this.profile = profile;
+        menu.setText(profile.getUsername());
     }
 
     public void setCont(Controller cont) {
