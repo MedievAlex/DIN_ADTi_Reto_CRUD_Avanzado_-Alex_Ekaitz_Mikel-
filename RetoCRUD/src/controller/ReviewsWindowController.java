@@ -5,6 +5,7 @@
  */
 package controller;
 
+import exception.passwordequalspassword;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -22,6 +23,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.Profile;
 
@@ -30,18 +32,24 @@ import model.Profile;
  *
  * @author 2dami
  */
-public class ListWindowController implements Initializable {
+public class ReviewsWindowController implements Initializable {
 
     @FXML
     private SplitMenuButton menu;
     @FXML
     private MenuItem miProfile;
     @FXML
-    private MenuItem miReviews;
+    private MenuItem miLists;
     @FXML
     private MenuItem miMainMenu;
     @FXML
     private MenuItem miLogOut;
+    @FXML
+    private TextField searchBar;
+    @FXML
+    private Button bttnSearch;
+    @FXML
+    private ComboBox<?> combLists;
     @FXML
     private TableView<?> tableReview;
     @FXML
@@ -51,19 +59,11 @@ public class ListWindowController implements Initializable {
     @FXML
     private TableColumn<?, ?> tcPlatform;
     @FXML
-    private TableColumn<?, ?> tcPegi;
+    private TableColumn<?, ?> tcRate;
     @FXML
-    private TableColumn<?, ?> tcCheckBox;
+    private TableColumn<?, ?> tcReview;
     @FXML
-    private Button bttnNewList;
-    @FXML
-    private Button bttnAllGames;
-    @FXML
-    private Button bttnRemove;
-    @FXML
-    private Button bttnAdd;
-    @FXML
-    private ComboBox<?> combLists;
+    private Button bttnNewReview;
 
     private Profile profile;
     private Controller cont;
@@ -104,18 +104,18 @@ public class ListWindowController implements Initializable {
             }
         });
 
-        miReviews.setOnAction((event) -> {
+        miLists.setOnAction((event) -> {
             try {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ReviewsWindow.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ListWindow.fxml"));
                 Parent root = fxmlLoader.load();
 
-                controller.ReviewsWindowController controllerWindow = fxmlLoader.getController();
+                controller.ListWindowController controllerWindow = fxmlLoader.getController();
                 controllerWindow.setUsuario(profile);
                 controllerWindow.setCont(cont);
 
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root));
-                stage.setTitle("REVIEWS");
+                stage.setTitle("LISTS");
                 stage.setResizable(false);
                 stage.show();
             } catch (IOException ex) {
@@ -146,5 +146,26 @@ public class ListWindowController implements Initializable {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.close();
         });
+    }
+
+    @FXML
+    private void newReview() {
+
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/NewReviewWindow.fxml"));
+            Parent root = fxmlLoader.load();
+
+            controller.NewReviewWindowController controllerWindow = fxmlLoader.getController();
+            controllerWindow.setUsuario(profile);
+            controllerWindow.setCont(this.cont);
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("NEW REVIEW");
+            stage.setResizable(false);
+            stage.show();
+        } catch (IOException ex) {
+            Logger.getLogger(SignUpWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

@@ -19,11 +19,10 @@ import model.Profile;
 import model.User;
 
 /**
- * Controller for the main Menu window.
- * Handles navigation to modify, delete, and logout actions.
+ * Controller for the main Menu window. Handles navigation to modify, delete,
+ * and logout actions.
  */
-public class MenuWindowController implements Initializable
-{
+public class MenuWindowController implements Initializable {
 
     @FXML
     private Button Button_Delete;
@@ -40,19 +39,16 @@ public class MenuWindowController implements Initializable
     private Profile profile;
     private Controller cont;
 
-    public void setUsuario(Profile profile)
-    {
+    public void setUsuario(Profile profile) {
         this.profile = profile;
         label_Username.setText(profile.getUsername());
     }
 
-    public void setCont(Controller cont)
-    {
+    public void setCont(Controller cont) {
         this.cont = cont;
     }
 
-    public Controller getCont()
-    {
+    public Controller getCont() {
         return cont;
     }
 
@@ -60,10 +56,8 @@ public class MenuWindowController implements Initializable
      * Opens the Modify window.
      */
     @FXML
-    private void modifyVentana(ActionEvent event)
-    {
-        try
-        {
+    private void modifyVentana(ActionEvent event) {
+        try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ModifyWindow.fxml"));
             javafx.scene.Parent root = fxmlLoader.load();
 
@@ -73,30 +67,27 @@ public class MenuWindowController implements Initializable
 
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
+            stage.setTitle("MODIFY");
+            stage.setResizable(false);
             stage.show();
 
             Stage currentStage = (Stage) Button_Modify.getScene().getWindow();
             currentStage.close();
 
-        }
-        catch (IOException ex)
-        {
+        } catch (IOException ex) {
             Logger.getLogger(MenuWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     /**
-     * Opens the Delete Account window depending on profile type.
-     * Users open DeleteAccount; Admins open DeleteAccountAdmin.
+     * Opens the Delete Account window depending on profile type. Users open
+     * DeleteAccount; Admins open DeleteAccountAdmin.
      */
     @FXML
-    private void delete()
-    {
-        try
-        {
+    private void delete() {
+        try {
             FXMLLoader fxmlLoader;
-            if (profile instanceof User)
-            {
+            if (profile instanceof User) {
                 fxmlLoader = new FXMLLoader(getClass().getResource("/view/DeleteAccount.fxml"));
                 javafx.scene.Parent root = fxmlLoader.load();
                 controller.DeleteAccountController controllerWindow = fxmlLoader.getController();
@@ -105,13 +96,14 @@ public class MenuWindowController implements Initializable
 
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root));
+                stage.setTitle("DELETE");
+                stage.setResizable(false);
                 stage.show();
+
                 Stage currentStage = (Stage) Button_Delete.getScene().getWindow();
                 currentStage.close();
 
-            }
-            else if (profile instanceof Admin)
-            {
+            } else if (profile instanceof Admin) {
                 fxmlLoader = new FXMLLoader(getClass().getResource("/view/DeleteAccountAdmin.fxml"));
                 javafx.scene.Parent root = fxmlLoader.load();
                 controller.DeleteAccountAdminController controllerWindow = fxmlLoader.getController();
@@ -121,13 +113,14 @@ public class MenuWindowController implements Initializable
 
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root));
+                stage.setTitle("DELETE");
+                stage.setResizable(false);
                 stage.show();
+
                 Stage currentStage = (Stage) Button_Delete.getScene().getWindow();
                 currentStage.close();
             }
-        }
-        catch (IOException ex)
-        {
+        } catch (IOException ex) {
             Logger.getLogger(MenuWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -136,15 +129,13 @@ public class MenuWindowController implements Initializable
      * Closes the current window (used for logout).
      */
     @FXML
-    private void cerrarVentana(ActionEvent event)
-    {
+    private void cerrarVentana(ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.close();
     }
 
     @Override
-    public void initialize(URL url, ResourceBundle rb)
-    {
+    public void initialize(URL url, ResourceBundle rb) {
         // Initialization logic if needed
     }
 }

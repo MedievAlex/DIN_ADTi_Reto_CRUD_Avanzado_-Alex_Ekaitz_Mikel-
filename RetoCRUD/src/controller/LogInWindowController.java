@@ -19,11 +19,11 @@ import model.DBImplementation;
 import model.Profile;
 
 /**
- * Controller for the Login window.
- * Handles user login and navigation to the main menu or signup window.
+ * Controller for the Login window. Handles user login and navigation to the
+ * main menu or signup window.
  */
-public class LogInWindowController implements Initializable
-{
+public class LogInWindowController implements Initializable {
+
     @FXML
     private TextField TextField_Username;
 
@@ -46,15 +46,14 @@ public class LogInWindowController implements Initializable
      * Opens the SignUp window.
      */
     @FXML
-    private void signUp()
-    {
-        try
-        {
+    private void signUp() {
+        try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/SignUpWindow.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = new Stage();
-            stage.setTitle("SignUp");
             stage.setScene(new Scene(root));
+            stage.setTitle("SIGN IN");
+            stage.setResizable(false);
             stage.show();
 
             controller.SignUpWindowController controllerWindow = fxmlLoader.getController();
@@ -63,63 +62,52 @@ public class LogInWindowController implements Initializable
             // Close current window
             Stage currentStage = (Stage) Button_SignUp.getScene().getWindow();
             currentStage.close();
-        }
-        catch (IOException ex)
-        {
+        } catch (IOException ex) {
             Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     /**
-     * Attempts to log in the user.
-     * If successful, opens MenuWindow; otherwise, shows an error.
+     * Attempts to log in the user. If successful, opens MenuWindow; otherwise,
+     * shows an error.
      */
     @FXML
-    private void logIn()
-    {
+    private void logIn() {
         String username = TextField_Username.getText();
         String password = PasswordField_Password.getText();
 
-        if (username.equals("") || password.equals(""))
-        {
+        if (username.equals("") || password.equals("")) {
             labelIncorrecto.setText("Please fill in both fields.");
-        }
-        else
-        {
+        } else {
             Profile profile = CONT.logIn(username, password);
-            if (profile != null)
-            {
-                try
-                {
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MenuWindow.fxml"));
+            if (profile != null) {
+                try {
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MainMenuWindow.fxml"));
                     Parent root = fxmlLoader.load();
 
-                    controller.MenuWindowController controllerWindow = fxmlLoader.getController();
+                    controller.MainMenuWindowController controllerWindow = fxmlLoader.getController();
                     controllerWindow.setUsuario(profile);
                     controllerWindow.setCont(CONT);
 
                     Stage stage = new Stage();
                     stage.setScene(new Scene(root));
+                    stage.setTitle("MAIN MENU");
+                    stage.setResizable(false);
                     stage.show();
 
                     Stage currentStage = (Stage) Button_LogIn.getScene().getWindow();
                     currentStage.close();
-                }
-                catch (IOException ex)
-                {
+                } catch (IOException ex) {
                     Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }
-            else
-            {
+            } else {
                 labelIncorrecto.setText("The username and/or password are incorrect.");
             }
         }
     }
 
     @Override
-    public void initialize(URL url, ResourceBundle rb)
-    {
+    public void initialize(URL url, ResourceBundle rb) {
         // Initialization logic if needed
     }
 }

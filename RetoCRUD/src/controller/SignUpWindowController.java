@@ -51,10 +51,15 @@ public class SignUpWindowController implements Initializable
         {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/LogInWindow.fxml"));
             Parent root = fxmlLoader.load();
+            
             controller.LogInWindowController controllerWindow = fxmlLoader.getController();
+            
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
-            stage.show();
+                stage.setTitle("LOGIN");
+                stage.setResizable(false);
+                stage.show();
+                
             Stage currentStage = (Stage) buttonLogIn.getScene().getWindow();
             currentStage.close();
         }
@@ -91,14 +96,19 @@ public class SignUpWindowController implements Initializable
             Profile profile = cont.logIn(username, pass);
             try
             {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MenuWindow.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MainMenuWindow.fxml"));
                 Parent root = fxmlLoader.load();
-                controller.MenuWindowController controllerWindow = fxmlLoader.getController();
+                
+                controller.MainMenuWindowController controllerWindow = fxmlLoader.getController();
                 controllerWindow.setUsuario(profile);
                 controllerWindow.setCont(this.cont);
+                
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root));
+                stage.setTitle("MAIN MENU");
+                stage.setResizable(false);
                 stage.show();
+                
                 Stage currentStage = (Stage) buttonSignUp.getScene().getWindow();
                 currentStage.close();
             }
