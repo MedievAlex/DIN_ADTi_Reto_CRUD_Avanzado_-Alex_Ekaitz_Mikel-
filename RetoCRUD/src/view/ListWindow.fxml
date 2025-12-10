@@ -39,7 +39,7 @@
       </Text>
       <ScrollPane layoutX="20.8" layoutY="188.6" prefHeight="371.0" prefWidth="567.0" AnchorPane.bottomAnchor="87.39999999999998" AnchorPane.leftAnchor="20.8" AnchorPane.rightAnchor="179.19999999999993" AnchorPane.topAnchor="188.6">
          <content>
-            <TableView fx:id="tableReview" prefHeight="374.0" prefWidth="550.0">
+            <TableView fx:id="tableReview" prefHeight="374.0" prefWidth="546.0">
               <columns>
                 <TableColumn fx:id="tcGame" minWidth="-1.0" prefWidth="150.0" text="GAME" />
                 <TableColumn fx:id="tcRelease" minWidth="-1.0" prefWidth="100.0" text="RELEASE" />
