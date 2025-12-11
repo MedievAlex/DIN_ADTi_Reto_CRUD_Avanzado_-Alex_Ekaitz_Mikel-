@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -22,6 +21,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Profile;
 
@@ -55,6 +55,10 @@ public class ListWindowController implements Initializable {
     @FXML
     private TableColumn<?, ?> tcCheckBox;
     @FXML
+    private ComboBox<?> combLists;
+    @FXML
+    private VBox vbLists;
+    @FXML
     private Button bttnNewList;
     @FXML
     private Button bttnAllGames;
@@ -62,11 +66,11 @@ public class ListWindowController implements Initializable {
     private Button bttnRemove;
     @FXML
     private Button bttnAdd;
-    @FXML
-    private ComboBox<?> combLists;
 
     private Profile profile;
     private Controller cont;
+    
+    private int number;
 
     public void setUsuario(Profile profile) {
         this.profile = profile;
@@ -156,5 +160,14 @@ public class ListWindowController implements Initializable {
             Stage stage = (Stage) menu.getScene().getWindow();
             stage.close();
         });
+    }
+    
+    @FXML
+    public void newList(){
+        number++;
+        Button button = new Button("["+"New List "+number+"]");
+        button.setStyle("-fx-background-radius: 30px;");
+        
+        vbLists.getChildren().add(button);    
     }
 }

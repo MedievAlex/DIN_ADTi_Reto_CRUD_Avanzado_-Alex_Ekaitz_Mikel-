@@ -64,11 +64,11 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Text>
-      <ScrollPane layoutX="595.0" layoutY="217.0" prefHeight="344.0" prefWidth="142.0">
+      <ScrollPane layoutX="595.0" layoutY="217.0" prefHeight="344.0" prefWidth="150.0">
          <content>
-            <VBox alignment="TOP_CENTER" prefHeight="345.0" prefWidth="126.0" spacing="5.0">
+            <VBox fx:id="vbLists" alignment="TOP_CENTER" prefHeight="346.0" prefWidth="135.0" spacing="5.0">
                <children>
-                  <Button fx:id="bttnNewList" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" style="-fx-background-radius: 30px;" text="+ New List" />
+                  <Button fx:id="bttnNewList" mnemonicParsing="false" onAction="#newList" prefHeight="26.0" prefWidth="96.0" style="-fx-background-radius: 30px;" text="+ New List" />
                   <Button fx:id="bttnAllGames" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" style="-fx-background-radius: 30px;" text="All My Games" />
                </children>
             </VBox>
