@@ -67,12 +67,7 @@
             </Text>
             <ScrollPane prefHeight="373.0" prefWidth="150.0" AnchorPane.bottomAnchor="90.0" AnchorPane.rightAnchor="31.0">
                <content>
-                  <VBox fx:id="vbLists" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0">
-                     <children>
-                        <Button fx:id="bttnNewList" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#newList" style="-fx-background-radius: 30px;" text="+ New List" textAlignment="CENTER" />
-                        <Button fx:id="bttnAllGames" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-radius: 30px;" text="All My Games" />
-                     </children>
-                  </VBox>
+                  <VBox fx:id="vbLists" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0" />
                </content>
             </ScrollPane>
             <Button fx:id="bttnRemove" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" text="Remove" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="30.0" />

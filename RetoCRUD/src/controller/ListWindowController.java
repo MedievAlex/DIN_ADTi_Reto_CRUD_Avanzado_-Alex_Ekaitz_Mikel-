@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -47,7 +48,11 @@ public class ListWindowController implements Initializable {
     @FXML
     private MenuItem miLogOut;
     @FXML
-    private TableColumn<?, ?> tcGame;
+    private Text listName;
+    @FXML
+    private TableView<String> tableLists;
+    @FXML
+    private TableColumn<String, String> tcGame;
     @FXML
     private TableColumn<?, ?> tcRelease;
     @FXML
@@ -61,10 +66,6 @@ public class ListWindowController implements Initializable {
     @FXML
     private VBox vbLists;
     @FXML
-    private Button bttnNewList;
-    @FXML
-    private Button bttnAllGames;
-    @FXML
     private Button bttnRemove;
     @FXML
     private Button bttnAdd;
@@ -73,10 +74,6 @@ public class ListWindowController implements Initializable {
     private Controller cont;
 
     private int number;
-    @FXML
-    private Text listName;
-    @FXML
-    private TableView<?> tableLists;
 
     public void setUsuario(Profile profile) {
         this.profile = profile;
@@ -97,9 +94,13 @@ public class ListWindowController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         Button button = new Button("+ New List");
-        button.setMinWidth(menu.getPrefWidth()-50);
+        button.setMinWidth(menu.getPrefWidth() - 50);
         button.setStyle("-fx-background-radius: 30px;");
-        
+        button.setOnAction(e ->
+        {
+            newList();
+        });
+
         vbLists.getChildren().add(button);
         miProfile.setOnAction((event) -> {
             try {
@@ -180,27 +181,46 @@ public class ListWindowController implements Initializable {
             ArrayList<String> games = entry.getValue();
 
             Button button = new Button(listName);
-            button.setMinWidth(menu.getPrefWidth()-50);
+            button.setMinWidth(menu.getPrefWidth() - 50);
             button.setStyle("-fx-background-radius: 30px;");
             vbLists.getChildren().add(button);
         }
     }
 
-    @FXML
+    public void showList(Button button) {
+        ArrayList<String> list = profile.getLists().get(button.getText());
+        for(String name: list)
+        {
+            tableLists.getItems().add(name);
+        }
+    }
+
     public void newList() {
         number++;
         String name = "New List " + number;
-        
+
         profile.newList(name, new ArrayList<String>());
-        Button button = new Button("[" + name + "]");
-        button.setMinWidth(menu.getPrefWidth()-50);
+        
+        Button button = new Button(name);
+        button.setMinWidth(menu.getPrefWidth() - 50);
         button.setStyle("-fx-background-radius: 30px;");
+
+        button.setOnAction(e ->
+        {
+            showList(button);
+        });
         
         vbLists.getChildren().add(button);
     }
 
     public void test() {
-        profile.newList("NDSW", new ArrayList<String>());
-        profile.newList("PlayStation", new ArrayList<String>());
+        ArrayList<String> games = new ArrayList<String>();
+        games.add("Animal Crossing New Horizons");
+        games.add("Owlboy");
+        profile.newList("NDSW", games);
+        games = new ArrayList<String>();
+        games.add("Outlast");
+        games.add("Detroit: Become Human");
+        profile.newList("PlayStation", games);
     }
 }

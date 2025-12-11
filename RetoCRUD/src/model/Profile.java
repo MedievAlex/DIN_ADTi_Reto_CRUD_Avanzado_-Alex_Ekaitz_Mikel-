@@ -41,6 +41,7 @@ public abstract class Profile {
         this.telephone = telephone;
         this.surname = surname;
         this.lists = new HashMap<String, ArrayList>();
+        this.lists.put("All my Games", new ArrayList<>());
     }
 
     /**
@@ -123,7 +124,7 @@ public abstract class Profile {
 
     public boolean newList(String name, ArrayList<String> videogames) {
         if (!this.lists.containsKey(name)) {
-            lists.put("[" + name + "]", videogames);
+            lists.put(name, videogames);
             return true;
         } else {
             return false;
