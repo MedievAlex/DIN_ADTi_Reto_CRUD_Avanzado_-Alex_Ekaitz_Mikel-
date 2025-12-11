@@ -117,9 +117,6 @@ public class MainMenuWindowController implements Initializable {
                 stage.setTitle("PROFILE MENU");
                 stage.setResizable(false);
                 stage.show();
-                
-                Stage currentStage = (Stage) menu.getScene().getWindow();
-                currentStage.close();
             } catch (IOException ex) {
                 Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -170,7 +167,7 @@ public class MainMenuWindowController implements Initializable {
         });
 
         miLogOut.setOnAction((event) -> {
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Stage stage = (Stage) menu.getScene().getWindow();
             stage.close();
         });
     }

@@ -150,7 +150,7 @@ public class ReviewsWindowController implements Initializable {
         });
 
         miLogOut.setOnAction((event) -> {
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Stage stage = (Stage) menu.getScene().getWindow();
             stage.close();
         });
     }
@@ -171,9 +171,6 @@ public class ReviewsWindowController implements Initializable {
             stage.setTitle("NEW REVIEW");
             stage.setResizable(false);
             stage.show();
-
-            Stage currentStage = (Stage) menu.getScene().getWindow();
-            currentStage.close();
         } catch (IOException ex) {
             Logger.getLogger(SignUpWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
