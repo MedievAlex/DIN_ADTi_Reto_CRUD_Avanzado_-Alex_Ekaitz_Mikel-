@@ -153,7 +153,7 @@ public class ListWindowController implements Initializable {
         });
 
         miLogOut.setOnAction((event) -> {
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Stage stage = (Stage) menu.getScene().getWindow();
             stage.close();
         });
     }
