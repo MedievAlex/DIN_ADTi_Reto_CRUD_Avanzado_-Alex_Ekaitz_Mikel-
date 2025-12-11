@@ -25,6 +25,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -102,6 +103,7 @@ public class ListWindowController implements Initializable {
         });
 
         vbLists.getChildren().add(button);
+        
         miProfile.setOnAction((event) -> {
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MenuWindow.fxml"));
@@ -183,12 +185,18 @@ public class ListWindowController implements Initializable {
             Button button = new Button(listName);
             button.setMinWidth(menu.getPrefWidth() - 50);
             button.setStyle("-fx-background-radius: 30px;");
+            button.setOnAction(e ->
+            {
+                showList(button);
+            });
+            
             vbLists.getChildren().add(button);
         }
     }
 
     public void showList(Button button) {
         ArrayList<String> list = profile.getLists().get(button.getText());
+        System.out.println(list);
         for(String name: list)
         {
             tableLists.getItems().add(name);

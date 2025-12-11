@@ -130,6 +130,7 @@ public class MainMenuWindowController implements Initializable {
                 controller.ListWindowController controllerWindow = fxmlLoader.getController();
                 controllerWindow.setUsuario(profile);
                 controllerWindow.setCont(cont);
+                
                 controllerWindow.test();
                 controllerWindow.loadLists();
 
