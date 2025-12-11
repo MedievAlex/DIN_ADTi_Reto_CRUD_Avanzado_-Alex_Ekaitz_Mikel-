@@ -47,32 +47,32 @@
                   <Font size="30.0" />
                </font>
             </Text>
-            <ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="404.0" prefWidth="539.0" AnchorPane.bottomAnchor="90.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="195.0" AnchorPane.topAnchor="50.0">
+            <ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="90.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="158.0" AnchorPane.topAnchor="50.0">
                <content>
-                  <TableView fx:id="tableLists" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                  <TableView fx:id="tableLists" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="574.0">
                     <columns>
                       <TableColumn fx:id="tcGame" minWidth="-1.0" prefWidth="150.0" text="GAME" />
                       <TableColumn fx:id="tcRelease" minWidth="-1.0" prefWidth="100.0" text="RELEASE" />
                         <TableColumn fx:id="tcPlatform" minWidth="-1.0" prefWidth="150.0" text="PLATFORM" />
                         <TableColumn fx:id="tcPegi" minWidth="-1.0" prefWidth="108.0" text="PEGI" />
-                        <TableColumn fx:id="tcCheckBox" prefWidth="40.0" />
+                        <TableColumn fx:id="tcCheckBox" prefWidth="60.0" />
                     </columns>
                   </TableView>
                </content>
             </ScrollPane>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Lists" textAlignment="CENTER" underline="true" wrappingWidth="150.39999999999986" AnchorPane.rightAnchor="31.0" AnchorPane.topAnchor="50.0">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Lists" textAlignment="CENTER" underline="true" wrappingWidth="115.20000000000005" AnchorPane.rightAnchor="31.0" AnchorPane.topAnchor="50.0">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </Text>
-            <ScrollPane prefHeight="373.0" prefWidth="150.0" AnchorPane.bottomAnchor="90.0" AnchorPane.rightAnchor="31.0">
+            <ScrollPane fx:id="spLists" prefHeight="374.0" prefWidth="115.0" AnchorPane.bottomAnchor="90.0" AnchorPane.rightAnchor="30.0">
                <content>
-                  <VBox fx:id="vbLists" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0" />
+                  <VBox fx:id="vbLists" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="375.0" prefWidth="100.0" spacing="5.0" />
                </content>
             </ScrollPane>
             <Button fx:id="bttnRemove" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" text="Remove" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="30.0" />
             <Button fx:id="bttnAdd" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" text="Add to List" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0" />
-            <ComboBox fx:id="combLists" layoutX="139.0" layoutY="488.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="430.0" promptText="-- Choose a List --" AnchorPane.bottomAnchor="31.0" AnchorPane.rightAnchor="196.0" />
+            <ComboBox fx:id="combLists" layoutX="139.0" layoutY="488.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="466.0" promptText="-- Choose a List --" AnchorPane.bottomAnchor="31.0" AnchorPane.rightAnchor="160.0" />
          </children>
       </AnchorPane>
    </children>
