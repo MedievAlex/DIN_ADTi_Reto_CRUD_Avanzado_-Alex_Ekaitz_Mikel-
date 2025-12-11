@@ -123,7 +123,7 @@ public abstract class Profile {
 
     public boolean newList(String name, ArrayList<String> videogames) {
         if (!this.lists.containsKey(name)) {
-            lists.put(name, videogames);
+            lists.put("[" + name + "]", videogames);
             return true;
         } else {
             return false;

@@ -11,15 +11,14 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" prefHeight="647.0" prefWidth="761.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ReviewsWindowController">
+<AnchorPane id="AnchorPane" prefHeight="650.0" prefWidth="760.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ReviewsWindowController">
    <children>
-      <Pane layoutX="-1.0" layoutY="-4.0" prefHeight="122.0" prefWidth="762.0" style="-fx-background-color: A7C4E5;">
+      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: A7C4E5;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <SplitMenuButton fx:id="menu" layoutX="580.0" layoutY="14.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="168.0">
+            <SplitMenuButton fx:id="menu" layoutX="580.0" layoutY="14.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="168.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
               <items>
                   <MenuItem fx:id="miProfile" mnemonicParsing="false" text="PROFILE" />
                   <MenuItem fx:id="miLists" mnemonicParsing="false" text="LISTS" />
@@ -34,30 +33,34 @@
                   </ImageView>
                </graphic>
             </SplitMenuButton>
-            <Text layoutX="1.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="REVIEWS" textAlignment="CENTER" wrappingWidth="761.0">
+            <Text layoutX="1.0" layoutY="78.0" strokeType="OUTSIDE" strokeWidth="0.0" text="REVIEWS" textAlignment="CENTER" wrappingWidth="761.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
                <font>
                   <Font name="System Bold" size="30.0" />
                </font>
             </Text>
          </children>
-      </Pane>
-      <TextField fx:id="searchBar" layoutX="33.0" layoutY="139.0" prefHeight="26.0" prefWidth="382.0" />
-      <Button fx:id="bttnSearch" layoutX="429.0" layoutY="138.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" text="Search" />
-      <ComboBox fx:id="combLists" layoutX="578.0" layoutY="139.0" prefWidth="150.0" promptText="-- My Lists --" />
-      <ScrollPane layoutX="33.0" layoutY="179.0" prefHeight="403.0" prefWidth="696.0" AnchorPane.bottomAnchor="65.0" AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="32.59999999999991" AnchorPane.topAnchor="179.0">
-         <content>
-            <TableView fx:id="tableReview" prefHeight="406.0" prefWidth="680.0">
-              <columns>
-                <TableColumn fx:id="tcGame" minWidth="-1.0" prefWidth="100.0" text="GAME" />
-                <TableColumn fx:id="tcRelease" minWidth="-1.0" prefWidth="100.0" text="RELEASE" />
-                  <TableColumn fx:id="tcPlatform" minWidth="-1.0" prefWidth="100.0" text="PLATFORM" />
-                  <TableColumn fx:id="tcRate" minWidth="-1.0" prefWidth="50.0" text="RATE" />
-                  <TableColumn fx:id="tcReview" prefWidth="350.0" text="REVIEW" />
-              </columns>
-            </TableView>
-         </content>
-      </ScrollPane>
-      <Button fx:id="bttnNewReview" layoutX="596.0" layoutY="600.0" mnemonicParsing="false" onAction="#newReview" prefHeight="26.0" prefWidth="133.0" text="New Review" />
+      </AnchorPane>
+      <AnchorPane layoutY="141.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <children>
+            <TextField fx:id="searchBar" layoutX="-88.0" layoutY="10.0" prefHeight="26.0" prefWidth="382.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="400.0" AnchorPane.topAnchor="10.0" />
+            <Button fx:id="bttnSearch" layoutX="380.0" layoutY="9.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" text="Search" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="10.0" />
+            <ComboBox fx:id="combLists" layoutX="457.0" layoutY="10.0" prefWidth="150.0" promptText="-- My Lists --" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="10.0" />
+            <ScrollPane layoutX="31.2" layoutY="51.0" prefHeight="394.0" prefWidth="700.0" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="50.0">
+               <content>
+                  <TableView fx:id="tableReview" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                    <columns>
+                      <TableColumn fx:id="tcGame" minWidth="-1.0" prefWidth="100.0" text="GAME" />
+                      <TableColumn fx:id="tcRelease" minWidth="-1.0" prefWidth="100.0" text="RELEASE" />
+                        <TableColumn fx:id="tcPlatform" minWidth="-1.0" prefWidth="100.0" text="PLATFORM" />
+                        <TableColumn fx:id="tcRate" minWidth="-1.0" prefWidth="50.0" text="RATE" />
+                        <TableColumn fx:id="tcReview" prefWidth="350.0" text="REVIEW" />
+                    </columns>
+                  </TableView>
+               </content>
+            </ScrollPane>
+            <Button fx:id="bttnNewReview" layoutX="476.0" layoutY="472.0" mnemonicParsing="false" onAction="#newReview" prefHeight="26.0" prefWidth="133.0" text="New Review" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="30.0" />
+         </children>
+      </AnchorPane>
    </children>
 
 </AnchorPane>

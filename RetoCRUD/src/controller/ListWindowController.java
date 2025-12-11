@@ -7,6 +7,9 @@ package controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,6 +25,7 @@ import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Profile;
 
@@ -42,8 +46,6 @@ public class ListWindowController implements Initializable {
     private MenuItem miMainMenu;
     @FXML
     private MenuItem miLogOut;
-    @FXML
-    private TableView<?> tableReview;
     @FXML
     private TableColumn<?, ?> tcGame;
     @FXML
@@ -69,8 +71,12 @@ public class ListWindowController implements Initializable {
 
     private Profile profile;
     private Controller cont;
-    
+
     private int number;
+    @FXML
+    private Text listName;
+    @FXML
+    private TableView<?> tableLists;
 
     public void setUsuario(Profile profile) {
         this.profile = profile;
@@ -90,6 +96,11 @@ public class ListWindowController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        Button button = new Button("+ New List");
+        button.setMinWidth(menu.getPrefWidth()-50);
+        button.setStyle("-fx-background-radius: 30px;");
+        
+        vbLists.getChildren().add(button);
         miProfile.setOnAction((event) -> {
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MenuWindow.fxml"));
@@ -104,7 +115,7 @@ public class ListWindowController implements Initializable {
                 stage.setTitle("PROFILE MENU");
                 stage.setResizable(false);
                 stage.show();
-                
+
                 Stage currentStage = (Stage) menu.getScene().getWindow();
                 currentStage.close();
             } catch (IOException ex) {
@@ -126,7 +137,7 @@ public class ListWindowController implements Initializable {
                 stage.setTitle("REVIEWS");
                 stage.setResizable(false);
                 stage.show();
-                
+
                 Stage currentStage = (Stage) menu.getScene().getWindow();
                 currentStage.close();
             } catch (IOException ex) {
@@ -148,7 +159,7 @@ public class ListWindowController implements Initializable {
                 stage.setTitle("MAIN MENU");
                 stage.setResizable(false);
                 stage.show();
-                
+
                 Stage currentStage = (Stage) menu.getScene().getWindow();
                 currentStage.close();
             } catch (IOException ex) {
@@ -161,13 +172,35 @@ public class ListWindowController implements Initializable {
             stage.close();
         });
     }
-    
+
+    public void loadLists() {
+        HashMap<String, ArrayList> lists = profile.getLists();
+        for (Map.Entry<String, ArrayList> entry : lists.entrySet()) {
+            String listName = entry.getKey();
+            ArrayList<String> games = entry.getValue();
+
+            Button button = new Button(listName);
+            button.setMinWidth(menu.getPrefWidth()-50);
+            button.setStyle("-fx-background-radius: 30px;");
+            vbLists.getChildren().add(button);
+        }
+    }
+
     @FXML
-    public void newList(){
+    public void newList() {
         number++;
-        Button button = new Button("["+"New List "+number+"]");
+        String name = "New List " + number;
+        
+        profile.newList(name, new ArrayList<String>());
+        Button button = new Button("[" + name + "]");
+        button.setMinWidth(menu.getPrefWidth()-50);
         button.setStyle("-fx-background-radius: 30px;");
         
-        vbLists.getChildren().add(button);    
+        vbLists.getChildren().add(button);
+    }
+
+    public void test() {
+        profile.newList("NDSW", new ArrayList<String>());
+        profile.newList("PlayStation", new ArrayList<String>());
     }
 }
