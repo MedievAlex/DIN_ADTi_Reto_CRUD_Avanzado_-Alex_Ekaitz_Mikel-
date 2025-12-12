@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import static java.util.Collections.list;
 import java.util.HashMap;
 
 /**
@@ -145,8 +146,35 @@ public abstract class Profile {
         }
     }
 
-    public boolean newGame(String name, VideoGame videogame) {
-        if (!this.lists.get(name).contains(videogame)) {
+    public boolean addGame(String name, VideoGame videogame) {
+        ArrayList<VideoGame> list = this.lists.get(name);
+        boolean exist = false;
+        
+        for (int i = 0; i < list.size(); i++) {
+            if (videogame.getV_name().equals(list.get(i).getV_name())) {
+                exist = true;
+            }
+        }
+
+        if (!exist) {
+            this.lists.get(name).add(videogame);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public boolean removeGame(String name, VideoGame videogame) {
+        ArrayList<VideoGame> list = this.lists.get(name);
+        boolean exist = false;
+        
+        for (int i = 0; i < list.size(); i++) {
+            if (videogame.getV_name().equals(list.get(i).getV_name())) {
+                exist = true;
+            }
+        }
+
+        if (!exist) {
             this.lists.get(name).add(videogame);
             return true;
         } else {

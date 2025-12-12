@@ -111,6 +111,14 @@ public class ListWindowController implements Initializable {
         button.wrapTextProperty().setValue(true);
     }
 
+    private void selectedButton(Button button) {
+        button.setStyle("-fx-background-color: D1DFF0;");
+    }
+
+    private void notSelectedButton(Button button) {
+        button.setStyle("-fx-background-color: A7C4E5;");
+    }
+
     public void loadLists() {
         HashMap<String, ArrayList> lists = profile.getLists();
         for (Map.Entry<String, ArrayList> entry : lists.entrySet()) {
@@ -182,17 +190,31 @@ public class ListWindowController implements Initializable {
     }
 
     public void addToList() {
+        String name = combLists.getValue();
+        VideoGame game = tableLists.getSelectionModel().getSelectedItem();
+
         // Saves them on a list and if it already is shows an alert
-        
-        if (!profile.newGame(combLists.getValue(), null)) {
-            Alert alert = new Alert(AlertType.WARNING);
+        if (combLists.getValue() == null) {
+            Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("ERROR");
-            alert.setHeaderText("[Error when adding to the list]"); // O null si no quieres encabezado
-            alert.setContentText("The game " + " it has not been added to the list " + "because it is already there.");
+            alert.setHeaderText("[No list selected]"); // O null si no quieres encabezado
+            alert.setContentText("Select a list to add the games.");
             alert.show();
-        }
-        else{
-            // Add to database
+        } else {
+            name = combLists.getValue();
+
+            if (tableLists.getSelectionModel().getSelectedItem() != null) {
+                game = tableLists.getSelectionModel().getSelectedItem();
+                if (!profile.addGame(name, game)) {
+                    Alert alert = new Alert(AlertType.WARNING);
+                    alert.setTitle("WARNING");
+                    alert.setHeaderText("[Error when adding to the list]"); // O null si no quieres encabezado
+                    alert.setContentText("The game " + " it has not been added to the list " + "because it is already there.");
+                    alert.show();
+                } else {
+                       tableLists.refresh();
+                }
+            }
         }
     }
 
@@ -207,10 +229,11 @@ public class ListWindowController implements Initializable {
         games.add(new VideoGame(2, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
         profile.newList("PlayStation", games);
 
-        profile.newGame("All Games", new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
-        profile.newGame("All Games", new VideoGame(2, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
-        profile.newGame("All Games", new VideoGame(3, "Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
-        profile.newGame("All Games", new VideoGame(4, "Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
+        profile.addGame("All Games", new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
+        profile.addGame("All Games", new VideoGame(2, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
+        profile.addGame("All Games", new VideoGame(3, "Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
+        profile.addGame("All Games", new VideoGame(4, "Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
+        profile.addGame("All Games", new VideoGame(1, "Call of Duty: Black Ops II", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
     }
 
     /**
