@@ -49,12 +49,12 @@
             </Text>
             <ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="90.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="158.0" AnchorPane.topAnchor="50.0">
                <content>
-                  <TableView fx:id="tableLists" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                  <TableView fx:id="tableLists" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                     <columns>
-                      <TableColumn fx:id="tcGame" minWidth="-1.0" prefWidth="150.0" text="GAME" />
-                      <TableColumn fx:id="tcRelease" minWidth="-1.0" prefWidth="100.0" text="RELEASE" />
-                        <TableColumn fx:id="tcPlatform" minWidth="-1.0" prefWidth="150.0" text="PLATFORM" />
-                        <TableColumn fx:id="tcPegi" minWidth="-1.0" prefWidth="108.0" text="PEGI" />
+                      <TableColumn fx:id="tcGame" editable="false" minWidth="-1.0" prefWidth="150.0" text="GAME" />
+                      <TableColumn fx:id="tcRelease" editable="false" minWidth="-1.0" prefWidth="100.0" text="RELEASE" />
+                        <TableColumn fx:id="tcPlatform" editable="false" minWidth="-1.0" prefWidth="150.0" text="PLATFORM" />
+                        <TableColumn fx:id="tcPegi" editable="false" minWidth="-1.0" prefWidth="108.0" text="PEGI" />
                         <TableColumn fx:id="tcCheckBox" prefWidth="60.0" />
                     </columns>
                   </TableView>
