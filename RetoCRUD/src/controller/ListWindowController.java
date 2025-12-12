@@ -110,10 +110,9 @@ public class ListWindowController implements Initializable {
     public void loadLists() {
         HashMap<String, ArrayList> lists = profile.getLists();
         for (Map.Entry<String, ArrayList> entry : lists.entrySet()) {
-            String listName = entry.getKey();
-            ArrayList<String> games = entry.getValue();
+            String list = entry.getKey();
 
-            Button button = new Button(listName);
+            Button button = new Button(list);
             buttonStyle(button);
             button.setOnAction(e
                     -> {
@@ -126,6 +125,8 @@ public class ListWindowController implements Initializable {
 
     public void showList(Button button) {
         ArrayList<VideoGame> list = profile.getLists().get(button.getText());
+        listName.setText(button.getText());
+        
         tcGame.setCellValueFactory(new PropertyValueFactory<VideoGame, String>("v_name"));
         tcRelease.setCellValueFactory(new PropertyValueFactory<VideoGame, Date>("v_release"));
         tcPlatform.setCellValueFactory(new PropertyValueFactory<VideoGame, Platform>("v_platform"));
@@ -156,14 +157,7 @@ public class ListWindowController implements Initializable {
     }
 
     public void test() {
-        ArrayList<VideoGame> games =  profile.getLists().get("All my Games");
-        games.add(new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));        
-        games.add(new VideoGame(2, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
-        games.add(new VideoGame(3, "Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
-        games.add(new VideoGame(4, "Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
-        
-        
-        games = new ArrayList<VideoGame>();
+        ArrayList<VideoGame> games = new ArrayList<VideoGame>();
         games.add(new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
         games.add(new VideoGame(3, "Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
         profile.newList("NDSW", games);
@@ -172,6 +166,12 @@ public class ListWindowController implements Initializable {
         games.add(new VideoGame(4, "Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
         games.add(new VideoGame(2, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
         profile.newList("PlayStation", games);
+        
+        profile.newGame("All my Games", new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
+        profile.newGame("All my Games", new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));        
+        profile.newGame("All my Games", new VideoGame(2, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
+        profile.newGame("All my Games", new VideoGame(3, "Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
+        profile.newGame("All my Games", new VideoGame(4, "Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
     }
     
     /**

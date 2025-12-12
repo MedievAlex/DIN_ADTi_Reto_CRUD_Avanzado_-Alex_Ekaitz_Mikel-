@@ -56,66 +56,67 @@ public abstract class Profile {
         this.telephone = "";
         this.surname = "";
         this.lists = new HashMap<String, ArrayList>();
+        this.lists.put("All my Games", new ArrayList<>());
     }
 
     public String getUsername() {
         return username;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public int getUserCode() {
-        return userCode;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getTelephone() {
-        return telephone;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-    
-    public HashMap<String, ArrayList> getLists() {
-        return lists;
-    }
-
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public int getUserCode() {
+        return userCode;
     }
 
     public void setUserCode(int userCode) {
         this.userCode = userCode;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getTelephone() {
+        return telephone;
     }
 
     public void setTelephone(String telephone) {
         this.telephone = telephone;
     }
 
+    public String getSurname() {
+        return surname;
+    }
+
     public void setSurname(String surname) {
         this.surname = surname;
+    }
+
+    public HashMap<String, ArrayList> getLists() {
+        return lists;
     }
 
     public void setLists(HashMap<String, ArrayList> lists) {
@@ -129,6 +130,20 @@ public abstract class Profile {
         } else {
             return false;
         }
+    }
+
+    public boolean renameList(String oldName, String newName) {
+        if (!this.lists.containsKey(newName)) {
+            ArrayList<VideoGame> videogames = lists.remove(oldName);
+            lists.put(newName, videogames);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public void newGame(String name, VideoGame videogame){
+        this.lists.get(name).add(videogame);
     }
 
     @Override
