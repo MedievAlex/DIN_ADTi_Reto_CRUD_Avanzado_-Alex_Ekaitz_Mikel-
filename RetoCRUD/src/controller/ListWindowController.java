@@ -22,6 +22,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -100,8 +102,8 @@ public class ListWindowController implements Initializable {
     public Controller getCont() {
         return cont;
     }
-    
-    private void buttonStyle(Button button){
+
+    private void buttonStyle(Button button) {
         button.setMinWidth(vbLists.getPrefWidth());
         button.setMaxWidth(vbLists.getPrefWidth());
         button.setPrefWidth(vbLists.getPrefWidth());
@@ -128,7 +130,7 @@ public class ListWindowController implements Initializable {
     public void showList(Button button) {
         ArrayList<VideoGame> list = profile.getLists().get(button.getText());
         listName.setText(button.getText());
-        
+
         tcGame.setCellValueFactory(new PropertyValueFactory<VideoGame, String>("v_name"));
         tcRelease.setCellValueFactory(new PropertyValueFactory<VideoGame, Date>("v_release"));
         tcPlatform.setCellValueFactory(new PropertyValueFactory<VideoGame, Platform>("v_platform"));
@@ -163,15 +165,23 @@ public class ListWindowController implements Initializable {
         HashMap<String, ArrayList> hmLists = profile.getLists();
         ArrayList<String> listsNames = new ArrayList<String>();
         for (Map.Entry<String, ArrayList> entry : hmLists.entrySet()) {
-            if(!"All Games".equals(entry.getKey())){
+            if (!"All Games".equals(entry.getKey())) {
                 listsNames.add(entry.getKey());
-            }  
+            }
         }
-        
+
         combLists.getItems().clear();
         combLists.getItems().addAll(listsNames);
     }
-    
+
+    public void addToList() {
+        Alert alert = new Alert(AlertType.WARNING);
+        alert.setTitle("ERROR");
+        alert.setHeaderText("[Error when adding to the list]"); // O null si no quieres encabezado
+        alert.setContentText("The game "+" it has not been added to the list "+"because it is already there.");
+        alert.show();
+    }
+
     public void test() {
         ArrayList<VideoGame> games = new ArrayList<VideoGame>();
         games.add(new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
@@ -182,13 +192,13 @@ public class ListWindowController implements Initializable {
         games.add(new VideoGame(4, "Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
         games.add(new VideoGame(2, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
         profile.newList("PlayStation", games);
-        
-        profile.newGame("All Games", new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));       
+
+        profile.newGame("All Games", new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
         profile.newGame("All Games", new VideoGame(2, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
         profile.newGame("All Games", new VideoGame(3, "Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
         profile.newGame("All Games", new VideoGame(4, "Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
     }
-    
+
     /**
      * Initializes the controller class.
      */
@@ -199,6 +209,11 @@ public class ListWindowController implements Initializable {
         button.setOnAction(e
                 -> {
             newList();
+        });
+
+        bttnAdd.setOnAction(e
+                -> {
+            addToList();
         });
 
         vbLists.getChildren().add(button);
