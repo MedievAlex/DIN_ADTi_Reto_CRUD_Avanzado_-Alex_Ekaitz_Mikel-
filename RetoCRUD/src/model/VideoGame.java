@@ -91,6 +91,6 @@ public class VideoGame {
 
     @Override
     public String toString() {
-        return "VideoGame{" + "v_id=" + v_id + ", v_name=" + v_name + ", v_release=" + v_release + ", v_platform=" + v_platform + ", v_pegi=" + v_pegi + ", checked=" + checked + '}';
+        return "VideoGame{" + "v_id=" + v_id + ", v_name=" + v_name + ", v_release=" + v_release + ", v_platform=" + v_platform + ", v_pegi=" + v_pegi + '}';
     } 
 }
