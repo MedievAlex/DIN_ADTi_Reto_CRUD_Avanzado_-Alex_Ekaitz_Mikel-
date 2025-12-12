@@ -21,6 +21,7 @@ public class VideoGame {
     private LocalDate v_release;
     private Platform v_platform;
     private Pegi v_pegi;
+    private boolean checked;
 
     public VideoGame() {
         this.v_id = 0;
@@ -28,6 +29,7 @@ public class VideoGame {
         this.v_release = LocalDate.now();
         this.v_platform = Platform.DEFAULT;
         this.v_pegi = Pegi.DEFAULT;
+        this.checked = false;
     }
 
     public VideoGame(int v_id, String v_name, LocalDate v_release, Platform v_platform, Pegi v_pegi) {
@@ -36,6 +38,7 @@ public class VideoGame {
         this.v_release = v_release;
         this.v_platform = v_platform;
         this.v_pegi = v_pegi;
+        this.checked = false;
     }
 
     public int getV_id() {
@@ -78,8 +81,16 @@ public class VideoGame {
         this.v_pegi = v_pegi;
     }
 
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
     @Override
     public String toString() {
-        return "VideoGame{" + "v_id=" + v_id + ", v_name=" + v_name + ", v_release=" + v_release + ", v_platform=" + v_platform + ", v_pegi=" + v_pegi + '}';
-    }
+        return "VideoGame{" + "v_id=" + v_id + ", v_name=" + v_name + ", v_release=" + v_release + ", v_platform=" + v_platform + ", v_pegi=" + v_pegi + ", checked=" + checked + '}';
+    } 
 }

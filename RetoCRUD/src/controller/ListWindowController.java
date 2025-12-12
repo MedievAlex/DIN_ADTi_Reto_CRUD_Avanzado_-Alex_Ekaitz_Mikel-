@@ -72,7 +72,7 @@ public class ListWindowController implements Initializable {
     @FXML
     private TableColumn<VideoGame, Pegi> tcPegi;
     @FXML
-    private TableColumn<VideoGame, CheckBox> tcCheckBox;
+    private TableColumn<VideoGame, Boolean> tcCheckBox;
     @FXML
     private ComboBox<String> combLists;
     @FXML
@@ -135,7 +135,9 @@ public class ListWindowController implements Initializable {
         tcRelease.setCellValueFactory(new PropertyValueFactory<VideoGame, Date>("v_release"));
         tcPlatform.setCellValueFactory(new PropertyValueFactory<VideoGame, Platform>("v_platform"));
         tcPegi.setCellValueFactory(new PropertyValueFactory<VideoGame, Pegi>("v_pegi"));
-        tcCheckBox.setCellFactory(column -> new CheckBoxTableCell<>());
+        tcCheckBox.setCellFactory(
+                CheckBoxTableCell.forTableColumn(tcCheckBox)
+        );
 
         videoGames = FXCollections.observableArrayList();
         for (VideoGame game : list) {
@@ -174,12 +176,19 @@ public class ListWindowController implements Initializable {
         combLists.getItems().addAll(listsNames);
     }
 
+    private void saveToAdd() {
+
+    }
+
     public void addToList() {
-        Alert alert = new Alert(AlertType.WARNING);
-        alert.setTitle("ERROR");
-        alert.setHeaderText("[Error when adding to the list]"); // O null si no quieres encabezado
-        alert.setContentText("The game "+" it has not been added to the list "+"because it is already there.");
-        alert.show();
+
+        if (true) {
+            Alert alert = new Alert(AlertType.WARNING);
+            alert.setTitle("ERROR");
+            alert.setHeaderText("[Error when adding to the list]"); // O null si no quieres encabezado
+            alert.setContentText("The game " + " it has not been added to the list " + "because it is already there.");
+            alert.show();
+        }
     }
 
     public void test() {
