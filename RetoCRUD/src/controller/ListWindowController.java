@@ -11,7 +11,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -31,6 +30,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -133,6 +133,7 @@ public class ListWindowController implements Initializable {
         tcRelease.setCellValueFactory(new PropertyValueFactory<VideoGame, Date>("v_release"));
         tcPlatform.setCellValueFactory(new PropertyValueFactory<VideoGame, Platform>("v_platform"));
         tcPegi.setCellValueFactory(new PropertyValueFactory<VideoGame, Pegi>("v_pegi"));
+        tcCheckBox.setCellFactory(column -> new CheckBoxTableCell<>());
 
         videoGames = FXCollections.observableArrayList();
         for (VideoGame game : list) {
