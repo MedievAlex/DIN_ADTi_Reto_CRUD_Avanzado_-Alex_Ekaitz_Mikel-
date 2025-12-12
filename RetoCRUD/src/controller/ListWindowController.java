@@ -101,12 +101,79 @@ public class ListWindowController implements Initializable {
     public Controller getCont() {
         return cont;
     }
-
     
     private void buttonStyle(Button button){
         button.setMinWidth(vbLists.getPrefWidth() - 10);
         button.setStyle("-fx-background-radius: 30px;");
     }
+
+    public void loadLists() {
+        HashMap<String, ArrayList> lists = profile.getLists();
+        for (Map.Entry<String, ArrayList> entry : lists.entrySet()) {
+            String listName = entry.getKey();
+            ArrayList<String> games = entry.getValue();
+
+            Button button = new Button(listName);
+            buttonStyle(button);
+            button.setOnAction(e
+                    -> {
+                showList(button);
+            });
+
+            vbLists.getChildren().add(button);
+        }
+    }
+
+    public void showList(Button button) {
+        ArrayList<VideoGame> list = profile.getLists().get(button.getText());
+        tcGame.setCellValueFactory(new PropertyValueFactory<VideoGame, String>("v_name"));
+        tcRelease.setCellValueFactory(new PropertyValueFactory<VideoGame, Date>("v_release"));
+        tcPlatform.setCellValueFactory(new PropertyValueFactory<VideoGame, Platform>("v_platform"));
+        tcPegi.setCellValueFactory(new PropertyValueFactory<VideoGame, Pegi>("v_pegi"));
+
+        videoGames = FXCollections.observableArrayList();
+        for (VideoGame game : list) {
+            videoGames.add(game);
+        }
+        tableLists.setItems(videoGames);
+    }
+
+    public void newList() {
+        number++;
+        String name = "New List " + number;
+
+        profile.newList(name, new ArrayList<VideoGame>());
+
+        Button button = new Button(name);
+        buttonStyle(button);
+
+        button.setOnAction(e
+                -> {
+            showList(button);
+        });
+
+        vbLists.getChildren().add(button);
+    }
+
+    public void test() {
+        ArrayList<VideoGame> games =  profile.getLists().get("All my Games");
+        games.add(new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));        
+        games.add(new VideoGame(2, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
+        games.add(new VideoGame(3, "Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
+        games.add(new VideoGame(4, "Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
+        
+        
+        games = new ArrayList<VideoGame>();
+        games.add(new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
+        games.add(new VideoGame(3, "Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
+        profile.newList("NDSW", games);
+
+        games = new ArrayList<VideoGame>();
+        games.add(new VideoGame(4, "Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
+        games.add(new VideoGame(2, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
+        profile.newList("PlayStation", games);
+    }
+    
     /**
      * Initializes the controller class.
      */
@@ -191,72 +258,5 @@ public class ListWindowController implements Initializable {
             Stage stage = (Stage) menu.getScene().getWindow();
             stage.close();
         });
-    }
-
-    public void loadLists() {
-        HashMap<String, ArrayList> lists = profile.getLists();
-        for (Map.Entry<String, ArrayList> entry : lists.entrySet()) {
-            String listName = entry.getKey();
-            ArrayList<String> games = entry.getValue();
-
-            Button button = new Button(listName);
-            buttonStyle(button);
-            button.setOnAction(e
-                    -> {
-                showList(button);
-            });
-
-            vbLists.getChildren().add(button);
-        }
-    }
-
-    public void showList(Button button) {
-        ArrayList<VideoGame> list = profile.getLists().get(button.getText());
-        tcGame.setCellValueFactory(new PropertyValueFactory<VideoGame, String>("v_name"));
-        tcRelease.setCellValueFactory(new PropertyValueFactory<VideoGame, Date>("v_release"));
-        tcPlatform.setCellValueFactory(new PropertyValueFactory<VideoGame, Platform>("v_platform"));
-        tcPegi.setCellValueFactory(new PropertyValueFactory<VideoGame, Pegi>("v_pegi"));
-
-        videoGames = FXCollections.observableArrayList();
-        for (VideoGame game : list) {
-            videoGames.add(game);
-        }
-        tableLists.setItems(videoGames);
-    }
-
-    public void newList() {
-        number++;
-        String name = "New List " + number;
-
-        profile.newList(name, new ArrayList<VideoGame>());
-
-        Button button = new Button(name);
-        buttonStyle(button);
-
-        button.setOnAction(e
-                -> {
-            showList(button);
-        });
-
-        vbLists.getChildren().add(button);
-    }
-
-    public void test() {
-        ArrayList<VideoGame> games =  profile.getLists().get("All my Games");
-        games.add(new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));        
-        games.add(new VideoGame(2, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
-        games.add(new VideoGame(3, "Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
-        games.add(new VideoGame(4, "Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
-        
-        
-        games = new ArrayList<VideoGame>();
-        games.add(new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
-        games.add(new VideoGame(3, "Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
-        profile.newList("NDSW", games);
-
-        games = new ArrayList<VideoGame>();
-        games.add(new VideoGame(4, "Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
-        games.add(new VideoGame(2, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
-        profile.newList("PlayStation", games);
     }
 }
