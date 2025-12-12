@@ -40,8 +40,7 @@ public abstract class Profile {
         this.name = name;
         this.telephone = telephone;
         this.surname = surname;
-        this.lists = new HashMap<String, ArrayList>();
-        this.lists.put("All my Games", new ArrayList<>());
+        defaultList();
     }
 
     /**
@@ -55,8 +54,7 @@ public abstract class Profile {
         this.name = "";
         this.telephone = "";
         this.surname = "";
-        this.lists = new HashMap<String, ArrayList>();
-        this.lists.put("All my Games", new ArrayList<>());
+        defaultList();
     }
 
     public String getUsername() {
@@ -123,6 +121,11 @@ public abstract class Profile {
         this.lists = lists;
     }
 
+    private void defaultList(){
+        this.lists = new HashMap<String, ArrayList>();
+        this.lists.put("All Games", new ArrayList<>());
+    }
+    
     public boolean newList(String name, ArrayList<VideoGame> videogames) {
         if (!this.lists.containsKey(name)) {
             lists.put(name, videogames);

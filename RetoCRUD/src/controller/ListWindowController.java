@@ -103,8 +103,11 @@ public class ListWindowController implements Initializable {
     }
     
     private void buttonStyle(Button button){
-        button.setMinWidth(vbLists.getPrefWidth() - 10);
+        button.setMinWidth(vbLists.getPrefWidth());
+        button.setMaxWidth(vbLists.getPrefWidth());
+        button.setPrefWidth(vbLists.getPrefWidth());
         button.setStyle("-fx-background-radius: 30px;");
+        button.wrapTextProperty().setValue(true);
     }
 
     public void loadLists() {
@@ -160,18 +163,17 @@ public class ListWindowController implements Initializable {
         ArrayList<VideoGame> games = new ArrayList<VideoGame>();
         games.add(new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
         games.add(new VideoGame(3, "Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
-        profile.newList("NDSW", games);
+        profile.newList("Nintendo Switch", games);
 
         games = new ArrayList<VideoGame>();
         games.add(new VideoGame(4, "Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
         games.add(new VideoGame(2, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
         profile.newList("PlayStation", games);
         
-        profile.newGame("All my Games", new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
-        profile.newGame("All my Games", new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));        
-        profile.newGame("All my Games", new VideoGame(2, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
-        profile.newGame("All my Games", new VideoGame(3, "Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
-        profile.newGame("All my Games", new VideoGame(4, "Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
+        profile.newGame("All Games", new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));       
+        profile.newGame("All Games", new VideoGame(2, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
+        profile.newGame("All Games", new VideoGame(3, "Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
+        profile.newGame("All Games", new VideoGame(4, "Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
     }
     
     /**

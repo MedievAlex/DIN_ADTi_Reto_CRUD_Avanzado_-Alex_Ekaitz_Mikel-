@@ -16,7 +16,7 @@
 
 <AnchorPane id="AnchorPane" prefHeight="650.0" prefWidth="760.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ListWindowController">
    <children>
-      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="141.0" prefWidth="765.0" style="-fx-background-color: A7C4E5;">
+      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="142.0" prefWidth="766.0" style="-fx-background-color: A7C4E5;">
          <children>
             <SplitMenuButton fx:id="menu" mnemonicParsing="false" prefHeight="26.0" prefWidth="168.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
                <items>
@@ -42,14 +42,14 @@
       </AnchorPane>
       <AnchorPane layoutY="139.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
          <children>
-            <Text fx:id="listName" strokeType="OUTSIDE" strokeWidth="0.0" text="listname" textAlignment="CENTER" wrappingWidth="765.6" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="10.0">
+            <Text fx:id="listName" strokeType="OUTSIDE" strokeWidth="0.0" text="listname" textAlignment="CENTER" wrappingWidth="765.6" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
                <font>
                   <Font size="30.0" />
                </font>
             </Text>
-            <ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="90.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="158.0" AnchorPane.topAnchor="50.0">
+            <ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="90.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="158.0" AnchorPane.topAnchor="50.0">
                <content>
-                  <TableView fx:id="tableLists" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="574.0">
+                  <TableView fx:id="tableLists" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                     <columns>
                       <TableColumn fx:id="tcGame" minWidth="-1.0" prefWidth="150.0" text="GAME" />
                       <TableColumn fx:id="tcRelease" minWidth="-1.0" prefWidth="100.0" text="RELEASE" />
@@ -65,14 +65,14 @@
                   <Font name="System Bold" size="15.0" />
                </font>
             </Text>
-            <ScrollPane fx:id="spLists" prefHeight="374.0" prefWidth="115.0" AnchorPane.bottomAnchor="90.0" AnchorPane.rightAnchor="30.0">
+            <ScrollPane fx:id="spLists" prefHeight="374.0" prefWidth="125.0" AnchorPane.bottomAnchor="91.0" AnchorPane.rightAnchor="20.0">
                <content>
-                  <VBox fx:id="vbLists" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="375.0" prefWidth="100.0" spacing="5.0" />
+                  <VBox fx:id="vbLists" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0" />
                </content>
             </ScrollPane>
-            <Button fx:id="bttnRemove" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" text="Remove" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="30.0" />
-            <Button fx:id="bttnAdd" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" text="Add to List" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0" />
-            <ComboBox fx:id="combLists" layoutX="139.0" layoutY="488.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="466.0" promptText="-- Choose a List --" AnchorPane.bottomAnchor="31.0" AnchorPane.rightAnchor="160.0" />
+            <Button fx:id="bttnRemove" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" text="Remove" AnchorPane.bottomAnchor="55.0" AnchorPane.leftAnchor="20.0" />
+            <Button fx:id="bttnAdd" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" text="Add to List" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" />
+            <ComboBox fx:id="combLists" layoutX="126.0" layoutY="485.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="466.0" promptText="-- Choose a List --" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="172.39999999999998" />
          </children>
       </AnchorPane>
    </children>
