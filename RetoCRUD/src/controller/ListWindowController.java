@@ -177,11 +177,12 @@ public class ListWindowController implements Initializable {
     }
 
     private void saveToAdd() {
-
+        // Save in a list to add them when a checkbox is true
     }
 
     public void addToList() {
-
+        // Saves them on a list and if it already is shows an alert
+        
         if (true) {
             Alert alert = new Alert(AlertType.WARNING);
             alert.setTitle("ERROR");
