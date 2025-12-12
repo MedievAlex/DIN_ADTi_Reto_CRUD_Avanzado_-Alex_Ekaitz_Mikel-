@@ -121,11 +121,11 @@ public abstract class Profile {
         this.lists = lists;
     }
 
-    private void defaultList(){
+    private void defaultList() {
         this.lists = new HashMap<String, ArrayList>();
         this.lists.put("All Games", new ArrayList<>());
     }
-    
+
     public boolean newList(String name, ArrayList<VideoGame> videogames) {
         if (!this.lists.containsKey(name)) {
             lists.put(name, videogames);
@@ -144,9 +144,14 @@ public abstract class Profile {
             return false;
         }
     }
-    
-    public void newGame(String name, VideoGame videogame){
-        this.lists.get(name).add(videogame);
+
+    public boolean newGame(String name, VideoGame videogame) {
+        if (!this.lists.get(name).contains(videogame)) {
+            this.lists.get(name).add(videogame);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override

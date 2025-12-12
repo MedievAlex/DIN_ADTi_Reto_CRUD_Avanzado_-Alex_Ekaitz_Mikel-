@@ -183,12 +183,15 @@ public class ListWindowController implements Initializable {
     public void addToList() {
         // Saves them on a list and if it already is shows an alert
         
-        if (true) {
+        if (!profile.newGame(combLists.getValue(), null)) {
             Alert alert = new Alert(AlertType.WARNING);
             alert.setTitle("ERROR");
             alert.setHeaderText("[Error when adding to the list]"); // O null si no quieres encabezado
             alert.setContentText("The game " + " it has not been added to the list " + "because it is already there.");
             alert.show();
+        }
+        else{
+            // Add to database
         }
     }
 
