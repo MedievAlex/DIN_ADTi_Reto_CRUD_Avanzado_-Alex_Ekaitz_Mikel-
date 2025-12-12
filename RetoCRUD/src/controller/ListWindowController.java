@@ -120,16 +120,17 @@ public class ListWindowController implements Initializable {
             buttonStyle(button);
             button.setOnAction(e
                     -> {
-                showList(button);
+                showList(button.getText());
             });
 
             vbLists.getChildren().add(button);
         }
+        showList("All Games");
     }
 
-    public void showList(Button button) {
-        ArrayList<VideoGame> list = profile.getLists().get(button.getText());
-        listName.setText(button.getText());
+    public void showList(String name) {
+        ArrayList<VideoGame> list = profile.getLists().get(name);
+        listName.setText(name);
 
         tcGame.setCellValueFactory(new PropertyValueFactory<VideoGame, String>("v_name"));
         tcRelease.setCellValueFactory(new PropertyValueFactory<VideoGame, Date>("v_release"));
@@ -157,7 +158,7 @@ public class ListWindowController implements Initializable {
 
         button.setOnAction(e
                 -> {
-            showList(button);
+            showList(button.getText());
         });
 
         vbLists.getChildren().add(button);
