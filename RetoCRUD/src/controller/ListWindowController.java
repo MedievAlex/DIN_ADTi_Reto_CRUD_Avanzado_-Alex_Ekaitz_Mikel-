@@ -89,6 +89,7 @@ public class ListWindowController implements Initializable {
 
     private ObservableList<VideoGame> videoGames;
     private int number;
+    private String selectedList;
 
     public void setUsuario(Profile profile) {
         this.profile = profile;
@@ -128,12 +129,16 @@ public class ListWindowController implements Initializable {
             buttonStyle(button);
             button.setOnAction(e
                     -> {
-                showList(button.getText());
+                String name = button.getText();
+                selectedList = name;
+                showList(name);
             });
 
             vbLists.getChildren().add(button);
         }
-        showList("All Games");
+        
+        selectedList = "All Games";
+        showList(selectedList);
     }
 
     public void showList(String name) {
@@ -157,17 +162,19 @@ public class ListWindowController implements Initializable {
 
     public void newList() {
         number++;
-        String name = "New List " + number;
+        String buttonName = "New List " + number;
 
-        profile.newList(name, new ArrayList<VideoGame>());
+        profile.newList(buttonName, new ArrayList<VideoGame>());
 
-        Button button = new Button(name);
+        Button button = new Button(buttonName);
         buttonStyle(button);
 
         button.setOnAction(e
-                -> {
-            showList(button.getText());
-        });
+                    -> {
+                String name = button.getText();
+                selectedList = name;
+                showList(name);
+            });
 
         vbLists.getChildren().add(button);
     }
@@ -175,12 +182,13 @@ public class ListWindowController implements Initializable {
     public void setComboBox() {
         HashMap<String, ArrayList> hmLists = profile.getLists();
         ArrayList<String> listsNames = new ArrayList<String>();
+        
         for (Map.Entry<String, ArrayList> entry : hmLists.entrySet()) {
             if (!"All Games".equals(entry.getKey())) {
                 listsNames.add(entry.getKey());
             }
         }
-
+        
         combLists.getItems().clear();
         combLists.getItems().addAll(listsNames);
     }
@@ -190,8 +198,8 @@ public class ListWindowController implements Initializable {
     }
 
     public void addToList() {
-        String name = combLists.getValue();
-        VideoGame game = tableLists.getSelectionModel().getSelectedItem();
+        String name;
+        VideoGame game;
 
         // Saves them on a list and if it already is shows an alert
         if (combLists.getValue() == null) {
@@ -208,12 +216,31 @@ public class ListWindowController implements Initializable {
                 if (!profile.addGame(name, game)) {
                     Alert alert = new Alert(AlertType.WARNING);
                     alert.setTitle("WARNING");
-                    alert.setHeaderText("[Error when adding to the list]"); // O null si no quieres encabezado
-                    alert.setContentText("The game " + " it has not been added to the list " + "because it is already there.");
+                    alert.setHeaderText("Error when adding games to the list " + name + "."); // O null si no quieres encabezado
+                    alert.setContentText("The game " + game.getV_name() + " it has not been added to the list " + name + " because it is already there.");
                     alert.show();
                 } else {
-                       tableLists.refresh();
+                    showList(selectedList);
+                    // Actualizar
                 }
+            }
+        }
+    }
+
+    public void removeFromList() {
+        String name = selectedList;
+        VideoGame game;
+
+        if (tableLists.getSelectionModel().getSelectedItem() != null) {
+            game = tableLists.getSelectionModel().getSelectedItem();
+            if (!profile.removeGame(name, game)) {
+                Alert alert = new Alert(AlertType.WARNING);
+                alert.setTitle("ERROR");
+                alert.setHeaderText("Error when removing " + game.getV_name() + " from the list " + name + "."); // O null si no quieres encabezado
+                alert.setContentText("The game " + game.getV_name() + " already has has been deleted from the list " + name + ".");
+                alert.show();
+            } else {
+                // Actualizar
             }
         }
     }
@@ -241,20 +268,6 @@ public class ListWindowController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        Button button = new Button("+ New List");
-        buttonStyle(button);
-        button.setOnAction(e
-                -> {
-            newList();
-        });
-
-        bttnAdd.setOnAction(e
-                -> {
-            addToList();
-        });
-
-        vbLists.getChildren().add(button);
-
         miProfile.setOnAction((event) -> {
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MenuWindow.fxml"));
@@ -325,5 +338,24 @@ public class ListWindowController implements Initializable {
             Stage stage = (Stage) menu.getScene().getWindow();
             stage.close();
         });
+
+        Button button = new Button("+ New List");
+        buttonStyle(button);
+        button.setOnAction(e
+                -> {
+            newList();
+        });
+        
+        vbLists.getChildren().add(button);
+        
+        bttnRemove.setOnAction(e
+                -> {
+            removeFromList();
+        });
+
+        bttnAdd.setOnAction(e
+                -> {
+            addToList();
+        });  
     }
 }

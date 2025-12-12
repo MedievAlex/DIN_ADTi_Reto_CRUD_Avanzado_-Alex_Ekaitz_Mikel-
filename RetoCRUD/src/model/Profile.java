@@ -149,7 +149,7 @@ public abstract class Profile {
     public boolean addGame(String name, VideoGame videogame) {
         ArrayList<VideoGame> list = this.lists.get(name);
         boolean exist = false;
-        
+
         for (int i = 0; i < list.size(); i++) {
             if (videogame.getV_name().equals(list.get(i).getV_name())) {
                 exist = true;
@@ -163,23 +163,19 @@ public abstract class Profile {
             return false;
         }
     }
-    
+
     public boolean removeGame(String name, VideoGame videogame) {
         ArrayList<VideoGame> list = this.lists.get(name);
-        boolean exist = false;
-        
+        boolean removed = false;
+
         for (int i = 0; i < list.size(); i++) {
             if (videogame.getV_name().equals(list.get(i).getV_name())) {
-                exist = true;
+                list.remove(i);
+                newList(name, list);
+                removed = true;
             }
         }
-
-        if (!exist) {
-            this.lists.get(name).add(videogame);
-            return true;
-        } else {
-            return false;
-        }
+        return removed;
     }
 
     @Override
