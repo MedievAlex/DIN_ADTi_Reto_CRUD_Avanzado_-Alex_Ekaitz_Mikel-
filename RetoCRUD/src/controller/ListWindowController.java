@@ -7,12 +7,11 @@ package controller;
 
 import java.io.IOException;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -73,7 +72,7 @@ public class ListWindowController implements Initializable {
     @FXML
     private TableColumn<VideoGame, CheckBox> tcCheckBox;
     @FXML
-    private ComboBox<?> combLists;
+    private ComboBox<String> combLists;
     @FXML
     private ScrollPane spLists;
     @FXML
@@ -159,6 +158,19 @@ public class ListWindowController implements Initializable {
         vbLists.getChildren().add(button);
     }
 
+    public void setComboBox() {
+        HashMap<String, ArrayList> hmLists = profile.getLists();
+        ArrayList<String> listsNames = new ArrayList<String>();
+        for (Map.Entry<String, ArrayList> entry : hmLists.entrySet()) {
+            if(!"All Games".equals(entry.getKey())){
+                listsNames.add(entry.getKey());
+            }  
+        }
+        
+        combLists.getItems().clear();
+        combLists.getItems().addAll(listsNames);
+    }
+    
     public void test() {
         ArrayList<VideoGame> games = new ArrayList<VideoGame>();
         games.add(new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));

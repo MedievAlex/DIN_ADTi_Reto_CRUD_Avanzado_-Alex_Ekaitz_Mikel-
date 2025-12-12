@@ -133,6 +133,7 @@ public class MainMenuWindowController implements Initializable {
                 
                 controllerWindow.test();
                 controllerWindow.loadLists();
+                controllerWindow.setComboBox();
 
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root));
