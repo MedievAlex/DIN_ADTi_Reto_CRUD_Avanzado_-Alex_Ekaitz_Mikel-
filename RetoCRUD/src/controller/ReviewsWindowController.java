@@ -5,7 +5,6 @@
  */
 package controller;
 
-import exception.passwordequalspassword;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -14,7 +13,6 @@ import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -81,6 +79,27 @@ public class ReviewsWindowController implements Initializable {
         return cont;
     }
 
+    @FXML
+    private void newReview() {
+
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/NewReviewWindow.fxml"));
+            Parent root = fxmlLoader.load();
+
+            controller.NewReviewWindowController controllerWindow = fxmlLoader.getController();
+            controllerWindow.setUsuario(profile);
+            controllerWindow.setCont(this.cont);
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("NEW REVIEW");
+            stage.setResizable(false);
+            stage.show();
+        } catch (IOException ex) {
+            Logger.getLogger(SignUpWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     /**
      * Initializes the controller class.
      */
@@ -113,6 +132,10 @@ public class ReviewsWindowController implements Initializable {
                 controller.ListWindowController controllerWindow = fxmlLoader.getController();
                 controllerWindow.setUsuario(profile);
                 controllerWindow.setCont(cont);
+                
+                controllerWindow.test();
+                controllerWindow.loadLists();
+                controllerWindow.setComboBox();
 
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root));
@@ -153,26 +176,5 @@ public class ReviewsWindowController implements Initializable {
             Stage stage = (Stage) menu.getScene().getWindow();
             stage.close();
         });
-    }
-
-    @FXML
-    private void newReview() {
-
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/NewReviewWindow.fxml"));
-            Parent root = fxmlLoader.load();
-
-            controller.NewReviewWindowController controllerWindow = fxmlLoader.getController();
-            controllerWindow.setUsuario(profile);
-            controllerWindow.setCont(this.cont);
-
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.setTitle("NEW REVIEW");
-            stage.setResizable(false);
-            stage.show();
-        } catch (IOException ex) {
-            Logger.getLogger(SignUpWindowController.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 }

@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -130,6 +129,10 @@ public class MainMenuWindowController implements Initializable {
                 controller.ListWindowController controllerWindow = fxmlLoader.getController();
                 controllerWindow.setUsuario(profile);
                 controllerWindow.setCont(cont);
+                
+                controllerWindow.test();
+                controllerWindow.loadLists();
+                controllerWindow.setComboBox();
 
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root));
