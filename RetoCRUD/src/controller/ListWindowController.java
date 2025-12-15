@@ -240,16 +240,25 @@ public class ListWindowController implements Initializable {
 
         if (tableLists.getSelectionModel().getSelectedItem() != null) {
             game = tableLists.getSelectionModel().getSelectedItem();
-            if (!profile.removeGame(selectedList, game)) {
-                Alert alert = new Alert(AlertType.WARNING);
-                alert.setTitle("ERROR");
-                alert.setHeaderText("Error when removing " + game.getV_name() + " from the list " + selectedList + "."); // O null si no quieres encabezado
-                alert.setContentText("The game " + game.getV_name() + " already has has been deleted from the list " + selectedList + ".");
-                alert.showAndWait();
+
+            if ("All Games".equals(selectedList)) {
+                HashMap<String, ArrayList> lists = profile.getLists();
+                for (Map.Entry<String, ArrayList> entry : lists.entrySet()) {
+                    profile.removeGame(entry.getKey(), game);
+                }
             } else {
-                Button button = new Button(selectedList);
-                showList(button);
+                if (!profile.removeGame(selectedList, game)) {
+                    Alert alert = new Alert(AlertType.WARNING);
+                    alert.setTitle("ERROR");
+                    alert.setHeaderText("Error when removing " + game.getV_name() + " from the list " + selectedList + "."); // O null si no quieres encabezado
+                    alert.setContentText("The game " + game.getV_name() + " already has has been deleted from the list " + selectedList + ".");
+                    alert.showAndWait();
+                } else {
+
+                }
             }
+            Button button = new Button(selectedList);
+            showList(button);
         }
     }
 
