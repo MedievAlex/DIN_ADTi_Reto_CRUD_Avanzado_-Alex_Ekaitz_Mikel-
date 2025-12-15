@@ -89,6 +89,7 @@ public class ListWindowController implements Initializable {
     private ObservableList<VideoGame> videoGames;
     private int number;
     private String selectedList;
+    private ArrayList<Button> litsButtons;
 
     public void setUsuario(Profile profile) {
         this.profile = profile;
@@ -107,16 +108,8 @@ public class ListWindowController implements Initializable {
         button.setMinWidth(vbLists.getPrefWidth());
         button.setMaxWidth(vbLists.getPrefWidth());
         button.setPrefWidth(vbLists.getPrefWidth());
-        button.setStyle("-fx-background-radius: 30px;");
+        button.setStyle("-fx-background-radius: 30px; -fx-background-color: #A7C4E5;");
         button.wrapTextProperty().setValue(true);
-    }
-
-    private void selectedButton(Button button) {
-        button.setStyle("-fx-background-color: D1DFF0;");
-    }
-
-    private void notSelectedButton(Button button) {
-        button.setStyle("-fx-background-color: A7C4E5;");
     }
 
     public void loadLists() {
@@ -128,21 +121,34 @@ public class ListWindowController implements Initializable {
             buttonStyle(button);
             button.setOnAction(e
                     -> {
-                String name = button.getText();
-                selectedList = name;
-                showList(name);
+                showList(button);
             });
 
             vbLists.getChildren().add(button);
+            litsButtons.add(button);
         }
 
-        selectedList = "All Games";
-        showList(selectedList);
+        Button button = new Button("All Games");
+        showList(button);
     }
 
-    public void showList(String name) {
-        ArrayList<VideoGame> list = profile.getLists().get(name);
-        listName.setText(name);
+    private void selectedButton(Button button) {  
+        for (Button listButton : litsButtons) {
+            if(button.getText().equals(listButton.getText())){
+                listButton.setStyle("-fx-background-radius: 30px; -fx-background-color: #D1DFF0;");
+            }else{
+                listButton.setStyle("-fx-background-radius: 30px; -fx-background-color: #A7C4E5;");
+            } 
+        }
+    }
+    
+    public void showList(Button button) {
+        String buttonListName = button.getText();
+        
+        selectedButton(button);
+        
+        ArrayList<VideoGame> list = profile.getLists().get(buttonListName);
+        listName.setText(buttonListName);
 
         tcGame.setCellValueFactory(new PropertyValueFactory<VideoGame, String>("v_name"));
         tcRelease.setCellValueFactory(new PropertyValueFactory<VideoGame, Date>("v_release"));
@@ -150,11 +156,13 @@ public class ListWindowController implements Initializable {
         tcPegi.setCellValueFactory(new PropertyValueFactory<VideoGame, Pegi>("v_pegi"));
         tcCheckBox.setCellValueFactory(new PropertyValueFactory<VideoGame, Boolean>("checked"));
         tcCheckBox.setCellFactory(CheckBoxTableCell.forTableColumn(tcCheckBox));
+
         /*
         tcCheckBox.setOnEditColumn(new EventHandler<TableColumn.CellEditEvent<VideoGame, Boolean>(){
             VideoGame videoGame = event.getTableView().getItems().grt(event.getTablePosition().getRow());
         >};
          */
+        
         videoGames = FXCollections.observableArrayList();
         for (VideoGame game : list) {
             videoGames.add(game);
@@ -173,12 +181,11 @@ public class ListWindowController implements Initializable {
 
         button.setOnAction(e
                 -> {
-            String name = button.getText();
-            selectedList = name;
-            showList(name);
+            showList(button);
         });
 
         vbLists.getChildren().add(button);
+        litsButtons.add(button);
     }
 
     public void setComboBox() {
@@ -222,7 +229,6 @@ public class ListWindowController implements Initializable {
                     alert.setContentText("The game " + game.getV_name() + " it has not been added to the list " + name + " because it is already there.");
                     alert.showAndWait();
                 } else {
-                    showList(selectedList);
                     // Actualizar
                 }
             }
@@ -320,11 +326,13 @@ public class ListWindowController implements Initializable {
     private void setOnActionHandlers() {
         Button button = new Button("+ New List");
         buttonStyle(button);
+        button.setStyle("-fx-background-radius: 30px; -fx-background-color: #75E773;");
         button.setOnAction(e
                 -> {
             newList();
         });
         vbLists.getChildren().add(button);
+        litsButtons = new ArrayList<>();
 
         tcCheckBox.setOnEditCommit(event -> {
             //MiItem item = event.getRowValue();
