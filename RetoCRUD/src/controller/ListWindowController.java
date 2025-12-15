@@ -135,7 +135,7 @@ public class ListWindowController implements Initializable {
 
             vbLists.getChildren().add(button);
         }
-        
+
         selectedList = "All Games";
         showList(selectedList);
     }
@@ -155,7 +155,7 @@ public class ListWindowController implements Initializable {
         tcCheckBox.setOnEditColumn(new EventHandler<TableColumn.CellEditEvent<VideoGame, Boolean>(){
             VideoGame videoGame = event.getTableView().getItems().grt(event.getTablePosition().getRow());
         >};
-        */
+         */
         videoGames = FXCollections.observableArrayList();
         for (VideoGame game : list) {
             videoGames.add(game);
@@ -173,11 +173,11 @@ public class ListWindowController implements Initializable {
         buttonStyle(button);
 
         button.setOnAction(e
-                    -> {
-                String name = button.getText();
-                selectedList = name;
-                showList(name);
-            });
+                -> {
+            String name = button.getText();
+            selectedList = name;
+            showList(name);
+        });
 
         vbLists.getChildren().add(button);
     }
@@ -185,13 +185,13 @@ public class ListWindowController implements Initializable {
     public void setComboBox() {
         HashMap<String, ArrayList> hmLists = profile.getLists();
         ArrayList<String> listsNames = new ArrayList<String>();
-        
+
         for (Map.Entry<String, ArrayList> entry : hmLists.entrySet()) {
             if (!"All Games".equals(entry.getKey())) {
                 listsNames.add(entry.getKey());
             }
         }
-        
+
         combLists.getItems().clear();
         combLists.getItems().addAll(listsNames);
     }
@@ -266,11 +266,7 @@ public class ListWindowController implements Initializable {
         profile.addGame("All Games", new VideoGame(1, "Call of Duty: Black Ops II", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
     }
 
-    /**
-     * Initializes the controller class.
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    private void setMenuOptions() {
         miProfile.setOnAction((event) -> {
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MenuWindow.fxml"));
@@ -285,9 +281,6 @@ public class ListWindowController implements Initializable {
                 stage.setTitle("PROFILE MENU");
                 stage.setResizable(false);
                 stage.show();
-
-                Stage currentStage = (Stage) menu.getScene().getWindow();
-                currentStage.close();
             } catch (IOException ex) {
                 Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -341,17 +334,17 @@ public class ListWindowController implements Initializable {
             Stage stage = (Stage) menu.getScene().getWindow();
             stage.close();
         });
-        
-        
+    }
+    
+    private void setOnActionHandlers(){
         Button button = new Button("+ New List");
         buttonStyle(button);
         button.setOnAction(e
                 -> {
             newList();
         });
-        
         vbLists.getChildren().add(button);
-        
+
         bttnRemove.setOnAction(e
                 -> {
             removeFromList();
@@ -360,6 +353,15 @@ public class ListWindowController implements Initializable {
         bttnAdd.setOnAction(e
                 -> {
             addToList();
-        });  
-    } 
+        });
+    }
+
+    /**
+     * Initializes the controller class.
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        setMenuOptions();
+        setOnActionHandlers();
+    }
 }

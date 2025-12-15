@@ -98,13 +98,9 @@ public class ReviewsWindowController implements Initializable {
         } catch (IOException ex) {
             Logger.getLogger(SignUpWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+    }  
     
-    /**
-     * Initializes the controller class.
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    private void setMenuOptions() {
         miProfile.setOnAction((event) -> {
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MenuWindow.fxml"));
@@ -132,7 +128,7 @@ public class ReviewsWindowController implements Initializable {
                 controller.ListWindowController controllerWindow = fxmlLoader.getController();
                 controllerWindow.setUsuario(profile);
                 controllerWindow.setCont(cont);
-                
+
                 controllerWindow.test();
                 controllerWindow.loadLists();
                 controllerWindow.setComboBox();
@@ -176,5 +172,18 @@ public class ReviewsWindowController implements Initializable {
             Stage stage = (Stage) menu.getScene().getWindow();
             stage.close();
         });
+    }
+    
+    private void setOnActionHandlers(){
+
+    }
+    
+    /**
+     * Initializes the controller class.
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        setMenuOptions();
+        setOnActionHandlers();
     }
 }

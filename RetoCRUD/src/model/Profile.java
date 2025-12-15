@@ -1,7 +1,6 @@
 package model;
 
 import java.util.ArrayList;
-import static java.util.Collections.list;
 import java.util.HashMap;
 
 /**
@@ -123,7 +122,7 @@ public abstract class Profile {
     }
 
     private void defaultList() {
-        this.lists = new HashMap<String, ArrayList>();
+        this.lists = new HashMap<>();
         this.lists.put("All Games", new ArrayList<>());
     }
 
