@@ -152,6 +152,7 @@ public class ListWindowController implements Initializable {
         tcCheckBox.setCellFactory(
                 CheckBoxTableCell.forTableColumn(tcCheckBox)
         );
+        //tcCheckBox.setCellFactory();
 
         videoGames = FXCollections.observableArrayList();
         for (VideoGame game : list) {
@@ -207,7 +208,7 @@ public class ListWindowController implements Initializable {
             alert.setTitle("ERROR");
             alert.setHeaderText("[No list selected]"); // O null si no quieres encabezado
             alert.setContentText("Select a list to add the games.");
-            alert.show();
+            alert.showAndWait();
         } else {
             name = combLists.getValue();
 
@@ -218,7 +219,7 @@ public class ListWindowController implements Initializable {
                     alert.setTitle("WARNING");
                     alert.setHeaderText("Error when adding games to the list " + name + "."); // O null si no quieres encabezado
                     alert.setContentText("The game " + game.getV_name() + " it has not been added to the list " + name + " because it is already there.");
-                    alert.show();
+                    alert.showAndWait();
                 } else {
                     showList(selectedList);
                     // Actualizar
@@ -238,7 +239,7 @@ public class ListWindowController implements Initializable {
                 alert.setTitle("ERROR");
                 alert.setHeaderText("Error when removing " + game.getV_name() + " from the list " + name + "."); // O null si no quieres encabezado
                 alert.setContentText("The game " + game.getV_name() + " already has has been deleted from the list " + name + ".");
-                alert.show();
+                alert.showAndWait();
             } else {
                 // Actualizar
             }
@@ -338,7 +339,8 @@ public class ListWindowController implements Initializable {
             Stage stage = (Stage) menu.getScene().getWindow();
             stage.close();
         });
-
+        
+        
         Button button = new Button("+ New List");
         buttonStyle(button);
         button.setOnAction(e
