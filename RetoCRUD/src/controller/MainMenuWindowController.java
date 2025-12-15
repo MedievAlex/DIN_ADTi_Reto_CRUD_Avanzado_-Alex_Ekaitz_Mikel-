@@ -92,11 +92,7 @@ public class MainMenuWindowController implements Initializable {
         return cont;
     }
 
-    /**
-     * Initializes the controller class.
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    private void setMenuOptions() {
         miProfile.setOnAction((event) -> {
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MenuWindow.fxml"));
@@ -124,7 +120,7 @@ public class MainMenuWindowController implements Initializable {
                 controller.ListWindowController controllerWindow = fxmlLoader.getController();
                 controllerWindow.setUsuario(profile);
                 controllerWindow.setCont(cont);
-                
+
                 controllerWindow.test();
                 controllerWindow.loadLists();
                 controllerWindow.setComboBox();
@@ -134,7 +130,7 @@ public class MainMenuWindowController implements Initializable {
                 stage.setTitle("LISTS");
                 stage.setResizable(false);
                 stage.show();
-                
+
                 Stage currentStage = (Stage) menu.getScene().getWindow();
                 currentStage.close();
             } catch (IOException ex) {
@@ -156,7 +152,7 @@ public class MainMenuWindowController implements Initializable {
                 stage.setTitle("REVIEWS");
                 stage.setResizable(false);
                 stage.show();
-                
+
                 Stage currentStage = (Stage) menu.getScene().getWindow();
                 currentStage.close();
             } catch (IOException ex) {
@@ -168,5 +164,18 @@ public class MainMenuWindowController implements Initializable {
             Stage stage = (Stage) menu.getScene().getWindow();
             stage.close();
         });
+    }
+
+    private void setOnActionHandlers() {
+
+    }
+
+    /**
+     * Initializes the controller class.
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        setMenuOptions();
+        setOnActionHandlers();
     }
 }
