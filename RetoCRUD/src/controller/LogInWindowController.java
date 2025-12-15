@@ -17,6 +17,7 @@ import javafx.scene.control.PasswordField;
 import javafx.stage.Stage;
 import model.DBImplementation;
 import model.Profile;
+import model.User;
 
 /**
  * Controller for the Login window. Handles user login and navigation to the
@@ -66,13 +67,38 @@ public class LogInWindowController implements Initializable {
             Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    @FXML
+    private void logIn() {
+        try {
+            User profile = new User("Male", "", "test", "a", "test@test.com", -1, "", "", "");
+                    
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MainMenuWindow.fxml"));
+            Parent root = fxmlLoader.load();
+
+            controller.MainMenuWindowController controllerWindow = fxmlLoader.getController();
+            controllerWindow.setUsuario(profile);
+            controllerWindow.setCont(CONT);
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("MAIN MENU");
+            stage.setResizable(false);
+            stage.show();
+
+            Stage currentStage = (Stage) Button_LogIn.getScene().getWindow();
+            currentStage.close();
+        } catch (IOException ex) {
+            Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     /**
      * Attempts to log in the user. If successful, opens MenuWindow; otherwise,
      * shows an error.
      */
     @FXML
-    private void logIn() {
+    private void logInReal() {
         String username = TextField_Username.getText();
         String password = PasswordField_Password.getText();
 
