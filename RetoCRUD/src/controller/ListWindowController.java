@@ -247,7 +247,8 @@ public class ListWindowController implements Initializable {
                 alert.setContentText("The game " + game.getV_name() + " already has has been deleted from the list " + selectedList + ".");
                 alert.showAndWait();
             } else {
-                // Actualizar
+                Button button = new Button(selectedList);
+                showList(button);
             }
         }
     }
