@@ -152,8 +152,11 @@ public class ListWindowController implements Initializable {
         tcCheckBox.setCellFactory(
                 CheckBoxTableCell.forTableColumn(tcCheckBox)
         );
-        //tcCheckBox.setCellFactory();
-
+        /*
+        tcCheckBox.setOnEditColumn(new EventHandler<TableColumn.CellEditEvent<VideoGame, Boolean> ){
+        VideoGame videoGame = event.getTableView().getItems().grt(event.getTablePosition().getRow());
+        };
+        */
         videoGames = FXCollections.observableArrayList();
         for (VideoGame game : list) {
             videoGames.add(game);

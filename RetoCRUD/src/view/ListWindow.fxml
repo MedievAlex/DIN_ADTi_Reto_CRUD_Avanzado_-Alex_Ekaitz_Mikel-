@@ -40,32 +40,28 @@
             </Text>
          </children>
       </AnchorPane>
-      <AnchorPane layoutY="139.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+      <AnchorPane layoutY="139.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="510.0" prefWidth="766.0">
          <children>
+            <TableView fx:id="tableLists" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="90.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="160.0" AnchorPane.topAnchor="50.0">
+              <columns>
+                <TableColumn fx:id="tcGame" editable="false" minWidth="-1.0" prefWidth="150.0" text="GAME" />
+                <TableColumn fx:id="tcRelease" editable="false" minWidth="-1.0" prefWidth="100.0" text="RELEASE" />
+                  <TableColumn fx:id="tcPlatform" editable="false" minWidth="-1.0" prefWidth="150.0" text="PLATFORM" />
+                  <TableColumn fx:id="tcPegi" editable="false" minWidth="-1.0" prefWidth="108.0" text="PEGI" />
+                  <TableColumn fx:id="tcCheckBox" prefWidth="66.39999389648438" />
+              </columns>
+            </TableView>
             <Text fx:id="listName" strokeType="OUTSIDE" strokeWidth="0.0" text="listname" textAlignment="CENTER" wrappingWidth="765.6" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
                <font>
                   <Font size="30.0" />
                </font>
             </Text>
-            <ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="90.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="158.0" AnchorPane.topAnchor="50.0">
-               <content>
-                  <TableView fx:id="tableLists" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
-                    <columns>
-                      <TableColumn fx:id="tcGame" editable="false" minWidth="-1.0" prefWidth="150.0" text="GAME" />
-                      <TableColumn fx:id="tcRelease" editable="false" minWidth="-1.0" prefWidth="100.0" text="RELEASE" />
-                        <TableColumn fx:id="tcPlatform" editable="false" minWidth="-1.0" prefWidth="150.0" text="PLATFORM" />
-                        <TableColumn fx:id="tcPegi" editable="false" minWidth="-1.0" prefWidth="108.0" text="PEGI" />
-                        <TableColumn fx:id="tcCheckBox" prefWidth="60.0" />
-                    </columns>
-                  </TableView>
-               </content>
-            </ScrollPane>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Lists" textAlignment="CENTER" underline="true" wrappingWidth="115.20000000000005" AnchorPane.rightAnchor="31.0" AnchorPane.topAnchor="50.0">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Lists" textAlignment="CENTER" underline="true" wrappingWidth="125.60000000000014" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="50.0">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </Text>
-            <ScrollPane fx:id="spLists" prefHeight="374.0" prefWidth="125.0" AnchorPane.bottomAnchor="91.0" AnchorPane.rightAnchor="20.0">
+            <ScrollPane fx:id="spLists" prefHeight="374.0" prefWidth="125.0" AnchorPane.bottomAnchor="91.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="90.0">
                <content>
                   <VBox fx:id="vbLists" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0" />
                </content>
