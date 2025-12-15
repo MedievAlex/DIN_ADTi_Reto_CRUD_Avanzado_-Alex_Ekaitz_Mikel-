@@ -186,6 +186,7 @@ public class ListWindowController implements Initializable {
 
         vbLists.getChildren().add(button);
         litsButtons.add(button);
+        setComboBox();
     }
 
     public void setComboBox() {
