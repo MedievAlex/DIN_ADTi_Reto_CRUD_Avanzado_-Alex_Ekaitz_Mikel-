@@ -5,6 +5,7 @@
  */
 package controller;
 
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -17,6 +18,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -47,7 +50,7 @@ import model.VideoGame;
  *
  * @author 2dami
  */
-public class ListWindowController implements Initializable {
+public class ListWindowController implements EventHandler, Initializable {
 
     @FXML
     private SplitMenuButton menu;
@@ -153,9 +156,9 @@ public class ListWindowController implements Initializable {
                 CheckBoxTableCell.forTableColumn(tcCheckBox)
         );
         /*
-        tcCheckBox.setOnEditColumn(new EventHandler<TableColumn.CellEditEvent<VideoGame, Boolean> ){
-        VideoGame videoGame = event.getTableView().getItems().grt(event.getTablePosition().getRow());
-        };
+        tcCheckBox.setOnEditColumn(new EventHandler<TableColumn.CellEditEvent<VideoGame, Boolean>(){
+            VideoGame videoGame = event.getTableView().getItems().grt(event.getTablePosition().getRow());
+        >};
         */
         videoGames = FXCollections.observableArrayList();
         for (VideoGame game : list) {
@@ -272,6 +275,13 @@ public class ListWindowController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        tableLists.setOnKeyPresed(new EventHandler<KeyEvent>(){
+            @Override
+            public void handle(KeyEvent event) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        });
+        
         miProfile.setOnAction((event) -> {
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MenuWindow.fxml"));
@@ -362,5 +372,5 @@ public class ListWindowController implements Initializable {
                 -> {
             addToList();
         });  
-    }
+    } 
 }

@@ -42,20 +42,20 @@
       </AnchorPane>
       <AnchorPane layoutY="139.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="510.0" prefWidth="766.0">
          <children>
+            <Text fx:id="listName" strokeType="OUTSIDE" strokeWidth="0.0" text="listname" textAlignment="CENTER" wrappingWidth="765.6" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
+               <font>
+                  <Font size="30.0" />
+               </font>
+            </Text>
             <TableView fx:id="tableLists" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="90.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="160.0" AnchorPane.topAnchor="50.0">
               <columns>
                 <TableColumn fx:id="tcGame" editable="false" minWidth="-1.0" prefWidth="150.0" text="GAME" />
                 <TableColumn fx:id="tcRelease" editable="false" minWidth="-1.0" prefWidth="100.0" text="RELEASE" />
                   <TableColumn fx:id="tcPlatform" editable="false" minWidth="-1.0" prefWidth="150.0" text="PLATFORM" />
                   <TableColumn fx:id="tcPegi" editable="false" minWidth="-1.0" prefWidth="108.0" text="PEGI" />
-                  <TableColumn fx:id="tcCheckBox" prefWidth="66.39999389648438" />
+                  <TableColumn fx:id="tcCheckBox" prefWidth="75.99993896484375" />
               </columns>
             </TableView>
-            <Text fx:id="listName" strokeType="OUTSIDE" strokeWidth="0.0" text="listname" textAlignment="CENTER" wrappingWidth="765.6" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
-               <font>
-                  <Font size="30.0" />
-               </font>
-            </Text>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Lists" textAlignment="CENTER" underline="true" wrappingWidth="125.60000000000014" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="50.0">
                <font>
                   <Font name="System Bold" size="15.0" />
