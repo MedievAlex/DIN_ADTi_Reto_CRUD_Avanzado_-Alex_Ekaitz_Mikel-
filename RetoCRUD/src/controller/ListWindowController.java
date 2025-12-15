@@ -132,23 +132,23 @@ public class ListWindowController implements Initializable {
         showList(button);
     }
 
-    private void selectedButton(Button button) {  
+    private void selectedButton(Button button) {
         for (Button listButton : litsButtons) {
-            if(button.getText().equals(listButton.getText())){
+            if (button.getText().equals(listButton.getText())) {
                 listButton.setStyle("-fx-background-radius: 30px; -fx-background-color: #D1DFF0;");
-            }else{
+            } else {
                 listButton.setStyle("-fx-background-radius: 30px; -fx-background-color: #A7C4E5;");
-            } 
+            }
         }
     }
-    
+
     public void showList(Button button) {
-        String buttonListName = button.getText();
-        
+        selectedList = button.getText();
+
         selectedButton(button);
-        
-        ArrayList<VideoGame> list = profile.getLists().get(buttonListName);
-        listName.setText(buttonListName);
+
+        ArrayList<VideoGame> list = profile.getLists().get(selectedList);
+        listName.setText(selectedList);
 
         tcGame.setCellValueFactory(new PropertyValueFactory<VideoGame, String>("v_name"));
         tcRelease.setCellValueFactory(new PropertyValueFactory<VideoGame, Date>("v_release"));
@@ -162,7 +162,6 @@ public class ListWindowController implements Initializable {
             VideoGame videoGame = event.getTableView().getItems().grt(event.getTablePosition().getRow());
         >};
          */
-        
         videoGames = FXCollections.observableArrayList();
         for (VideoGame game : list) {
             videoGames.add(game);
@@ -237,16 +236,15 @@ public class ListWindowController implements Initializable {
     }
 
     public void removeFromList() {
-        String name = selectedList;
         VideoGame game;
 
         if (tableLists.getSelectionModel().getSelectedItem() != null) {
             game = tableLists.getSelectionModel().getSelectedItem();
-            if (!profile.removeGame(name, game)) {
+            if (!profile.removeGame(selectedList, game)) {
                 Alert alert = new Alert(AlertType.WARNING);
                 alert.setTitle("ERROR");
-                alert.setHeaderText("Error when removing " + game.getV_name() + " from the list " + name + "."); // O null si no quieres encabezado
-                alert.setContentText("The game " + game.getV_name() + " already has has been deleted from the list " + name + ".");
+                alert.setHeaderText("Error when removing " + game.getV_name() + " from the list " + selectedList + "."); // O null si no quieres encabezado
+                alert.setContentText("The game " + game.getV_name() + " already has has been deleted from the list " + selectedList + ".");
                 alert.showAndWait();
             } else {
                 // Actualizar
