@@ -5,7 +5,6 @@
  */
 package controller;
 
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -18,8 +17,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -28,7 +25,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
@@ -50,7 +46,7 @@ import model.VideoGame;
  *
  * @author 2dami
  */
-public class ListWindowController implements EventHandler, Initializable {
+public class ListWindowController implements Initializable {
 
     @FXML
     private SplitMenuButton menu;
@@ -275,13 +271,6 @@ public class ListWindowController implements EventHandler, Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        tableLists.setOnKeyPresed(new EventHandler<KeyEvent>(){
-            @Override
-            public void handle(KeyEvent event) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-        });
-        
         miProfile.setOnAction((event) -> {
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MenuWindow.fxml"));

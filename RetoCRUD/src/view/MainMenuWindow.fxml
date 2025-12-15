@@ -90,11 +90,11 @@
             </HBox>
             <TableView fx:id="tableReview" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="150.0">
               <columns>
-                <TableColumn fx:id="tcGame" minWidth="-1.0" prefWidth="232.79999160766602" text="GAME" />
-                <TableColumn fx:id="tcRelease" minWidth="-1.0" prefWidth="116.79997253417969" text="RELEASE" />
-                  <TableColumn fx:id="tcPlatform" minWidth="-1.0" prefWidth="177.60003662109375" text="PLATFORM" />
-                  <TableColumn fx:id="tcPegi" minWidth="-1.0" prefWidth="138.39996337890625" text="PEGI" />
-                  <TableColumn fx:id="tcCheckBox" prefWidth="56.800048828125" />
+                <TableColumn fx:id="tcGame" minWidth="-1.0" prefWidth="232.79999160766602" resizable="false" text="GAME" />
+                <TableColumn fx:id="tcRelease" minWidth="-1.0" prefWidth="116.79997253417969" resizable="false" text="RELEASE" />
+                  <TableColumn fx:id="tcPlatform" minWidth="-1.0" prefWidth="177.60003662109375" resizable="false" text="PLATFORM" />
+                  <TableColumn fx:id="tcPegi" minWidth="-1.0" prefWidth="138.39996337890625" resizable="false" text="PEGI" />
+                  <TableColumn fx:id="tcCheckBox" prefWidth="56.800048828125" resizable="false" />
               </columns>
             </TableView>
          </children>
