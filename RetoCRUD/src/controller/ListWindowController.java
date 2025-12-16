@@ -26,15 +26,16 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Pegi;
 import model.Platform;
@@ -49,7 +50,7 @@ import model.VideoGame;
 public class ListWindowController implements Initializable {
 
     @FXML
-    private SplitMenuButton menu;
+    private MenuButton menu;
     @FXML
     private MenuItem miProfile;
     @FXML
@@ -276,7 +277,8 @@ public class ListWindowController implements Initializable {
                 stage.setScene(new Scene(root));
                 stage.setTitle("PROFILE MENU");
                 stage.setResizable(false);
-                stage.show();
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.showAndWait();
             } catch (IOException ex) {
                 Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
             }

@@ -12,11 +12,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Profile;
 
@@ -28,7 +29,7 @@ import model.Profile;
 public class MainMenuWindowController implements Initializable {
 
     @FXML
-    private SplitMenuButton menu;
+    private MenuButton menu;
     @FXML
     private MenuItem miProfile;
     @FXML
@@ -106,7 +107,8 @@ public class MainMenuWindowController implements Initializable {
                 stage.setScene(new Scene(root));
                 stage.setTitle("PROFILE MENU");
                 stage.setResizable(false);
-                stage.show();
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.showAndWait();
             } catch (IOException ex) {
                 Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
             }
