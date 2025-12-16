@@ -1,7 +1,6 @@
 package model;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 /**
  * Abstract base class representing a user profile in the system. This class
