@@ -6,6 +6,7 @@
 package controller;
 
 import java.io.IOException;
+import static java.lang.Integer.parseInt;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -88,7 +89,6 @@ public class ListWindowController implements Initializable {
     private Controller cont;
 
     private ObservableList<VideoGame> videoGames;
-    private int number;
     private String selectedList;
     private ArrayList<Button> litsButtons;
 
@@ -143,7 +143,7 @@ public class ListWindowController implements Initializable {
         }
     }
 
-    public void showList(Button button) {
+    private void showList(Button button) {
         selectedList = button.getText();
 
         selectedButton(button);
@@ -170,9 +170,27 @@ public class ListWindowController implements Initializable {
         tableLists.setItems(videoGames);
     }
 
-    public void newList() {
-        number++;
-        String buttonName = "New List " + number;
+    private int getListNumber() {
+        HashMap<String, ArrayList> lists = profile.getLists();
+        String name, prevNumber;
+        int newNumber = 1;
+
+        for (Map.Entry<String, ArrayList> entry : lists.entrySet()) {
+            name = entry.getKey();
+
+            if ("New List".equals(name.substring(0, 8))) {
+                prevNumber = name.substring(9, name.length());
+
+                if (newNumber <= Integer.parseInt(prevNumber)) {
+                    newNumber = Integer.parseInt(prevNumber) + 1;
+                }
+            }
+        }
+        return newNumber;
+    }
+
+    private void newList() {
+        String buttonName = "New List " + getListNumber();
 
         profile.newList(buttonName, new ArrayList<VideoGame>());
 
@@ -207,7 +225,7 @@ public class ListWindowController implements Initializable {
         // Save in a list to add them when a checkbox is true
     }
 
-    public void addToList() {
+    private void addToList() {
         String name;
         VideoGame game;
 
@@ -236,7 +254,7 @@ public class ListWindowController implements Initializable {
         }
     }
 
-    public void removeFromList() {
+    private void removeFromList() {
         VideoGame game;
 
         if (tableLists.getSelectionModel().getSelectedItem() != null) {
