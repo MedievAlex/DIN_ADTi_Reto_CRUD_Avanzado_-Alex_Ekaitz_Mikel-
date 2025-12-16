@@ -127,14 +127,10 @@ public class MainMenuWindowController implements Initializable {
                 controllerWindow.loadLists();
                 controllerWindow.setComboBox();
 
-                Stage stage = new Stage();
+                Stage stage = (Stage) menu.getScene().getWindow();
                 stage.setScene(new Scene(root));
                 stage.setTitle("LISTS");
                 stage.setResizable(false);
-                stage.show();
-
-                Stage currentStage = (Stage) menu.getScene().getWindow();
-                currentStage.close();
             } catch (IOException ex) {
                 Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -149,14 +145,10 @@ public class MainMenuWindowController implements Initializable {
                 controllerWindow.setUsuario(profile);
                 controllerWindow.setCont(cont);
 
-                Stage stage = new Stage();
+               Stage stage = (Stage) menu.getScene().getWindow();
                 stage.setScene(new Scene(root));
                 stage.setTitle("REVIEWS");
                 stage.setResizable(false);
-                stage.show();
-
-                Stage currentStage = (Stage) menu.getScene().getWindow();
-                currentStage.close();
             } catch (IOException ex) {
                 Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
             }
