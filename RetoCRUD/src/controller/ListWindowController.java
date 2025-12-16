@@ -26,15 +26,16 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Pegi;
 import model.Platform;
@@ -49,7 +50,7 @@ import model.VideoGame;
 public class ListWindowController implements Initializable {
 
     @FXML
-    private SplitMenuButton menu;
+    private MenuButton menu;
     @FXML
     private MenuItem miProfile;
     @FXML
@@ -89,6 +90,7 @@ public class ListWindowController implements Initializable {
     private ObservableList<VideoGame> videoGames;
     private int number;
     private String selectedList;
+    private ArrayList<Button> litsButtons;
 
     public void setUsuario(Profile profile) {
         this.profile = profile;
@@ -107,16 +109,8 @@ public class ListWindowController implements Initializable {
         button.setMinWidth(vbLists.getPrefWidth());
         button.setMaxWidth(vbLists.getPrefWidth());
         button.setPrefWidth(vbLists.getPrefWidth());
-        button.setStyle("-fx-background-radius: 30px;");
+        button.setStyle("-fx-background-radius: 30px; -fx-background-color: #A7C4E5;");
         button.wrapTextProperty().setValue(true);
-    }
-
-    private void selectedButton(Button button) {
-        button.setStyle("-fx-background-color: D1DFF0;");
-    }
-
-    private void notSelectedButton(Button button) {
-        button.setStyle("-fx-background-color: A7C4E5;");
     }
 
     public void loadLists() {
@@ -128,29 +122,42 @@ public class ListWindowController implements Initializable {
             buttonStyle(button);
             button.setOnAction(e
                     -> {
-                String name = button.getText();
-                selectedList = name;
-                showList(name);
+                showList(button);
             });
 
             vbLists.getChildren().add(button);
+            litsButtons.add(button);
         }
 
-        selectedList = "All Games";
-        showList(selectedList);
+        Button button = new Button("All Games");
+        showList(button);
     }
 
-    public void showList(String name) {
-        ArrayList<VideoGame> list = profile.getLists().get(name);
-        listName.setText(name);
+    private void selectedButton(Button button) {
+        for (Button listButton : litsButtons) {
+            if (button.getText().equals(listButton.getText())) {
+                listButton.setStyle("-fx-background-radius: 30px; -fx-background-color: #D1DFF0;");
+            } else {
+                listButton.setStyle("-fx-background-radius: 30px; -fx-background-color: #A7C4E5;");
+            }
+        }
+    }
+
+    public void showList(Button button) {
+        selectedList = button.getText();
+
+        selectedButton(button);
+
+        ArrayList<VideoGame> list = profile.getLists().get(selectedList);
+        listName.setText(selectedList);
 
         tcGame.setCellValueFactory(new PropertyValueFactory<VideoGame, String>("v_name"));
         tcRelease.setCellValueFactory(new PropertyValueFactory<VideoGame, Date>("v_release"));
         tcPlatform.setCellValueFactory(new PropertyValueFactory<VideoGame, Platform>("v_platform"));
         tcPegi.setCellValueFactory(new PropertyValueFactory<VideoGame, Pegi>("v_pegi"));
-        tcCheckBox.setCellFactory(
-                CheckBoxTableCell.forTableColumn(tcCheckBox)
-        );
+        tcCheckBox.setCellValueFactory(new PropertyValueFactory<VideoGame, Boolean>("checked"));
+        tcCheckBox.setCellFactory(CheckBoxTableCell.forTableColumn(tcCheckBox));
+
         /*
         tcCheckBox.setOnEditColumn(new EventHandler<TableColumn.CellEditEvent<VideoGame, Boolean>(){
             VideoGame videoGame = event.getTableView().getItems().grt(event.getTablePosition().getRow());
@@ -174,12 +181,12 @@ public class ListWindowController implements Initializable {
 
         button.setOnAction(e
                 -> {
-            String name = button.getText();
-            selectedList = name;
-            showList(name);
+            showList(button);
         });
 
         vbLists.getChildren().add(button);
+        litsButtons.add(button);
+        setComboBox();
     }
 
     public void setComboBox() {
@@ -223,7 +230,6 @@ public class ListWindowController implements Initializable {
                     alert.setContentText("The game " + game.getV_name() + " it has not been added to the list " + name + " because it is already there.");
                     alert.showAndWait();
                 } else {
-                    showList(selectedList);
                     // Actualizar
                 }
             }
@@ -231,39 +237,30 @@ public class ListWindowController implements Initializable {
     }
 
     public void removeFromList() {
-        String name = selectedList;
         VideoGame game;
 
         if (tableLists.getSelectionModel().getSelectedItem() != null) {
             game = tableLists.getSelectionModel().getSelectedItem();
-            if (!profile.removeGame(name, game)) {
-                Alert alert = new Alert(AlertType.WARNING);
-                alert.setTitle("ERROR");
-                alert.setHeaderText("Error when removing " + game.getV_name() + " from the list " + name + "."); // O null si no quieres encabezado
-                alert.setContentText("The game " + game.getV_name() + " already has has been deleted from the list " + name + ".");
-                alert.showAndWait();
+
+            if ("All Games".equals(selectedList)) {
+                HashMap<String, ArrayList> lists = profile.getLists();
+                for (Map.Entry<String, ArrayList> entry : lists.entrySet()) {
+                    profile.removeGame(entry.getKey(), game);
+                }
             } else {
-                // Actualizar
+                if (!profile.removeGame(selectedList, game)) {
+                    Alert alert = new Alert(AlertType.WARNING);
+                    alert.setTitle("ERROR");
+                    alert.setHeaderText("Error when removing " + game.getV_name() + " from the list " + selectedList + "."); // O null si no quieres encabezado
+                    alert.setContentText("The game " + game.getV_name() + " already has has been deleted from the list " + selectedList + ".");
+                    alert.showAndWait();
+                } else {
+
+                }
             }
+            Button button = new Button(selectedList);
+            showList(button);
         }
-    }
-
-    public void test() {
-        ArrayList<VideoGame> games = new ArrayList<VideoGame>();
-        games.add(new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
-        games.add(new VideoGame(3, "Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
-        profile.newList("Nintendo Switch", games);
-
-        games = new ArrayList<VideoGame>();
-        games.add(new VideoGame(4, "Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
-        games.add(new VideoGame(2, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
-        profile.newList("PlayStation", games);
-
-        profile.addGame("All Games", new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
-        profile.addGame("All Games", new VideoGame(2, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
-        profile.addGame("All Games", new VideoGame(3, "Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
-        profile.addGame("All Games", new VideoGame(4, "Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
-        profile.addGame("All Games", new VideoGame(1, "Call of Duty: Black Ops II", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
     }
 
     private void setMenuOptions() {
@@ -280,7 +277,8 @@ public class ListWindowController implements Initializable {
                 stage.setScene(new Scene(root));
                 stage.setTitle("PROFILE MENU");
                 stage.setResizable(false);
-                stage.show();
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.showAndWait();
             } catch (IOException ex) {
                 Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -335,15 +333,22 @@ public class ListWindowController implements Initializable {
             stage.close();
         });
     }
-    
-    private void setOnActionHandlers(){
+
+    private void setOnActionHandlers() {
         Button button = new Button("+ New List");
         buttonStyle(button);
+        button.setStyle("-fx-background-radius: 30px; -fx-background-color: #75E773;");
         button.setOnAction(e
                 -> {
             newList();
         });
         vbLists.getChildren().add(button);
+        litsButtons = new ArrayList<>();
+
+        tcCheckBox.setOnEditCommit(event -> {
+            //MiItem item = event.getRowValue();
+            //System.out.println("Estado cambiado para " + item.getNombre() + ": " + item.isActivo());
+        });
 
         bttnRemove.setOnAction(e
                 -> {
@@ -363,5 +368,25 @@ public class ListWindowController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         setMenuOptions();
         setOnActionHandlers();
+    }
+
+    public void test() {
+        ArrayList<VideoGame> games = new ArrayList<VideoGame>();
+        VideoGame game = new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3);
+        game.setChecked(true);
+        games.add(game);
+        games.add(new VideoGame(3, "Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
+        profile.newList("Nintendo Switch", games);
+
+        games = new ArrayList<VideoGame>();
+        games.add(new VideoGame(4, "Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
+        games.add(new VideoGame(2, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
+        profile.newList("PlayStation", games);
+
+        profile.addGame("All Games", new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
+        profile.addGame("All Games", new VideoGame(2, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
+        profile.addGame("All Games", new VideoGame(3, "Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
+        profile.addGame("All Games", new VideoGame(4, "Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
+        profile.addGame("All Games", new VideoGame(1, "Call of Duty: Black Ops II", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
     }
 }

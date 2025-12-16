@@ -18,12 +18,6 @@
    <children>
       <AnchorPane maxWidth="1.7976931348623157E308" style="-fx-background-color: A7C4E5;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="MAIN MENU" textAlignment="CENTER" wrappingWidth="761.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
-               <font>
-                  <Font name="System Bold" size="30.0" />
-               </font>
-            </Text>
-            <MenuButton fx:id="menu" layoutX="576.0" layoutY="55.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="170.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
                <graphic>
                   <ImageView>
                      <image>
@@ -38,6 +32,11 @@
                   <MenuItem fx:id="miLogOut" mnemonicParsing="false" text="LOG OUT" />
                </items>
             </MenuButton>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="MAIN MENU" textAlignment="CENTER" wrappingWidth="761.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+               <font>
+                  <Font name="System Bold" size="30.0" />
+               </font>
+            </Text>
          </children>
       </AnchorPane>
       <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="508.0" prefWidth="761.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
