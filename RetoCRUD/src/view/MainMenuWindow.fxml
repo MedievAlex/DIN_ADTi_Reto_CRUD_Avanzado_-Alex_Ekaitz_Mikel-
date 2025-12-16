@@ -14,11 +14,10 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" prefHeight="650.0" prefWidth="760.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainMenuWindowController">
+<AnchorPane id="AnchorPane" prefHeight="650.0" prefWidth="760.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainMenuWindowController">
    <children>
       <AnchorPane maxWidth="1.7976931348623157E308" style="-fx-background-color: A7C4E5;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <MenuButton fx:id="menu" layoutX="91.0" layoutY="46.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="168.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
                <graphic>
                   <ImageView>
                      <image>
