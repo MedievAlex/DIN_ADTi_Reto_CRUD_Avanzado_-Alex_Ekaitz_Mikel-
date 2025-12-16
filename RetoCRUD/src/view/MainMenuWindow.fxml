@@ -15,89 +15,90 @@
 <?import javafx.scene.text.Text?>
 
 <AnchorPane id="AnchorPane" prefHeight="650.0" prefWidth="760.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainMenuWindowController">
-   <children>
-      <AnchorPane maxWidth="1.7976931348623157E308" style="-fx-background-color: A7C4E5;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-               <graphic>
-                  <ImageView>
-                     <image>
-                        <Image url="@../images/person_23dp_789DE5_FILL0_wght400_GRAD0_opsz24.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <items>
-                  <MenuItem fx:id="miProfile" mnemonicParsing="false" text="PROFILE" />
-                  <MenuItem fx:id="miLists" mnemonicParsing="false" text="LISTS" />
-                  <MenuItem fx:id="miReviews" mnemonicParsing="false" text="REVIEWS" />
-                  <MenuItem fx:id="miLogOut" mnemonicParsing="false" text="LOG OUT" />
-               </items>
-            </MenuButton>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="MAIN MENU" textAlignment="CENTER" wrappingWidth="761.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
-               <font>
-                  <Font name="System Bold" size="30.0" />
-               </font>
-            </Text>
-         </children>
-      </AnchorPane>
-      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="508.0" prefWidth="761.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-         <children>
-            <TextField fx:id="searchBar" layoutY="11.2" prefHeight="26.0" prefWidth="617.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="11.0" />
-            <Button fx:id="bttnSearch" layoutX="635.0" layoutY="10.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" text="Search" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="10.0" />
-            <HBox alignment="CENTER" prefHeight="86.0" prefWidth="696.0" spacing="40.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="50.0">
-               <children>
-                  <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
-                     <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="PLATFORM" textAlignment="CENTER" underline="true" wrappingWidth="84.85589599609375" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <font>
-                              <Font name="System Bold" size="12.0" />
-                           </font>
-                        </Text>
-                        <CheckBox fx:id="chkNintendo" mnemonicParsing="false" text="Nintendo" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="30.0" />
-                        <CheckBox fx:id="chkPC" mnemonicParsing="false" text="PC" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="60.0" />
-                        <CheckBox fx:id="chkPlayStation" mnemonicParsing="false" text="PlayStation" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="30.0" />
-                        <CheckBox fx:id="chkXbox" mnemonicParsing="false" text="Xbox" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
-                     </children>
-                  </AnchorPane>
-                  <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0">
-                     <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="PEGI" textAlignment="CENTER" underline="true" wrappingWidth="84.85589599609375" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <font>
-                              <Font name="System Bold" size="12.0" />
-                           </font>
-                        </Text>
-                        <CheckBox fx:id="chkPegi3" mnemonicParsing="false" text="3" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="30.0" />
-                        <CheckBox fx:id="chkPegi7" mnemonicParsing="false" text="7" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
-                        <CheckBox fx:id="chkPegi12" mnemonicParsing="false" text="12" AnchorPane.leftAnchor="60.0" AnchorPane.topAnchor="30.0" />
-                        <CheckBox fx:id="chkPegi16" mnemonicParsing="false" text="16" AnchorPane.leftAnchor="60.0" AnchorPane.topAnchor="60.0" />
-                        <CheckBox fx:id="chkPegi18" mnemonicParsing="false" text="18" AnchorPane.leftAnchor="110.0" AnchorPane.topAnchor="30.0" />
-                     </children>
-                  </AnchorPane>
-                  <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0">
-                     <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="DATE" textAlignment="CENTER" underline="true" wrappingWidth="84.85589599609375" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <font>
-                              <Font name="System Bold" size="12.0" />
-                           </font>
-                        </Text>
-                        <TextField fx:id="txtFromDate" prefHeight="25.0" prefWidth="102.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="30.0" />
-                        <TextField fx:id="txtToDate" prefHeight="25.0" prefWidth="102.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="60.0" />
-                        <Text layoutX="10.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="From:" wrappingWidth="84.85589599609375" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="35.0" />
-                        <Text layoutX="10.0" layoutY="77.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To:" wrappingWidth="84.85589599609375" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="65.0" />
-                     </children>
-                  </AnchorPane>
-               </children>
-            </HBox>
-            <TableView fx:id="tableReview" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="150.0">
-              <columns>
-                <TableColumn fx:id="tcGame" minWidth="-1.0" prefWidth="232.79999160766602" resizable="false" text="GAME" />
-                <TableColumn fx:id="tcRelease" minWidth="-1.0" prefWidth="116.79997253417969" resizable="false" text="RELEASE" />
-                  <TableColumn fx:id="tcPlatform" minWidth="-1.0" prefWidth="177.60003662109375" resizable="false" text="PLATFORM" />
-                  <TableColumn fx:id="tcPegi" minWidth="-1.0" prefWidth="138.39996337890625" resizable="false" text="PEGI" />
-                  <TableColumn fx:id="tcCheckBox" prefWidth="56.800048828125" resizable="false" />
-              </columns>
-            </TableView>
-         </children>
-      </AnchorPane>
-   </children>
+    <children>
+        <AnchorPane maxWidth="1.7976931348623157E308" style="-fx-background-color: A7C4E5;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <MenuButton fx:id="menu" layoutX="91.0" layoutY="46.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="168.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+                    <graphic>
+                        <ImageView>
+                            <image>
+                                <Image url="@../images/person_23dp_789DE5_FILL0_wght400_GRAD0_opsz24.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                    <items>
+                        <MenuItem fx:id="miProfile" mnemonicParsing="false" text="PROFILE" />
+                        <MenuItem fx:id="miLists" mnemonicParsing="false" text="LISTS" />
+                        <MenuItem fx:id="miReviews" mnemonicParsing="false" text="REVIEWS" />
+                        <MenuItem fx:id="miLogOut" mnemonicParsing="false" text="LOG OUT" />
+                    </items>
+                </MenuButton>
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="MAIN MENU" textAlignment="CENTER" wrappingWidth="761.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+                    <font>
+                        <Font name="System Bold" size="30.0" />
+                    </font>
+                </Text>
+            </children>
+        </AnchorPane>
+        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="508.0" prefWidth="761.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <children>
+                <TextField fx:id="searchBar" layoutY="11.2" prefHeight="26.0" prefWidth="617.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="11.0" />
+                <Button fx:id="bttnSearch" layoutX="635.0" layoutY="10.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" text="Search" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="10.0" />
+                <HBox alignment="CENTER" prefHeight="86.0" prefWidth="696.0" spacing="40.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="50.0">
+                    <children>
+                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                            <children>
+                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="PLATFORM" textAlignment="CENTER" underline="true" wrappingWidth="84.85589599609375" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <font>
+                                        <Font name="System Bold" size="12.0" />
+                                    </font>
+                                </Text>
+                                <CheckBox fx:id="chkNintendo" mnemonicParsing="false" text="Nintendo" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="30.0" />
+                                <CheckBox fx:id="chkPC" mnemonicParsing="false" text="PC" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="60.0" />
+                                <CheckBox fx:id="chkPlayStation" mnemonicParsing="false" text="PlayStation" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="30.0" />
+                                <CheckBox fx:id="chkXbox" mnemonicParsing="false" text="Xbox" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
+                            </children>
+                        </AnchorPane>
+                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0">
+                            <children>
+                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="PEGI" textAlignment="CENTER" underline="true" wrappingWidth="84.85589599609375" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <font>
+                                        <Font name="System Bold" size="12.0" />
+                                    </font>
+                                </Text>
+                                <CheckBox fx:id="chkPegi3" mnemonicParsing="false" text="3" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="30.0" />
+                                <CheckBox fx:id="chkPegi7" mnemonicParsing="false" text="7" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
+                                <CheckBox fx:id="chkPegi12" mnemonicParsing="false" text="12" AnchorPane.leftAnchor="60.0" AnchorPane.topAnchor="30.0" />
+                                <CheckBox fx:id="chkPegi16" mnemonicParsing="false" text="16" AnchorPane.leftAnchor="60.0" AnchorPane.topAnchor="60.0" />
+                                <CheckBox fx:id="chkPegi18" mnemonicParsing="false" text="18" AnchorPane.leftAnchor="110.0" AnchorPane.topAnchor="30.0" />
+                            </children>
+                        </AnchorPane>
+                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0">
+                            <children>
+                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="DATE" textAlignment="CENTER" underline="true" wrappingWidth="84.85589599609375" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <font>
+                                        <Font name="System Bold" size="12.0" />
+                                    </font>
+                                </Text>
+                                <TextField fx:id="txtFromDate" prefHeight="25.0" prefWidth="102.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="30.0" />
+                                <TextField fx:id="txtToDate" prefHeight="25.0" prefWidth="102.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="60.0" />
+                                <Text layoutX="10.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="From:" wrappingWidth="84.85589599609375" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="35.0" />
+                                <Text layoutX="10.0" layoutY="77.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To:" wrappingWidth="84.85589599609375" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="65.0" />
+                            </children>
+                        </AnchorPane>
+                    </children>
+                </HBox>
+                <TableView fx:id="tableReview" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="150.0">
+                    <columns>
+                        <TableColumn fx:id="tcGame" minWidth="-1.0" prefWidth="232.79999160766602" resizable="false" text="GAME" />
+                        <TableColumn fx:id="tcRelease" minWidth="-1.0" prefWidth="116.79997253417969" resizable="false" text="RELEASE" />
+                        <TableColumn fx:id="tcPlatform" minWidth="-1.0" prefWidth="177.60003662109375" resizable="false" text="PLATFORM" />
+                        <TableColumn fx:id="tcPegi" minWidth="-1.0" prefWidth="138.39996337890625" resizable="false" text="PEGI" />
+                        <TableColumn fx:id="tcCheckBox" prefWidth="56.800048828125" resizable="false" />
+                    </columns>
+                </TableView>
+            </children>
+        </AnchorPane>
+    </children>
 
 </AnchorPane>
