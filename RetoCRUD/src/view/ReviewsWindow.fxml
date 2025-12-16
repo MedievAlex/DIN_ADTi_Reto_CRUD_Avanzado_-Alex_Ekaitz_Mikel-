@@ -49,7 +49,7 @@
                 <TableColumn fx:id="tcGame" minWidth="-1.0" prefWidth="154.39996719360352" resizable="false" text="GAME" />
                 <TableColumn fx:id="tcRelease" minWidth="-1.0" prefWidth="103.19993591308594" resizable="false" text="RELEASE" />
                   <TableColumn fx:id="tcPlatform" minWidth="-1.0" prefWidth="111.20001220703125" resizable="false" text="PLATFORM" />
-                  <TableColumn fx:id="tcRate" minWidth="-1.0" prefWidth="69.60003662109375" resizable="false" text="RATE" />
+                  <TableColumn fx:id="tcScore" minWidth="-1.0" prefWidth="69.60003662109375" resizable="false" text="SCORE" />
                   <TableColumn fx:id="tcReview" prefWidth="285.60003662109375" resizable="false" text="REVIEW" />
               </columns>
             </TableView>
