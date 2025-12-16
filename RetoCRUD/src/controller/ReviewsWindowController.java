@@ -59,7 +59,7 @@ public class ReviewsWindowController implements Initializable {
     @FXML
     private TableColumn<?, ?> tcPlatform;
     @FXML
-    private TableColumn<?, ?> tcRate;
+    private TableColumn<?, ?> tcScore;
     @FXML
     private TableColumn<?, ?> tcReview;
     @FXML
