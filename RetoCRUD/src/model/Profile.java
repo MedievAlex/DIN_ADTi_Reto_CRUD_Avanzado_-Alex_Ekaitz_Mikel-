@@ -123,7 +123,7 @@ public abstract class Profile {
 
     private void defaultList() {
         this.lists = new HashMap<>();
-        this.lists.put("All Games", new ArrayList<>());
+        this.lists.put("My Games", new ArrayList<>());
     }
 
     public boolean newList(String name, ArrayList<VideoGame> videogames) {

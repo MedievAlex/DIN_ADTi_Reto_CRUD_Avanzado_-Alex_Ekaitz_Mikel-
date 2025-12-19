@@ -129,7 +129,7 @@ public class ListWindowController implements Initializable {
             litsButtons.add(button);
         }
 
-        Button button = new Button("All Games");
+        Button button = new Button("My Games");
         showList(button);
     }
 
@@ -212,7 +212,7 @@ public class ListWindowController implements Initializable {
         ArrayList<String> listsNames = new ArrayList<String>();
 
         for (Map.Entry<String, ArrayList> entry : hmLists.entrySet()) {
-            if (!"All Games".equals(entry.getKey())) {
+            if (!"My Games".equals(entry.getKey())) {
                 listsNames.add(entry.getKey());
             }
         }
@@ -260,7 +260,7 @@ public class ListWindowController implements Initializable {
         if (tableLists.getSelectionModel().getSelectedItem() != null) {
             game = tableLists.getSelectionModel().getSelectedItem();
 
-            if ("All Games".equals(selectedList)) {
+            if ("My Games".equals(selectedList)) {
                 HashMap<String, ArrayList> lists = profile.getLists();
                 for (Map.Entry<String, ArrayList> entry : lists.entrySet()) {
                     profile.removeGame(entry.getKey(), game);
@@ -393,10 +393,10 @@ public class ListWindowController implements Initializable {
         games.add(new VideoGame(2, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
         profile.newList("PlayStation", games);
 
-        profile.addGame("All Games", new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
-        profile.addGame("All Games", new VideoGame(2, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
-        profile.addGame("All Games", new VideoGame(3, "Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
-        profile.addGame("All Games", new VideoGame(4, "Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
-        profile.addGame("All Games", new VideoGame(1, "Call of Duty: Black Ops II", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
+        profile.addGame("My Games", new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
+        profile.addGame("My Games", new VideoGame(2, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
+        profile.addGame("My Games", new VideoGame(3, "Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
+        profile.addGame("My Games", new VideoGame(4, "Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
+        profile.addGame("My Games", new VideoGame(1, "Call of Duty: Black Ops II", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
     }
 }
