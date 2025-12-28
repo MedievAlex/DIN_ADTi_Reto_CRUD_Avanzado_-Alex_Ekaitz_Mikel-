@@ -2,9 +2,14 @@ package controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -17,9 +22,14 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import model.Pegi;
+import model.Platform;
 import model.Profile;
+import model.VideoGame;
 
 /**
  * FXML Controller class
@@ -65,20 +75,21 @@ public class MainMenuWindowController implements Initializable {
     @FXML
     private TextField txtToDate;
     @FXML
-    private TableView<?> tableReview;
+    private TableView<VideoGame> tableGames;
     @FXML
-    private TableColumn<?, ?> tcGame;
+    private TableColumn<VideoGame, String> tcGame;
     @FXML
-    private TableColumn<?, ?> tcRelease;
+    private TableColumn<VideoGame, Date> tcRelease;
     @FXML
-    private TableColumn<?, ?> tcPlatform;
+    private TableColumn<VideoGame, Platform> tcPlatform;
     @FXML
-    private TableColumn<?, ?> tcPegi;
+    private TableColumn<VideoGame, Pegi> tcPegi;
     @FXML
-    private TableColumn<?, ?> tcCheckBox;
+    private TableColumn<VideoGame, Boolean> tcCheckBox;
 
     private Profile profile;
     private Controller cont;
+    private ObservableList<VideoGame> videoGames;
 
     public void setUsuario(Profile profile) {
         this.profile = profile;
@@ -171,5 +182,27 @@ public class MainMenuWindowController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         setMenuOptions();
         setOnActionHandlers();
+        test();
+    }
+    
+    public void test() {
+        ArrayList<VideoGame> allGames = new ArrayList<>();
+
+        allGames.add(new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
+        allGames.add(new VideoGame(2, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
+        allGames.add(new VideoGame(3, "Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
+        allGames.add(new VideoGame(4, "Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
+        allGames.add(new VideoGame(5, "Call of Duty: Black Ops II", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
+
+        videoGames = FXCollections.observableArrayList(allGames);
+
+        tcGame.setCellValueFactory(new PropertyValueFactory<>("v_name"));
+        tcRelease.setCellValueFactory(new PropertyValueFactory<>("v_release"));
+        tcPlatform.setCellValueFactory(new PropertyValueFactory<>("v_platform"));
+        tcPegi.setCellValueFactory(new PropertyValueFactory<>("v_pegi"));
+        tcCheckBox.setCellValueFactory(cellData -> cellData.getValue().checkedProperty());
+        tcCheckBox.setCellFactory(CheckBoxTableCell.forTableColumn(tcCheckBox));
+
+        tableGames.setItems(videoGames);
     }
 }

@@ -1,12 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller;
 
 import java.io.IOException;
-import static java.lang.Integer.parseInt;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -151,11 +145,11 @@ public class ListWindowController implements Initializable {
         ArrayList<VideoGame> list = profile.getLists().get(selectedList);
         listName.setText(selectedList);
 
-        tcGame.setCellValueFactory(new PropertyValueFactory<VideoGame, String>("v_name"));
-        tcRelease.setCellValueFactory(new PropertyValueFactory<VideoGame, Date>("v_release"));
-        tcPlatform.setCellValueFactory(new PropertyValueFactory<VideoGame, Platform>("v_platform"));
-        tcPegi.setCellValueFactory(new PropertyValueFactory<VideoGame, Pegi>("v_pegi"));
-        tcCheckBox.setCellValueFactory(new PropertyValueFactory<VideoGame, Boolean>("checked"));
+        tcGame.setCellValueFactory(new PropertyValueFactory<>("v_name"));
+        tcRelease.setCellValueFactory(new PropertyValueFactory<>("v_release"));
+        tcPlatform.setCellValueFactory(new PropertyValueFactory<>("v_platform"));
+        tcPegi.setCellValueFactory(new PropertyValueFactory<>("v_pegi"));
+        tcCheckBox.setCellValueFactory(cellData -> cellData.getValue().checkedProperty());
         tcCheckBox.setCellFactory(CheckBoxTableCell.forTableColumn(tcCheckBox));
 
         /*
@@ -192,7 +186,7 @@ public class ListWindowController implements Initializable {
     private void newList() {
         String buttonName = "New List " + getListNumber();
 
-        profile.newList(buttonName, new ArrayList<VideoGame>());
+        profile.newList(buttonName, new ArrayList<>());
 
         Button button = new Button(buttonName);
         buttonStyle(button);
@@ -209,7 +203,7 @@ public class ListWindowController implements Initializable {
 
     public void setComboBox() {
         HashMap<String, ArrayList> hmLists = profile.getLists();
-        ArrayList<String> listsNames = new ArrayList<String>();
+        ArrayList<String> listsNames = new ArrayList<>();
 
         for (Map.Entry<String, ArrayList> entry : hmLists.entrySet()) {
             if (!"My Games".equals(entry.getKey())) {
@@ -381,14 +375,14 @@ public class ListWindowController implements Initializable {
     }
 
     public void test() {
-        ArrayList<VideoGame> games = new ArrayList<VideoGame>();
+        ArrayList<VideoGame> games = new ArrayList<>();
         VideoGame game = new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3);
         game.setChecked(true);
         games.add(game);
         games.add(new VideoGame(3, "Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
         profile.newList("Nintendo Switch", games);
 
-        games = new ArrayList<VideoGame>();
+        games = new ArrayList<>();
         games.add(new VideoGame(4, "Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
         games.add(new VideoGame(2, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
         profile.newList("PlayStation", games);

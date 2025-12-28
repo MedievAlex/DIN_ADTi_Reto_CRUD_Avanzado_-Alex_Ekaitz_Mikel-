@@ -1,6 +1,8 @@
 package model;
 
 import java.time.LocalDate;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
 /**
  * Abstract base class representing a user profile in the system. This class
@@ -20,7 +22,7 @@ public class VideoGame {
     private LocalDate v_release;
     private Platform v_platform;
     private Pegi v_pegi;
-    private boolean checked;
+    private BooleanProperty checked = new SimpleBooleanProperty(false);
 
     public VideoGame() {
         this.v_id = 0;
@@ -28,7 +30,6 @@ public class VideoGame {
         this.v_release = LocalDate.now();
         this.v_platform = Platform.DEFAULT;
         this.v_pegi = Pegi.DEFAULT;
-        this.checked = false;
     }
 
     public VideoGame(int v_id, String v_name, LocalDate v_release, Platform v_platform, Pegi v_pegi) {
@@ -37,7 +38,6 @@ public class VideoGame {
         this.v_release = v_release;
         this.v_platform = v_platform;
         this.v_pegi = v_pegi;
-        this.checked = false;
     }
 
     public int getV_id() {
@@ -80,12 +80,16 @@ public class VideoGame {
         this.v_pegi = v_pegi;
     }
 
-    public boolean isChecked() {
+    public BooleanProperty checkedProperty() {
         return checked;
     }
-
-    public void setChecked(boolean checked) {
-        this.checked = checked;
+    
+    public boolean isChecked() {
+        return checked.get();
+    }
+    
+    public void setChecked(boolean value) {
+        checked.set(value);
     }
 
     @Override
