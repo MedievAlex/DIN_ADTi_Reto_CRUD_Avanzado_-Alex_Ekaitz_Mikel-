@@ -1,6 +1,5 @@
 package dao;
 
-import dao.ClassDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -71,7 +70,6 @@ public class DBImplementation implements ClassDAO
                     profile_admin.setUsername(result.getString("USERNAME"));
                     profile_admin.setPassword(result.getString("PASSWORD_"));
                     profile_admin.setEmail(result.getString("EMAIL"));
-                    profile_admin.setUserCode(result.getInt("USER_CODE"));
                     profile_admin.setName(result.getString("NAME_"));
                     profile_admin.setTelephone(result.getString("TELEPHONE"));
                     profile_admin.setSurname(result.getString("SURNAME"));
@@ -89,7 +87,6 @@ public class DBImplementation implements ClassDAO
                 profile_user.setUsername(result.getString("USERNAME"));
                 profile_user.setPassword(result.getString("PASSWORD_"));
                 profile_user.setEmail(result.getString("EMAIL"));
-                profile_user.setUserCode(result.getInt("USER_CODE"));
                 profile_user.setName(result.getString("NAME_"));
                 profile_user.setTelephone(result.getString("TELEPHONE"));
                 profile_user.setSurname(result.getString("SURNAME"));

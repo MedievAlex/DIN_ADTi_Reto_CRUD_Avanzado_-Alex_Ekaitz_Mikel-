@@ -3,6 +3,7 @@ package controller;
 import java.util.List;
 import dao.ClassDAO;
 import model.Profile;
+import model.VideoGame;
 
 /**
  * Controller class that handles interaction between the GUI and the database.
@@ -74,5 +75,13 @@ public class Controller
     public List comboBoxInsert()
     {
         return DAO.comboBoxInsert();
+    }
+    
+    public void addGameToDB(Profile profile, VideoGame game)
+    {
+    }
+    
+    public void removeGameFromDB(Profile profile, VideoGame game)
+    {
     }
 }

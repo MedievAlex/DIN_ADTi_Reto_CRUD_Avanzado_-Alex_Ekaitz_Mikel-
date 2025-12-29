@@ -2,7 +2,6 @@ package dao;
 
 import java.util.List;
 import model.Profile;
-
 /**
  * Data Access Object interface for database operations.
  * Provides methods to interact with user and admin records in the database.
@@ -13,7 +12,7 @@ public interface ClassDAO
     public boolean signUp(String gender, String cardNumber, String username, String password, String email, String name, String telephone, String surname);
     public boolean dropOutUser(String username, String password);
     public boolean dropOutAdmin(String usernameToDelete, String adminUsername, String adminPassword);
-    public boolean modificarUser (String password, String email, String name, String telephone, String surname, String username, String gender);
+    public boolean modificarUser(String password, String email, String name, String telephone, String surname, String username, String gender);
 
     List comboBoxInsert();
 }

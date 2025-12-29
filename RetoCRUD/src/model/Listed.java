@@ -1,41 +1,43 @@
 package model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.Table;
+import java.io.Serializable;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "listed")
 @IdClass(ListedId.class)
-
-public class Listed {
-    @Id
-    private int profile_id;
+public class Listed implements Serializable
+{
 
     @Id
-    private int videogame_id;
+    @ManyToOne
+    @JoinColumn(name = "username")
+    private Profile profile;
 
     @Id
-    private String list_name;
+    @ManyToOne
+    @JoinColumn(name = "videogame_id")
+    private VideoGame videogame;
+
+    @Id
+    @Column(name = "list_name")
+    private String listName;
 
     public Listed() {}
 
-    public Listed(int profile_id, int videogame_id, String list_name) {
-        this.profile_id = profile_id;
-        this.videogame_id = videogame_id;
-        this.list_name = list_name;
+    public Listed(Profile profile, VideoGame videogame, String listName)
+    {
+        this.profile = profile;
+        this.videogame = videogame;
+        this.listName = listName;
     }
 
-    public int getProfile_id() {
-        return profile_id;
-    }
+    public Profile getProfile() { return profile; }
+    public void setProfile(Profile profile) { this.profile = profile; }
 
-    public int getVideogame_id() {
-        return videogame_id;
-    }
+    public VideoGame getVideogame() { return videogame; }
+    public void setVideogame(VideoGame videogame) { this.videogame = videogame; }
 
-    public String getList_name() {
-        return list_name;
-    }
+    public String getListName() { return listName; }
+    public void setListName(String listName) { this.listName = listName; }
 }

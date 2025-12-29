@@ -71,7 +71,7 @@ public class LogInWindowController implements Initializable {
     @FXML
     private void logIn() {
         try {
-            User profile = new User("Male", "", "test", "a", "test@test.com", -1, "", "", "");
+            User profile = new User("Male", "", "test", "a", "test@test.com", "", "", "");
                     
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MainMenuWindow.fxml"));
             Parent root = fxmlLoader.load();

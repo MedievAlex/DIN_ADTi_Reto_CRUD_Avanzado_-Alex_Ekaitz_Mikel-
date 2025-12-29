@@ -34,7 +34,7 @@ import model.VideoGame;
 /**
  * FXML Controller class
  *
- * @author 2dami
+ * @author ema
  */
 public class MainMenuWindowController implements Initializable {
 
@@ -94,6 +94,7 @@ public class MainMenuWindowController implements Initializable {
     public void setUsuario(Profile profile) {
         this.profile = profile;
         menu.setText(profile.getUsername());
+        loadVideoGames();
     }
 
     public void setCont(Controller cont) {
@@ -179,20 +180,55 @@ public class MainMenuWindowController implements Initializable {
      * Initializes the controller class.
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize(URL url, ResourceBundle rb)
+    {
         setMenuOptions();
         setOnActionHandlers();
-        test();
+        tableGames.setSelectionModel(null);
     }
-    
-    public void test() {
-        ArrayList<VideoGame> allGames = new ArrayList<>();
 
+    private void loadVideoGames()
+    {
+        ArrayList<VideoGame> allGames = new ArrayList<>();
         allGames.add(new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
-        allGames.add(new VideoGame(2, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
-        allGames.add(new VideoGame(3, "Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
-        allGames.add(new VideoGame(4, "Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
+        allGames.add(new VideoGame(4, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
+        allGames.add(new VideoGame(2, "Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
+        allGames.add(new VideoGame(3, "Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
         allGames.add(new VideoGame(5, "Call of Duty: Black Ops II", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
+        
+        ArrayList<VideoGame> myGames = profile.getLists().get("My Games");
+        if (myGames == null)
+        {
+            myGames = new ArrayList<>();
+        }
+
+        for (VideoGame game : allGames)
+        {
+            if (myGames.stream().anyMatch(g -> g.getV_id() == game.getV_id()))
+            {
+                game.setChecked(true);
+            }
+
+            game.checkedProperty().addListener((obs, oldVal, newVal) ->
+            {
+                if (newVal)
+                {
+                    if (!profile.getLists().get("My Games").contains(game))
+                    {
+                        profile.addGame("My Games", game);
+                        cont.addGameToDB(profile, game);
+                    }
+                }
+                else
+                {
+                    if (profile.getLists().get("My Games").contains(game))
+                    {
+                        profile.removeGame("My Games", game);
+                        cont.removeGameFromDB(profile, game);
+                    }
+                }
+            });
+        }
 
         videoGames = FXCollections.observableArrayList(allGames);
 
@@ -200,6 +236,7 @@ public class MainMenuWindowController implements Initializable {
         tcRelease.setCellValueFactory(new PropertyValueFactory<>("v_release"));
         tcPlatform.setCellValueFactory(new PropertyValueFactory<>("v_platform"));
         tcPegi.setCellValueFactory(new PropertyValueFactory<>("v_pegi"));
+
         tcCheckBox.setCellValueFactory(cellData -> cellData.getValue().checkedProperty());
         tcCheckBox.setCellFactory(CheckBoxTableCell.forTableColumn(tcCheckBox));
 
