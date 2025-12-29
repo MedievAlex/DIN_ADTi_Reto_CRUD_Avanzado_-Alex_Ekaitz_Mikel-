@@ -1,7 +1,7 @@
 package controller;
 
 import java.util.List;
-import model.ClassDAO;
+import dao.ClassDAO;
 import model.Profile;
 
 /**

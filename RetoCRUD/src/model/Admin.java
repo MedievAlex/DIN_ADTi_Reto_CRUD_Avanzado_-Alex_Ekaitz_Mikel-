@@ -1,9 +1,10 @@
 package model;
 
 /**
- * Represents an admin profile in the system.
- * Extends Profile and adds the currentAccount attribute.
+ *
+ * @author ema
  */
+
 public class Admin extends Profile
 {
     private String currentAccount;

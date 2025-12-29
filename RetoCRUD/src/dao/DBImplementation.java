@@ -1,11 +1,16 @@
-package model;
+package dao;
 
+import dao.ClassDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import model.Admin;
+import pool.ConnectionPool;
+import model.Profile;
+import model.User;
 import threads.HiloConnection;
 
 /**

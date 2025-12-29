@@ -1,9 +1,10 @@
 package model;
 
 /**
- * Represents a standard user in the system.
- * Extends Profile and adds gender and card number attributes.
+ *
+ * @author ema
  */
+
 public class User extends Profile
 {
     private String gender;

@@ -15,7 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.stage.Stage;
-import model.DBImplementation;
+import dao.DBImplementation;
 import model.Profile;
 import model.User;
 

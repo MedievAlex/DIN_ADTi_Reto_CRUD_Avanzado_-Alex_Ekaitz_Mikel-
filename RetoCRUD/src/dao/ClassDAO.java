@@ -1,6 +1,7 @@
-package model;
+package dao;
 
 import java.util.List;
+import model.Profile;
 
 /**
  * Data Access Object interface for database operations.

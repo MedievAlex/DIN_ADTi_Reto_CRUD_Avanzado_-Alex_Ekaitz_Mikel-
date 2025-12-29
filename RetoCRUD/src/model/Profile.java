@@ -2,16 +2,19 @@ package model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
- * Abstract class representing a general profile in the system. Contains common
- * attributes such as username, password, email, and personal information. All
- * profile types (User, Admin) extend this class.
  *
- * @author acer
+ * @author ema
  */
-public abstract class Profile {
 
+@Entity
+@Table(name = "profile_")
+public abstract class Profile {
+    @Id
     private String username;
     private String password;
     private String email;
@@ -20,7 +23,7 @@ public abstract class Profile {
     private String telephone;
     private String surname;
     private HashMap<String, ArrayList> lists;
-
+    
     /**
      * Constructs a profile with the specified attributes.
      *
