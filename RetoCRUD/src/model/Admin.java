@@ -23,6 +23,7 @@ public class Admin extends Profile implements Serializable
 
     public Admin()
     {
+        super();
         this.currentAccount = "";
     }
 

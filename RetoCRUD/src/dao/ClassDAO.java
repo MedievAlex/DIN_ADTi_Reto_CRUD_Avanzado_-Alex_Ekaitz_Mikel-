@@ -1,7 +1,9 @@
 package dao;
 
-import java.util.List;
+import java.util.ArrayList;
 import model.Profile;
+import model.VideoGame;
+
 /**
  * Data Access Object interface for database operations.
  * Provides methods to interact with user and admin records in the database.
@@ -13,6 +15,8 @@ public interface ClassDAO
     public boolean dropOutUser(String username, String password);
     public boolean dropOutAdmin(String usernameToDelete, String adminUsername, String adminPassword);
     public boolean modificarUser(String password, String email, String name, String telephone, String surname, String username, String gender);
-
-    List comboBoxInsert();
+    public ArrayList<VideoGame> getVideoGames();
+    
+    public ArrayList<String> comboBoxInsert();
+    public void initializeDefault();
 }

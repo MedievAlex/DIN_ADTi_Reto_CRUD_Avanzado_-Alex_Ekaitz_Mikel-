@@ -9,8 +9,8 @@ import org.hibernate.annotations.Check;
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "profile_")
 @Check(constraints = "TELEPHONE REGEXP '^[0-9]{9}$'")
-public abstract class Profile implements Serializable
-{
+public abstract class Profile implements Serializable {
+
     @Id
     @Column(name = "username", length = 40)
     private String username;
@@ -30,16 +30,12 @@ public abstract class Profile implements Serializable
     @Column(name = "surname", length = 40)
     private String surname;
 
-    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<Listed> listedGames = new HashSet<>();
-
-    @Transient
-    private HashMap<String, ArrayList<VideoGame>> lists;
 
     public Profile() {}
 
-    public Profile(String username, String password, String email, String name, String telephone, String surname)
-    {
+    public Profile(String username, String password, String email, String name, String telephone, String surname) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -69,34 +65,33 @@ public abstract class Profile implements Serializable
     public Set<Listed> getListedGames() { return listedGames; }
     public void setListedGames(Set<Listed> listedGames) { this.listedGames = listedGames; }
 
-    public HashMap<String, ArrayList<VideoGame>> getLists()
-    {
-        if (lists == null) buildListsFromListed();
-        return lists;
-    }
+    public HashMap<String, ArrayList<VideoGame>> getListsView() {
+        HashMap<String, ArrayList<VideoGame>> map = new HashMap<>();
 
-    private void buildListsFromListed()
-    {
-        lists = new HashMap<>();
-        for (Listed listed : listedGames)
-        {
-            String listName = listed.getListName();
-            VideoGame game = listed.getVideogame();
-            lists.computeIfAbsent(listName, k -> new ArrayList<>()).add(game);
+        if (listedGames != null) {
+            for (Listed listed : listedGames) {
+                map.computeIfAbsent(listed.getListName(), k -> new ArrayList<>())
+                   .add(listed.getVideogame());
+            }
         }
-        lists.computeIfAbsent("My Games", k -> new ArrayList<>());
+
+        map.computeIfAbsent("My Games", k -> new ArrayList<>());
+
+        return map;
     }
 
-    public boolean newList(String listName)
-    {
-        if (getLists().containsKey(listName)) return false;
-        getLists().put(listName, new ArrayList<>());
+    public boolean newList(String listName) {
+        HashMap<String, ArrayList<VideoGame>> memLists = getListsView();
+        if (memLists.containsKey(listName)) return false;
+
+        memLists.put(listName, new ArrayList<>());
+
         return true;
     }
 
     public boolean renameList(String oldName, String newName)
     {
-        HashMap<String, ArrayList<VideoGame>> memLists = getLists();
+        HashMap<String, ArrayList<VideoGame>> memLists = getListsView();
         if (!memLists.containsKey(oldName) || memLists.containsKey(newName)) return false;
 
         ArrayList<VideoGame> games = memLists.remove(oldName);
@@ -109,41 +104,41 @@ public abstract class Profile implements Serializable
                 listed.setListName(newName);
             }
         }
+
         return true;
     }
 
     public boolean addGame(String listName, VideoGame game)
     {
-        List<VideoGame> games = getLists().computeIfAbsent(listName, k -> new ArrayList<>());
-        for (VideoGame g : games)
+        for (Listed l : listedGames)
         {
-            if (g.getV_id() == game.getV_id()) return false;
+            if (l.getListName().equals(listName) && l.getVideogame().getV_id() == game.getV_id())
+            {
+                return false;
+            }
         }
+        listedGames.add(new Listed(this, game, listName));
 
-        games.add(game);
-
-        Listed listed = new Listed(this, game, listName);
-        listedGames.add(listed);
         return true;
     }
 
     public boolean removeGame(String listName, VideoGame game)
     {
-        List<VideoGame> games = getLists().get(listName);
-        if (games == null) return false;
+        boolean removed = listedGames.removeIf(l -> l.getListName().equals(listName) && l.getVideogame().getV_id() == game.getV_id());
 
-        boolean removed = games.removeIf(g -> g.getV_id() == game.getV_id());
-        if (removed) {
-            listedGames.removeIf(l -> l.getListName().equals(listName) && l.getVideogame().getV_id() == game.getV_id());
-        }
         return removed;
     }
 
     @Override
     public String toString()
     {
-        return "Profile{" + "username=" + username + ", email=" + email + ", name=" + name +
-                ", telephone=" + telephone + ", surname=" + surname + '}';
+        return "Profile{" +
+                "username=" + username +
+                ", email=" + email +
+                ", name=" + name +
+                ", telephone=" + telephone +
+                ", surname=" + surname +
+                "}";
     }
 
     public abstract String show();

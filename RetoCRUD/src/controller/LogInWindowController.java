@@ -15,7 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.stage.Stage;
-import dao.DBImplementation;
+import dao.HibernateImplementation;
 import model.Profile;
 import model.User;
 
@@ -40,8 +40,11 @@ public class LogInWindowController implements Initializable {
     @FXML
     private Label labelIncorrecto; // Label to show error messages
 
-    // Controller handling business logic
-    private final Controller CONT = new Controller(new DBImplementation());
+    private Controller CONT;
+
+    public void setController(Controller controller) {
+        this.CONT = controller;
+    }
 
     /**
      * Opens the SignUp window.
@@ -69,7 +72,7 @@ public class LogInWindowController implements Initializable {
     }
     
     @FXML
-    private void logIn() {
+    private void logInReal() {
         try {
             User profile = new User("Male", "", "test", "a", "test@test.com", "", "", "");
                     
@@ -98,7 +101,7 @@ public class LogInWindowController implements Initializable {
      * shows an error.
      */
     @FXML
-    private void logInReal() {
+    private void logIn() {
         String username = TextField_Username.getText();
         String password = PasswordField_Password.getText();
 
@@ -112,8 +115,8 @@ public class LogInWindowController implements Initializable {
                     Parent root = fxmlLoader.load();
 
                     controller.MainMenuWindowController controllerWindow = fxmlLoader.getController();
-                    controllerWindow.setUsuario(profile);
                     controllerWindow.setCont(CONT);
+                    controllerWindow.setUsuario(profile);
 
                     Stage stage = new Stage();
                     stage.setScene(new Scene(root));
@@ -134,6 +137,5 @@ public class LogInWindowController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Initialization logic if needed
     }
 }

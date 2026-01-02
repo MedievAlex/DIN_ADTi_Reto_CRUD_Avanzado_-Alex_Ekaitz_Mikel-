@@ -2,7 +2,6 @@ package controller;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.ResourceBundle;
@@ -36,8 +35,8 @@ import model.VideoGame;
  *
  * @author ema
  */
-public class MainMenuWindowController implements Initializable {
-
+public class MainMenuWindowController implements Initializable
+{
     @FXML
     private MenuButton menu;
     @FXML
@@ -91,21 +90,26 @@ public class MainMenuWindowController implements Initializable {
     private Controller cont;
     private ObservableList<VideoGame> videoGames;
 
-    public void setUsuario(Profile profile) {
+    public void setUsuario(Profile profile)
+    {
         this.profile = profile;
         menu.setText(profile.getUsername());
         loadVideoGames();
     }
 
-    public void setCont(Controller cont) {
+
+    public void setCont(Controller cont)
+    {
         this.cont = cont;
     }
 
-    public Controller getCont() {
+    public Controller getCont()
+    {
         return cont;
     }
 
-    private void setMenuOptions() {
+    private void setMenuOptions()
+    {
         miProfile.setOnAction((event) -> {
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MenuWindow.fxml"));
@@ -114,6 +118,9 @@ public class MainMenuWindowController implements Initializable {
                 controller.MenuWindowController controllerWindow = fxmlLoader.getController();
                 controllerWindow.setUsuario(profile);
                 controllerWindow.setCont(cont);
+                
+                Stage mainStage = (Stage) menu.getScene().getWindow();
+                controllerWindow.setParentStage(mainStage);
 
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root));
@@ -189,18 +196,9 @@ public class MainMenuWindowController implements Initializable {
 
     private void loadVideoGames()
     {
-        ArrayList<VideoGame> allGames = new ArrayList<>();
-        allGames.add(new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
-        allGames.add(new VideoGame(4, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
-        allGames.add(new VideoGame(2, "Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
-        allGames.add(new VideoGame(3, "Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
-        allGames.add(new VideoGame(5, "Call of Duty: Black Ops II", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
+        ArrayList<VideoGame> allGames = cont.getVideoGames();
         
-        ArrayList<VideoGame> myGames = profile.getLists().get("My Games");
-        if (myGames == null)
-        {
-            myGames = new ArrayList<>();
-        }
+        ArrayList<VideoGame> myGames = profile.getListsView().getOrDefault("My Games", new ArrayList<>());
 
         for (VideoGame game : allGames)
         {
@@ -213,7 +211,7 @@ public class MainMenuWindowController implements Initializable {
             {
                 if (newVal)
                 {
-                    if (!profile.getLists().get("My Games").contains(game))
+                    if (!profile.getListsView().get("My Games").contains(game))
                     {
                         profile.addGame("My Games", game);
                         cont.addGameToDB(profile, game);
@@ -221,13 +219,14 @@ public class MainMenuWindowController implements Initializable {
                 }
                 else
                 {
-                    if (profile.getLists().get("My Games").contains(game))
+                    if (profile.getListsView().get("My Games").contains(game))
                     {
                         profile.removeGame("My Games", game);
                         cont.removeGameFromDB(profile, game);
                     }
                 }
             });
+
         }
 
         videoGames = FXCollections.observableArrayList(allGames);

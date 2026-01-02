@@ -1,7 +1,7 @@
 package controller;
 
-import java.util.List;
 import dao.ClassDAO;
+import java.util.ArrayList;
 import model.Profile;
 import model.VideoGame;
 
@@ -71,10 +71,16 @@ public class Controller
 
     /**
      * Retrieves a list of usernames for GUI combo boxes.
+     * @return ArrayList
      */
-    public List comboBoxInsert()
+    public ArrayList<String> comboBoxInsert()
     {
         return DAO.comboBoxInsert();
+    }
+    
+    public ArrayList<VideoGame> getVideoGames()
+    {
+        return DAO.getVideoGames();
     }
     
     public void addGameToDB(Profile profile, VideoGame game)
@@ -83,5 +89,10 @@ public class Controller
     
     public void removeGameFromDB(Profile profile, VideoGame game)
     {
+    }
+    
+    public void initializeDefault()
+    {
+        DAO.initializeDefault();
     }
 }

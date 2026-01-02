@@ -10,10 +10,6 @@
 
 <AnchorPane id="SignUpRoot" prefHeight="360.0" prefWidth="270.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LogInWindowController">
    <children>
-      <Button id="Button_LogIn" fx:id="Button_LogIn" layoutX="104.0" layoutY="238.0" mnemonicParsing="false" onAction="#logIn" prefHeight="28.0" prefWidth="61.0" style="-fx-background-color: A7C4E5; -fx-border-color: #000000;" text="Log In " textAlignment="CENTER" />
-      <Button id="Button_SignUp" fx:id="Button_SignUp" layoutX="104.0" layoutY="281.0" mnemonicParsing="false" onAction="#signUp" prefHeight="28.0" prefWidth="62.0" style="-fx-background-color: A7C4E5; -fx-border-color: #000000;" text="Sign Up" />
-      <PasswordField id="PasswordField_Password" fx:id="PasswordField_Password" layoutX="80.0" layoutY="180.0" promptText="Password" />
-      <TextField id="TextField_Username" fx:id="TextField_Username" layoutX="77.0" layoutY="136.0" promptText="Username" />
       <ImageView layoutX="97.0" layoutY="37.0">
          <image>
             <Image url="@../images/person_celebrate_76dp_5084C1_FILL0_wght400_GRAD0_opsz48.png" />
@@ -24,11 +20,15 @@
             <Image url="@../images/mail_34dp_5084C1_FILL0_wght400_GRAD0_opsz40.png" />
          </image>
       </ImageView>
+      <TextField id="TextField_Username" fx:id="TextField_Username" layoutX="77.0" layoutY="136.0" promptText="Username" />
       <ImageView fitHeight="25.0" fitWidth="25.0" layoutX="47.0" layoutY="180.0">
          <image>
             <Image url="@../images/lock_40dp_5084C1_FILL0_wght400_GRAD0_opsz40.png" />
          </image>
       </ImageView>
+      <PasswordField id="PasswordField_Password" fx:id="PasswordField_Password" layoutX="80.0" layoutY="180.0" promptText="Password" />
+      <Button id="Button_LogIn" fx:id="Button_LogIn" layoutX="104.0" layoutY="238.0" mnemonicParsing="false" onAction="#logIn" prefHeight="28.0" prefWidth="61.0" style="-fx-background-color: A7C4E5; -fx-border-color: #000000;" text="Log In " textAlignment="CENTER" />
+      <Button id="Button_SignUp" fx:id="Button_SignUp" layoutX="104.0" layoutY="281.0" mnemonicParsing="false" onAction="#signUp" prefHeight="28.0" prefWidth="62.0" style="-fx-background-color: A7C4E5; -fx-border-color: #000000;" text="Sign Up" />
       <Label fx:id="labelIncorrecto" layoutX="11.0" layoutY="315.0" prefHeight="17.0" prefWidth="255.0" textFill="RED" />
    </children>
 </AnchorPane>

@@ -107,7 +107,7 @@ public class ListWindowController implements Initializable {
     }
 
     public void loadLists() {
-        HashMap<String, ArrayList<VideoGame>> lists = profile.getLists();
+        HashMap<String, ArrayList<VideoGame>> lists = profile.getListsView();
         for (HashMap.Entry<String, ArrayList<VideoGame>> entry : lists.entrySet()) {
             String list = entry.getKey();
 
@@ -141,7 +141,7 @@ public class ListWindowController implements Initializable {
 
         selectedButton(button);
 
-        ArrayList<VideoGame> list = profile.getLists().get(selectedList);
+        ArrayList<VideoGame> list = profile.getListsView().get(selectedList);
         listName.setText(selectedList);
 
         videoGames = FXCollections.observableArrayList();
@@ -152,7 +152,7 @@ public class ListWindowController implements Initializable {
     }
 
     private int getListNumber() {
-        HashMap<String, ArrayList<VideoGame>> lists = profile.getLists();
+        HashMap<String, ArrayList<VideoGame>> lists = profile.getListsView();
         String name, prevNumber;
         int newNumber = 1;
 
@@ -189,7 +189,7 @@ public class ListWindowController implements Initializable {
     }
 
     public void setComboBox() {
-        HashMap<String, ArrayList<VideoGame>> hmLists = profile.getLists();
+        HashMap<String, ArrayList<VideoGame>> hmLists = profile.getListsView();
         ArrayList<String> listsNames = new ArrayList<>();
 
         for (HashMap.Entry<String, ArrayList<VideoGame>> entry : hmLists.entrySet()) {
@@ -245,7 +245,7 @@ public class ListWindowController implements Initializable {
         for (VideoGame game : new ArrayList<>(videoGames)) {
             if (game.isChecked()) {
                 if ("My Games".equals(selectedList)) {
-                    HashMap<String, ArrayList<VideoGame>> lists = profile.getLists();
+                    HashMap<String, ArrayList<VideoGame>> lists = profile.getListsView();
                     for (String listName : lists.keySet()) {
                         profile.removeGame(listName, game);
                     }
@@ -307,8 +307,8 @@ public class ListWindowController implements Initializable {
                 Parent root = fxmlLoader.load();
 
                 controller.MainMenuWindowController controllerWindow = fxmlLoader.getController();
-                controllerWindow.setUsuario(profile);
                 controllerWindow.setCont(cont);
+                controllerWindow.setUsuario(profile);
 
                 Stage stage = (Stage) menu.getScene().getWindow();
                 stage.setScene(new Scene(root));

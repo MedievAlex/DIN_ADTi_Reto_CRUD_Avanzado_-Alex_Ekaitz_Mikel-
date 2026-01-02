@@ -150,8 +150,8 @@ public class ReviewsWindowController implements Initializable {
                 Parent root = fxmlLoader.load();
 
                 controller.MainMenuWindowController controllerWindow = fxmlLoader.getController();
-                controllerWindow.setUsuario(profile);
                 controllerWindow.setCont(cont);
+                controllerWindow.setUsuario(profile);
 
                 Stage stage = (Stage) menu.getScene().getWindow();
                 stage.setScene(new Scene(root));
