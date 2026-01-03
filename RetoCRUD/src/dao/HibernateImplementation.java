@@ -1,5 +1,7 @@
 package dao;
 
+import exception.ErrorMessages;
+import exception.OurException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,14 +17,10 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import threads.SessionThread;
 
-/**
- *
- * @author ema
- */
 public class HibernateImplementation implements ClassDAO
 {    
     @Override
-    public Profile logIn(String username, String password)
+    public Profile logIn(String username, String password) throws OurException
     {
         Session session = null;
 
@@ -45,7 +43,7 @@ public class HibernateImplementation implements ClassDAO
         }
         catch (Exception e)
         {
-            return null;
+            throw new OurException(ErrorMessages.LOGIN);
         }
         finally
         {
@@ -56,9 +54,8 @@ public class HibernateImplementation implements ClassDAO
         }
     }
 
-
     @Override
-    public boolean signUp(String gender, String cardNumber, String username, String password, String email, String name, String telephone, String surname)
+    public boolean signUp(String gender, String cardNumber, String username, String password, String email, String name, String telephone, String surname) throws OurException
     {
         SessionThread thread = new SessionThread();
         thread.start();
@@ -66,6 +63,11 @@ public class HibernateImplementation implements ClassDAO
         try
         {
             Session session = waitForSession(thread);
+            
+            if (session == null)
+            {
+                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
+            }
 
             session.beginTransaction();
 
@@ -77,13 +79,21 @@ public class HibernateImplementation implements ClassDAO
 
             return true;
         }
+        catch (OurException e)
+        {
+            if (thread.getSession() != null && thread.getSession().getTransaction().isActive())
+            {
+                thread.getSession().getTransaction().rollback();
+            }
+            throw e;
+        }
         catch (Exception e)
         {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive())
             {
                 thread.getSession().getTransaction().rollback();
             }
-            return false;
+            throw new OurException(ErrorMessages.REGISTER_USER);
         }
         finally
         {
@@ -92,7 +102,7 @@ public class HibernateImplementation implements ClassDAO
     }
 
     @Override
-    public boolean dropOutUser(String username, String password)
+    public boolean dropOutUser(String username, String password) throws OurException
     {
         boolean success = false;
         SessionThread thread = new SessionThread();
@@ -101,19 +111,43 @@ public class HibernateImplementation implements ClassDAO
         try
         {
             Session session = waitForSession(thread);
+            
+            if (session == null)
+            {
+                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
+            }
+            
             session.beginTransaction();
 
             User user = session.get(User.class, username);
 
-            if (user == null) return false;
+            if (user == null)
+            {
+                throw new OurException(ErrorMessages.LOGIN);
+            }
 
-            if (!user.getPassword().equals(password)) return false;
+            if (!user.getPassword().equals(password))
+            {
+                throw new OurException(ErrorMessages.LOGIN);
+            }
 
             session.delete(user);
 
             session.getTransaction().commit();
 
             success = true;
+        }
+        catch (OurException e)
+        {
+            try
+            {
+                if (thread.getSession() != null && thread.getSession().getTransaction().isActive())
+                {
+                    thread.getSession().getTransaction().rollback();
+                }
+            }
+            catch (HibernateException he) {}
+            throw e;
         }
         catch (Exception e)
         {
@@ -125,7 +159,9 @@ public class HibernateImplementation implements ClassDAO
                 }
             }
             catch (HibernateException he) {}
-        } finally
+            throw new OurException(ErrorMessages.DELETE_USER);
+        }
+        finally
         {
             thread.releaseSession();
         }
@@ -133,9 +169,8 @@ public class HibernateImplementation implements ClassDAO
         return success;
     }
 
-
     @Override
-    public boolean dropOutAdmin(String usernameToDelete, String adminUsername, String adminPassword)
+    public boolean dropOutAdmin(String usernameToDelete, String adminUsername, String adminPassword) throws OurException
     {
         boolean success = false;
         SessionThread thread = new SessionThread();
@@ -144,11 +179,23 @@ public class HibernateImplementation implements ClassDAO
         try
         {
             Session session = waitForSession(thread);
+            
+            if (session == null)
+            {
+                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
+            }
+            
             session.beginTransaction();
 
             Admin admin = session.get(Admin.class, adminUsername);
-            if (admin == null) return false;
-            if (!admin.getPassword().equals(adminPassword)) return false;
+            if (admin == null)
+            {
+                throw new OurException(ErrorMessages.INVALID_ADMIN_CREDENTIALS);
+            }
+            if (!admin.getPassword().equals(adminPassword))
+            {
+                throw new OurException(ErrorMessages.INVALID_ADMIN_CREDENTIALS);
+            }
 
             User userToDelete = session.get(User.class, usernameToDelete);
             if (userToDelete != null)
@@ -172,6 +219,18 @@ public class HibernateImplementation implements ClassDAO
 
             success = true;
         }
+        catch (OurException e)
+        {
+            try
+            {
+                if (thread.getSession() != null && thread.getSession().getTransaction().isActive())
+                {
+                    thread.getSession().getTransaction().rollback();
+                }
+            }
+            catch (HibernateException he) {}
+            throw e;
+        }
         catch (Exception e)
         {
             try
@@ -182,6 +241,7 @@ public class HibernateImplementation implements ClassDAO
                 }
             }
             catch (HibernateException he) {}
+            throw new OurException(ErrorMessages.DELETE_USER);
         }
         finally
         {
@@ -191,9 +251,8 @@ public class HibernateImplementation implements ClassDAO
         return success;
     }
 
-
     @Override
-    public boolean modificarUser(String password, String email, String name, String telephone, String surname, String username, String gender)
+    public boolean modificarUser(String password, String email, String name, String telephone, String surname, String username, String gender) throws OurException
     {
         boolean success = false;
         SessionThread thread = new SessionThread();
@@ -202,10 +261,17 @@ public class HibernateImplementation implements ClassDAO
         try
         {
             Session session = waitForSession(thread);
+            
+            if (session == null)
+            {
+                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
+            }
+            
             session.beginTransaction();
 
             User user = session.get(User.class, username);
-            if (user != null) {
+            if (user != null)
+            {
                 user.setPassword(password);
                 user.setEmail(email);
                 user.setName(name);
@@ -221,12 +287,16 @@ public class HibernateImplementation implements ClassDAO
             else
             {
                 session.getTransaction().rollback();
-                success = false;
+                throw new OurException(ErrorMessages.UPDATE_USER);
             }
+        }
+        catch (OurException e)
+        {
+            throw e;
         }
         catch (Exception e)
         {
-            success = false;
+            throw new OurException(ErrorMessages.UPDATE_USER);
         }
         finally
         {
@@ -237,7 +307,7 @@ public class HibernateImplementation implements ClassDAO
     }
 
     @Override
-    public ArrayList<String> comboBoxInsert()
+    public ArrayList<String> comboBoxInsert() throws OurException
     {
         ArrayList<String> listaUsuarios = new ArrayList<>();
         Session session = null;
@@ -253,7 +323,10 @@ public class HibernateImplementation implements ClassDAO
                 listaUsuarios.add(u.getUsername());
             }
         }
-        catch (Exception e) {}
+        catch (Exception e)
+        {
+            throw new OurException(ErrorMessages.GET_USERS);
+        }
         finally
         {
             if (session != null && session.isOpen())
@@ -266,7 +339,8 @@ public class HibernateImplementation implements ClassDAO
     }
     
     @Override
-    public ArrayList<VideoGame> getVideoGames() {
+    public ArrayList<VideoGame> getVideoGames() throws OurException
+    {
         Session session = null;
         ArrayList<VideoGame> gamesList = new ArrayList<>();
 
@@ -285,6 +359,7 @@ public class HibernateImplementation implements ClassDAO
             {
                 session.getTransaction().rollback();
             }
+            throw new OurException(ErrorMessages.DATABASE);
         }
         finally
         {
@@ -298,7 +373,7 @@ public class HibernateImplementation implements ClassDAO
     }
     
     @Override
-    public void initializeDefault()
+    public void initializeDefault() throws OurException
     {
         Session session = null;
 
@@ -363,6 +438,7 @@ public class HibernateImplementation implements ClassDAO
             {
                 session.getTransaction().rollback();
             }
+            throw new OurException(ErrorMessages.DATABASE);
         }
         finally
         {

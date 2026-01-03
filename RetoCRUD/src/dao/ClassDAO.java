@@ -1,5 +1,6 @@
 package dao;
 
+import exception.OurException;
 import java.util.ArrayList;
 import model.Profile;
 import model.VideoGame;
@@ -10,13 +11,13 @@ import model.VideoGame;
  */
 public interface ClassDAO
 {
-    public Profile logIn(String username, String password);
-    public boolean signUp(String gender, String cardNumber, String username, String password, String email, String name, String telephone, String surname);
-    public boolean dropOutUser(String username, String password);
-    public boolean dropOutAdmin(String usernameToDelete, String adminUsername, String adminPassword);
-    public boolean modificarUser(String password, String email, String name, String telephone, String surname, String username, String gender);
-    public ArrayList<VideoGame> getVideoGames();
+    public Profile logIn(String username, String password) throws OurException;
+    public boolean signUp(String gender, String cardNumber, String username, String password, String email, String name, String telephone, String surname) throws OurException;
+    public boolean dropOutUser(String username, String password) throws OurException;
+    public boolean dropOutAdmin(String usernameToDelete, String adminUsername, String adminPassword) throws OurException;
+    public boolean modificarUser(String password, String email, String name, String telephone, String surname, String username, String gender) throws OurException;
+    public ArrayList<VideoGame> getVideoGames() throws OurException;
     
-    public ArrayList<String> comboBoxInsert();
-    public void initializeDefault();
+    public ArrayList<String> comboBoxInsert() throws OurException;
+    public void initializeDefault() throws OurException;
 }
