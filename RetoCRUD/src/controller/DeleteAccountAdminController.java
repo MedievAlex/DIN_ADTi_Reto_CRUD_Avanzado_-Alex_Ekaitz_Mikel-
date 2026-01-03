@@ -1,13 +1,16 @@
 package controller;
 
+import exception.OurException;
+import exception.ShowAlert;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.stage.Stage;
@@ -17,43 +20,51 @@ import javafx.scene.control.ComboBox;
 /**
  * FXML Controller class for deleting user accounts as an Admin.
  */
-public class DeleteAccountAdminController implements Initializable {
+public class DeleteAccountAdminController implements Initializable
+{
+    @FXML
+    private ComboBox<String> ComboBoxUser;
 
     @FXML
-    private ComboBox<String> ComboBoxUser; // ComboBox with all users
+    private TextField TextFieldPassword;
+
+    private Controller cont;
+    private Profile profile;
 
     @FXML
-    private TextField TextFieldPassword; // Password field for confirmation
-
-    private Controller cont; // Controller to handle business logic
-    private Profile profile; // Currently logged-in admin
-
+    private Button Button_Cancel;
     @FXML
-    private Button Button_Cancel; // Button to cancel the action
-    @FXML
-    private Button Button_Delete; // Button to delete selected user
+    private Button Button_Delete;
 
-    // Set the controller instance
-    public void setCont(Controller cont) {
+    public void setCont(Controller cont)
+    {
         this.cont = cont;
     }
 
-    // Set the current admin profile
-    public void setProfile(Profile profile) {
+    public void setProfile(Profile profile)
+    {
         this.profile = profile;
     }
 
-    // Populate the ComboBox with users from the controller
-    public void setComboBoxUser() {
-        List<String> users = cont.comboBoxInsert();
-        ComboBoxUser.getItems().clear();
-        ComboBoxUser.getItems().addAll(users);
+    public void setComboBoxUser()
+    {
+        try
+        {
+            ArrayList<String> users = cont.comboBoxInsert();
+            ComboBoxUser.getItems().clear();
+            ComboBoxUser.getItems().addAll(users);
+        }
+        catch (OurException ex)
+        {
+            ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 
-    // Cancel button action: returns to MenuWindow
     @FXML
-    private void cancel() {
-        try {
+    private void cancel()
+    {
+        try
+        {
             javafx.fxml.FXMLLoader fxmlLoader = new javafx.fxml.FXMLLoader(getClass().getResource("/view/MenuWindow.fxml"));
             javafx.scene.Parent root = fxmlLoader.load();
 
@@ -67,35 +78,28 @@ public class DeleteAccountAdminController implements Initializable {
             stage.setResizable(false);
             stage.show();
 
-            // Close current window
             Stage currentStage = (Stage) Button_Cancel.getScene().getWindow();
             currentStage.close();
 
-        } catch (IOException ex) {
+        }
+        catch (IOException ex)
+        {
             Logger.getLogger(MenuWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    // Delete button action: deletes the selected user
     @FXML
-    private void delete() {
-        if (TextFieldPassword.getText().isEmpty()) {
-            javafx.scene.control.Alert error = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-            error.setTitle("Error");
-            error.setHeaderText("Password required");
-            error.setContentText("Please enter your password to delete the account.");
-            error.showAndWait();
-
+    private void delete()
+    {
+        if (TextFieldPassword.getText().isEmpty())
+        {
+            ShowAlert.showAlert("Error", "Please enter your password to delete the account.", Alert.AlertType.ERROR);
             return;
         }
 
-        if (ComboBoxUser.getValue() == null || ComboBoxUser.getValue().isEmpty()) {
-            javafx.scene.control.Alert error = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-            error.setTitle("Error");
-            error.setHeaderText("User not selected");
-            error.setContentText("Please select a user to delete.");
-            error.showAndWait();
-
+        if (ComboBoxUser.getValue() == null || ComboBoxUser.getValue().isEmpty())
+        {
+            ShowAlert.showAlert("Error", "Please select a user to delete.", Alert.AlertType.ERROR);
             return;
         }
 
@@ -105,21 +109,22 @@ public class DeleteAccountAdminController implements Initializable {
         alert.setContentText("This action cannot be undone.");
 
         java.util.Optional<javafx.scene.control.ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == javafx.scene.control.ButtonType.OK) {
-            try {
+        if (result.isPresent() && result.get() == javafx.scene.control.ButtonType.OK)
+        {
+            try
+            {
                 String userToDelete = ComboBoxUser.getValue();
                 String adminPassword = TextFieldPassword.getText();
                 String adminUsername = profile.getUsername();
 
                 Boolean success = cont.dropOutAdmin(userToDelete, adminUsername, adminPassword);
-                if (success) {
-                    javafx.scene.control.Alert successAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-                    successAlert.setTitle("Deleted account");
-                    successAlert.setHeaderText(null);
-                    successAlert.setContentText("The account has been successfully deleted.");
-                    successAlert.showAndWait();
 
-                    try {
+                if (success)
+                {
+                    ShowAlert.showAlert("Deleted account", "The account has been successfully deleted.", Alert.AlertType.INFORMATION);
+
+                    try
+                    {
                         javafx.fxml.FXMLLoader fxmlLoader = new javafx.fxml.FXMLLoader(getClass().getResource("/view/MenuWindow.fxml"));
                         javafx.scene.Parent root = fxmlLoader.load();
 
@@ -135,31 +140,24 @@ public class DeleteAccountAdminController implements Initializable {
                         Stage currentStage = (Stage) Button_Cancel.getScene().getWindow();
                         currentStage.close();
 
-                    } catch (IOException ex) {
+                    }
+                    catch (IOException ex)
+                    {
                         Logger.getLogger(MenuWindowController.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } else {
-                    javafx.scene.control.Alert error = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-                    error.setTitle("Error");
-                    error.setHeaderText("Incorrect password");
-                    error.setContentText("The password is incorrect. Please try again.");
-                    error.showAndWait();
                 }
-
-            } catch (Exception ex) {
-                javafx.scene.control.Alert error = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-                error.setTitle("Error");
-                error.setHeaderText("The account could not be deleted.");
-                error.setContentText(ex.getMessage());
-                error.showAndWait();
             }
-        } else {
+            catch (OurException ex)
+            {
+                ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
+            }
+        }
+        else
+        {
             System.out.println("Deletion cancelled by the user.");
         }
     }
 
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // Initialization logic can be added here if needed
-    }
+    public void initialize(URL url, ResourceBundle rb) {}
 }

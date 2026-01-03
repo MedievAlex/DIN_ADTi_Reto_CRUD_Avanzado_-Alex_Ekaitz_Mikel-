@@ -30,7 +30,7 @@ public final class HibernateUtil
                 String maxConnection = configFile.getString("MAXCONNECTIONS");
                 
                 try (java.sql.Connection conn = java.sql.DriverManager.getConnection(
-                        "jdbc:mysql://" + host + ":" + port + "/?serverTimezone=Europe/Madrid&useSSL=false",
+                        "jdbc:mysql://" + host + ":" + port + "/?serverTimezone=Europe/Madrid&useSSL=false&allowPublicKeyRetrieval=true",
                         user, pass);
                      java.sql.Statement stmt = conn.createStatement())
                 {
@@ -41,7 +41,7 @@ public final class HibernateUtil
                     Logger.getLogger(HibernateUtil.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 
-                String url = "jdbc:mysql://" + host + ":" + port + "/" + db + "?serverTimezone=Europe/Madrid&useSSL=false";
+                String url = "jdbc:mysql://" + host + ":" + port + "/" + db + "?serverTimezone=Europe/Madrid&useSSL=false&allowPublicKeyRetrieval=true";
                 
                 Properties props = new Properties();
                 

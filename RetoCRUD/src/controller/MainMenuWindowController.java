@@ -1,5 +1,7 @@
 package controller;
 
+import exception.OurException;
+import exception.ShowAlert;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.MenuButton;
@@ -97,7 +100,6 @@ public class MainMenuWindowController implements Initializable
         loadVideoGames();
     }
 
-
     public void setCont(Controller cont)
     {
         this.cont = cont;
@@ -110,8 +112,10 @@ public class MainMenuWindowController implements Initializable
 
     private void setMenuOptions()
     {
-        miProfile.setOnAction((event) -> {
-            try {
+        miProfile.setOnAction((event) ->
+        {
+            try
+            {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MenuWindow.fxml"));
                 Parent root = fxmlLoader.load();
 
@@ -128,13 +132,17 @@ public class MainMenuWindowController implements Initializable
                 stage.setResizable(false);
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.showAndWait();
-            } catch (IOException ex) {
+            }
+            catch (IOException ex)
+            {
                 Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
 
-        miLists.setOnAction((event) -> {
-            try {
+        miLists.setOnAction((event) ->
+        {
+            try
+            {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ListWindow.fxml"));
                 Parent root = fxmlLoader.load();
 
@@ -150,13 +158,17 @@ public class MainMenuWindowController implements Initializable
                 stage.setScene(new Scene(root));
                 stage.setTitle("LISTS");
                 stage.setResizable(false);
-            } catch (IOException ex) {
+            }
+            catch (IOException ex)
+            {
                 Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
 
-        miReviews.setOnAction((event) -> {
-            try {
+        miReviews.setOnAction((event) ->
+        {
+            try
+            {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ReviewsWindow.fxml"));
                 Parent root = fxmlLoader.load();
 
@@ -164,24 +176,25 @@ public class MainMenuWindowController implements Initializable
                 controllerWindow.setUsuario(profile);
                 controllerWindow.setCont(cont);
 
-               Stage stage = (Stage) menu.getScene().getWindow();
+                Stage stage = (Stage) menu.getScene().getWindow();
                 stage.setScene(new Scene(root));
                 stage.setTitle("REVIEWS");
                 stage.setResizable(false);
-            } catch (IOException ex) {
+            }
+            catch (IOException ex)
+            {
                 Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
 
-        miLogOut.setOnAction((event) -> {
+        miLogOut.setOnAction((event) ->
+        {
             Stage stage = (Stage) menu.getScene().getWindow();
             stage.close();
         });
     }
 
-    private void setOnActionHandlers() {
-
-    }
+    private void setOnActionHandlers() {}
 
     /**
      * Initializes the controller class.
@@ -196,49 +209,55 @@ public class MainMenuWindowController implements Initializable
 
     private void loadVideoGames()
     {
-        ArrayList<VideoGame> allGames = cont.getVideoGames();
-        
-        ArrayList<VideoGame> myGames = profile.getListsView().getOrDefault("My Games", new ArrayList<>());
-
-        for (VideoGame game : allGames)
+        try
         {
-            if (myGames.stream().anyMatch(g -> g.getV_id() == game.getV_id()))
+            ArrayList<VideoGame> allGames = cont.getVideoGames();
+            
+            ArrayList<VideoGame> myGames = profile.getListsView().getOrDefault("My Games", new ArrayList<>());
+
+            for (VideoGame game : allGames)
             {
-                game.setChecked(true);
+                if (myGames.stream().anyMatch(g -> g.getV_id() == game.getV_id()))
+                {
+                    game.setChecked(true);
+                }
+
+                game.checkedProperty().addListener((obs, oldVal, newVal) ->
+                {
+                    if (newVal)
+                    {
+                        if (!profile.getListsView().get("My Games").contains(game))
+                        {
+                            profile.addGame("My Games", game);
+                            cont.addGameToDB(profile, game);
+                        }
+                    }
+                    else
+                    {
+                        if (profile.getListsView().get("My Games").contains(game))
+                        {
+                            profile.removeGame("My Games", game);
+                            cont.removeGameFromDB(profile, game);
+                        }
+                    }
+                });
             }
 
-            game.checkedProperty().addListener((obs, oldVal, newVal) ->
-            {
-                if (newVal)
-                {
-                    if (!profile.getListsView().get("My Games").contains(game))
-                    {
-                        profile.addGame("My Games", game);
-                        cont.addGameToDB(profile, game);
-                    }
-                }
-                else
-                {
-                    if (profile.getListsView().get("My Games").contains(game))
-                    {
-                        profile.removeGame("My Games", game);
-                        cont.removeGameFromDB(profile, game);
-                    }
-                }
-            });
+            videoGames = FXCollections.observableArrayList(allGames);
 
+            tcGame.setCellValueFactory(new PropertyValueFactory<>("v_name"));
+            tcRelease.setCellValueFactory(new PropertyValueFactory<>("v_release"));
+            tcPlatform.setCellValueFactory(new PropertyValueFactory<>("v_platform"));
+            tcPegi.setCellValueFactory(new PropertyValueFactory<>("v_pegi"));
+
+            tcCheckBox.setCellValueFactory(cellData -> cellData.getValue().checkedProperty());
+            tcCheckBox.setCellFactory(CheckBoxTableCell.forTableColumn(tcCheckBox));
+
+            tableGames.setItems(videoGames);
         }
-
-        videoGames = FXCollections.observableArrayList(allGames);
-
-        tcGame.setCellValueFactory(new PropertyValueFactory<>("v_name"));
-        tcRelease.setCellValueFactory(new PropertyValueFactory<>("v_release"));
-        tcPlatform.setCellValueFactory(new PropertyValueFactory<>("v_platform"));
-        tcPegi.setCellValueFactory(new PropertyValueFactory<>("v_pegi"));
-
-        tcCheckBox.setCellValueFactory(cellData -> cellData.getValue().checkedProperty());
-        tcCheckBox.setCellFactory(CheckBoxTableCell.forTableColumn(tcCheckBox));
-
-        tableGames.setItems(videoGames);
+        catch (OurException ex)
+        {
+            ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 }

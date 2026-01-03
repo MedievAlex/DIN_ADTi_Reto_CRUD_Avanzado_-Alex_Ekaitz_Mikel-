@@ -1,5 +1,8 @@
 package controller;
 
+import exception.OurException;
+import exception.ShowAlert;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import java.io.IOException;
@@ -15,16 +18,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.stage.Stage;
-import dao.HibernateImplementation;
 import model.Profile;
-import model.User;
 
 /**
  * Controller for the Login window. Handles user login and navigation to the
  * main menu or signup window.
  */
-public class LogInWindowController implements Initializable {
-
+public class LogInWindowController implements Initializable
+{
     @FXML
     private TextField TextField_Username;
 
@@ -38,11 +39,12 @@ public class LogInWindowController implements Initializable {
     private Button Button_SignUp;
 
     @FXML
-    private Label labelIncorrecto; // Label to show error messages
+    private Label labelIncorrecto;
 
     private Controller CONT;
 
-    public void setController(Controller controller) {
+    public void setController(Controller controller)
+    {
         this.CONT = controller;
     }
 
@@ -50,8 +52,10 @@ public class LogInWindowController implements Initializable {
      * Opens the SignUp window.
      */
     @FXML
-    private void signUp() {
-        try {
+    private void signUp()
+    {
+        try
+        {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/SignUpWindow.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = new Stage();
@@ -63,35 +67,11 @@ public class LogInWindowController implements Initializable {
             controller.SignUpWindowController controllerWindow = fxmlLoader.getController();
             controllerWindow.setCont(CONT);
 
-            // Close current window
             Stage currentStage = (Stage) Button_SignUp.getScene().getWindow();
             currentStage.close();
-        } catch (IOException ex) {
-            Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-    
-    @FXML
-    private void logInReal() {
-        try {
-            User profile = new User("Male", "", "test", "a", "test@test.com", "", "", "");
-                    
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MainMenuWindow.fxml"));
-            Parent root = fxmlLoader.load();
-
-            controller.MainMenuWindowController controllerWindow = fxmlLoader.getController();
-            controllerWindow.setUsuario(profile);
-            controllerWindow.setCont(CONT);
-
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.setTitle("MAIN MENU");
-            stage.setResizable(false);
-            stage.show();
-
-            Stage currentStage = (Stage) Button_LogIn.getScene().getWindow();
-            currentStage.close();
-        } catch (IOException ex) {
+        catch (IOException ex)
+        {
             Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -101,41 +81,57 @@ public class LogInWindowController implements Initializable {
      * shows an error.
      */
     @FXML
-    private void logIn() {
+    private void logIn()
+    {
         String username = TextField_Username.getText();
         String password = PasswordField_Password.getText();
 
-        if (username.equals("") || password.equals("")) {
+        if (username.equals("") || password.equals(""))
+        {
             labelIncorrecto.setText("Please fill in both fields.");
-        } else {
-            Profile profile = CONT.logIn(username, password);
-            if (profile != null) {
-                try {
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MainMenuWindow.fxml"));
-                    Parent root = fxmlLoader.load();
+        }
+        else
+        {
+            try
+            {
+                Profile profile = CONT.logIn(username, password);
+                if (profile != null)
+                {
+                    try
+                    {
+                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MainMenuWindow.fxml"));
+                        Parent root = fxmlLoader.load();
 
-                    controller.MainMenuWindowController controllerWindow = fxmlLoader.getController();
-                    controllerWindow.setCont(CONT);
-                    controllerWindow.setUsuario(profile);
+                        controller.MainMenuWindowController controllerWindow = fxmlLoader.getController();
+                        controllerWindow.setCont(CONT);
+                        controllerWindow.setUsuario(profile);
 
-                    Stage stage = new Stage();
-                    stage.setScene(new Scene(root));
-                    stage.setTitle("MAIN MENU");
-                    stage.setResizable(false);
-                    stage.show();
+                        Stage stage = new Stage();
+                        stage.setScene(new Scene(root));
+                        stage.setTitle("MAIN MENU");
+                        stage.setResizable(false);
+                        stage.show();
 
-                    Stage currentStage = (Stage) Button_LogIn.getScene().getWindow();
-                    currentStage.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                        Stage currentStage = (Stage) Button_LogIn.getScene().getWindow();
+                        currentStage.close();
+                    }
+                    catch (IOException ex)
+                    {
+                        Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
-            } else {
-                labelIncorrecto.setText("The username and/or password are incorrect.");
+                else
+                {
+                    labelIncorrecto.setText("The username and/or password are incorrect.");
+                }
+            }
+            catch (OurException ex)
+            {
+                ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
             }
         }
     }
 
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-    }
+    public void initialize(URL url, ResourceBundle rb) {}
 }
