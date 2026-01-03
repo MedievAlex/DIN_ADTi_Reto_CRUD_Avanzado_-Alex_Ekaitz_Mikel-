@@ -240,12 +240,11 @@ public class HibernateImplementation implements ClassDAO
     public ArrayList<String> comboBoxInsert()
     {
         ArrayList<String> listaUsuarios = new ArrayList<>();
-        SessionThread thread = new SessionThread();
-        thread.start();
+        Session session = null;
 
         try
         {
-            Session session = waitForSession(thread);
+            session = HibernateUtil.getSession();
 
             List<User> users = session.createCriteria(User.class).list();
 
@@ -257,7 +256,10 @@ public class HibernateImplementation implements ClassDAO
         catch (Exception e) {}
         finally
         {
-            thread.releaseSession();
+            if (session != null && session.isOpen())
+            {
+                session.close();
+            }
         }
 
         return listaUsuarios;

@@ -1,32 +1,18 @@
 package threads;
-
 import org.hibernate.Session;
 import org.hibernate.HibernateException;
 import dao.HibernateUtil;
-
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Thread class to obtain a Hibernate Session asynchronously.
- * Uses delay from config/configClass.properties to retain session
- * before closing. Useful for simulating concurrency in a GUI app.
- * 
- * This optimized version simplifies thread interruption handling
- * and avoids unnecessary re-interruption calls.
- */
 public class SessionThread extends Thread
 {
-    private boolean end = false;       // Flag to stop the thread
-    private boolean ready = false;     // Flag to indicate session is ready
-    private Session session;           // Hibernate session
-    private int delay;                 // Retention delay in seconds
+    private boolean end = false;
+    private boolean ready = false;
+    private Session session;
+    private int delay;
 
-    /**
-     * Loads the retention delay from config/configClass.properties.
-     * Defaults to 30 seconds if the property is missing or invalid.
-     */
     public SessionThread()
     {
         try
@@ -36,35 +22,24 @@ public class SessionThread extends Thread
         }
         catch (Exception e)
         {
-            this.delay = 30; // default
+            this.delay = 30;
         }
     }
 
-    /**
-     * Returns the Hibernate session obtained by the thread.
-     * @return Session
-     */
     public Session getSession()
     {
         return session;
     }
 
-    /**
-     * Returns true if the session is ready.
-     * @return boolean
-     */
     public boolean isReady()
     {
         return ready;
     }
 
-    /**
-     * Signals the thread to release the session and stop running.
-     */
     public void releaseSession()
     {
         this.end = true;
-        this.interrupt(); // wakes up the thread if sleeping
+        this.interrupt();
     }
 
     @Override
@@ -80,9 +55,8 @@ public class SessionThread extends Thread
             {
                 Logger.getLogger(SessionThread.class.getName()).log(Level.SEVERE, null, ex);
             }
-
             ready = true;
-
+            
             while (!end)
             {
                 try
@@ -94,12 +68,20 @@ public class SessionThread extends Thread
                     break;
                 }
             }
-
+            
             try
             {
-                Thread.sleep(delay * 1000L);
+                session.beginTransaction();
+                session.doWork(connection -> {
+                    try
+                    {
+                        Thread.sleep(delay * 1000L);
+                    }
+                    catch (InterruptedException e) {}
+                });
+                session.getTransaction().commit();
             }
-            catch (InterruptedException e) {}
+            catch (Exception e) {}
         }
         finally
         {
