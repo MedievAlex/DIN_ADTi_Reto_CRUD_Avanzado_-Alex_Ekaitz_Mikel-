@@ -17,6 +17,9 @@ public interface ClassDAO
     public boolean dropOutAdmin(String usernameToDelete, String adminUsername, String adminPassword) throws OurException;
     public boolean modificarUser(String password, String email, String name, String telephone, String surname, String username, String gender) throws OurException;
     public ArrayList<VideoGame> getVideoGames() throws OurException;
+    public ArrayList<VideoGame> getGamesFromList(String username, String listName) throws OurException;
+    public void addGameToList(String username, String listName, int gameId) throws OurException;
+    public void removeGameFromList(String username, String listName, int gameId) throws OurException;
     
     public ArrayList<String> comboBoxInsert() throws OurException;
     public void initializeDefault() throws OurException;

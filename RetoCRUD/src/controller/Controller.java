@@ -100,12 +100,19 @@ public class Controller
         return DAO.getVideoGames();
     }
     
-    public void addGameToDB(Profile profile, VideoGame game)
+    public ArrayList<VideoGame> getGamesFromList(String username, String listName) throws OurException
     {
+        return DAO.getGamesFromList(username, listName);
     }
     
-    public void removeGameFromDB(Profile profile, VideoGame game)
+    public void addGameToList(String username, String listName, int gameId) throws OurException
     {
+        DAO.addGameToList(username, listName, gameId);
+    }
+    
+    public void removeGameFromList(String username, String listName, int gameId) throws OurException
+    {
+        DAO.removeGameFromList(username, listName, gameId);
     }
     
     public void initializeDefault() throws OurException

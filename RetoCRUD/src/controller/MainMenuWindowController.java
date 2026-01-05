@@ -212,33 +212,44 @@ public class MainMenuWindowController implements Initializable
         try
         {
             ArrayList<VideoGame> allGames = cont.getVideoGames();
-            
-            ArrayList<VideoGame> myGames = profile.getListsView().getOrDefault("My Games", new ArrayList<>());
+
+            ArrayList<VideoGame> myGames = cont.getGamesFromList(profile.getUsername(), "My Games");
 
             for (VideoGame game : allGames)
             {
-                if (myGames.stream().anyMatch(g -> g.getV_id() == game.getV_id()))
+                boolean isInMyGames = myGames.stream().anyMatch(g -> g.getV_id() == game.getV_id());
+                game.setChecked(isInMyGames);
+
+                if (isInMyGames)
                 {
-                    game.setChecked(true);
+                    profile.addGame("My Games", game);
                 }
+
+                final boolean[] isUpdating = {false};
 
                 game.checkedProperty().addListener((obs, oldVal, newVal) ->
                 {
-                    if (newVal)
+                    if (isUpdating[0]) return;
+
+                    try
                     {
-                        if (!profile.getListsView().get("My Games").contains(game))
+                        if (newVal)
                         {
+                            cont.addGameToList(profile.getUsername(), "My Games", game.getV_id());
                             profile.addGame("My Games", game);
-                            cont.addGameToDB(profile, game);
+                        }
+                        else
+                        {
+                            cont.removeGameFromList(profile.getUsername(), "My Games", game.getV_id());
+                            profile.removeGame("My Games", game);
                         }
                     }
-                    else
+                    catch (OurException ex)
                     {
-                        if (profile.getListsView().get("My Games").contains(game))
-                        {
-                            profile.removeGame("My Games", game);
-                            cont.removeGameFromDB(profile, game);
-                        }
+                        ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
+                        isUpdating[0] = true;
+                        game.setChecked(oldVal);
+                        isUpdating[0] = false;
                     }
                 });
             }

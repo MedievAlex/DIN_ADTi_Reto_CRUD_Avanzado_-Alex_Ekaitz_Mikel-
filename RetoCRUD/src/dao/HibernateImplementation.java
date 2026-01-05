@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import model.Admin;
+import model.Listed;
 import model.Pegi;
 import model.Platform;
 import model.Profile;
@@ -373,6 +374,163 @@ public class HibernateImplementation implements ClassDAO
     }
     
     @Override
+    public ArrayList<VideoGame> getGamesFromList(String username, String listName) throws OurException
+    {
+        SessionThread thread = new SessionThread();
+        thread.start();
+        ArrayList<VideoGame> games = new ArrayList<>();
+
+        try
+        {
+            Session session = waitForSession(thread);
+
+            if (session == null)
+            {
+                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
+            }
+
+            session.beginTransaction();
+
+            Profile profile = session.get(Profile.class, username);
+
+            if (profile != null)
+            {
+                List<Listed> listedGames = session.createQuery(
+                    "FROM Listed WHERE profile.username = :username AND listName = :listName", Listed.class)
+                    .setParameter("username", username)
+                    .setParameter("listName", listName)
+                    .list();
+
+                for (Listed listed : listedGames)
+                {
+                    games.add(listed.getVideogame());
+                }
+            }
+
+            session.getTransaction().commit();
+        }
+        catch (OurException e)
+        {
+            if (thread.getSession() != null && thread.getSession().getTransaction().isActive())
+            {
+                thread.getSession().getTransaction().rollback();
+            }
+            throw e;
+        }
+        catch (Exception e)
+        {
+            if (thread.getSession() != null && thread.getSession().getTransaction().isActive())
+            {
+                thread.getSession().getTransaction().rollback();
+            }
+            throw new OurException(ErrorMessages.DATABASE);
+        }
+        finally
+        {
+            thread.releaseSession();
+        }
+
+        return games;
+    }
+
+    @Override
+    public void addGameToList(String username, String listName, int gameId) throws OurException
+    {
+        SessionThread thread = new SessionThread();
+        thread.start();
+
+        try
+        {
+            Session session = waitForSession(thread);
+
+            if (session == null)
+            {
+                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
+            }
+
+            session.beginTransaction();
+
+            Profile profile = session.get(Profile.class, username);
+            VideoGame game = session.get(VideoGame.class, gameId);
+
+            if (profile != null && game != null)
+            {
+                Listed listed = new Listed(profile, game, listName);
+                session.save(listed);
+            }
+
+            session.getTransaction().commit();
+        }
+        catch (OurException e)
+        {
+            if (thread.getSession() != null && thread.getSession().getTransaction().isActive())
+            {
+                thread.getSession().getTransaction().rollback();
+            }
+            throw e;
+        }
+        catch (Exception e)
+        {
+            if (thread.getSession() != null && thread.getSession().getTransaction().isActive())
+            {
+                thread.getSession().getTransaction().rollback();
+            }
+            throw new OurException(ErrorMessages.DATABASE);
+        }
+        finally
+        {
+            thread.releaseSession();
+        }
+    }
+
+    @Override
+    public void removeGameFromList(String username, String listName, int gameId) throws OurException
+    {
+        SessionThread thread = new SessionThread();
+        thread.start();
+
+        try
+        {
+            Session session = waitForSession(thread);
+
+            if (session == null)
+            {
+                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
+            }
+
+            session.beginTransaction();
+
+            session.createQuery("DELETE FROM Listed WHERE profile.username = :username AND listName = :listName AND videogame.v_id = :gameId")
+                .setParameter("username", username)
+                .setParameter("listName", listName)
+                .setParameter("gameId", gameId)
+                .executeUpdate();
+
+            session.getTransaction().commit();
+        }
+        catch (OurException e)
+        {
+            if (thread.getSession() != null && thread.getSession().getTransaction().isActive())
+            {
+                thread.getSession().getTransaction().rollback();
+            }
+            throw e;
+        }
+        catch (Exception e)
+        {
+            if (thread.getSession() != null && thread.getSession().getTransaction().isActive())
+            {
+                thread.getSession().getTransaction().rollback();
+            }
+            throw new OurException(ErrorMessages.DATABASE);
+        }
+        finally
+        {
+            thread.releaseSession();
+        }
+    }
+    
+    @Override
     public void initializeDefault() throws OurException
     {
         Session session = null;
@@ -416,18 +574,24 @@ public class HibernateImplementation implements ClassDAO
             }
 
             ArrayList<VideoGame> allGames = new ArrayList<>();
-            allGames.add(new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
-            allGames.add(new VideoGame(4, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
-            allGames.add(new VideoGame(2, "Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
-            allGames.add(new VideoGame(3, "Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
-            allGames.add(new VideoGame(5, "Call of Duty: Black Ops II", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
+            allGames.add(new VideoGame("Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
+            allGames.add(new VideoGame("ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
+            allGames.add(new VideoGame("Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
+            allGames.add(new VideoGame("Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
+            allGames.add(new VideoGame("Call of Duty: Black Ops II", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
 
             for (VideoGame game : allGames)
             {
-                if (session.get(VideoGame.class, game.getV_id()) == null)
-                {
-                    session.save(game);
-                }
+                VideoGame existing = session
+                .createQuery("FROM VideoGame v WHERE v.v_name = :name", VideoGame.class)
+                .setParameter("name", game.getV_name())
+                .uniqueResult();
+
+            if (existing == null)
+            {
+                session.save(game);
+            }
+
             }
 
             session.getTransaction().commit();

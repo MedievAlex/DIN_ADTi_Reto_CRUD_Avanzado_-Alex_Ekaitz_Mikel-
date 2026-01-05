@@ -81,7 +81,17 @@ public class SessionThread extends Thread
                 });
                 session.getTransaction().commit();
             }
-            catch (Exception e) {}
+            catch (Exception e)
+            {
+                try
+                {
+                    if (session.getTransaction() != null && session.getTransaction().isActive())
+                    {
+                        session.getTransaction().rollback();
+                    }
+                }
+                catch (Exception ex) {}
+            }
         }
         finally
         {
