@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.MenuButton?>
@@ -9,53 +10,73 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" prefHeight="650.0" prefWidth="760.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ReviewsWindowController">
-   <children>
-      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: A7C4E5;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <MenuButton fx:id="menu" mnemonicParsing="false" prefHeight="31.0" prefWidth="168.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
-               <graphic>
-                  <ImageView>
-                     <image>
-                        <Image url="@../images/person_23dp_789DE5_FILL0_wght400_GRAD0_opsz24.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <items>
-                  <MenuItem fx:id="miProfile" mnemonicParsing="false" text="PROFILE" />
-                  <MenuItem fx:id="miLists" mnemonicParsing="false" text="LISTS" />
-                  <MenuItem fx:id="miMainMenu" mnemonicParsing="false" text="MAIN MENU" />
-                  <MenuItem fx:id="miLogOut" mnemonicParsing="false" text="LOG OUT" />
-               </items>
-            </MenuButton>
-            <Text layoutX="1.0" layoutY="78.0" strokeType="OUTSIDE" strokeWidth="0.0" text="REVIEWS" textAlignment="CENTER" wrappingWidth="761.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
-               <font>
-                  <Font name="System Bold" size="30.0" />
-               </font>
-            </Text>
-         </children>
-      </AnchorPane>
-      <AnchorPane layoutY="141.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="510.0" prefWidth="761.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-         <children>
-            <TextField fx:id="searchBar" layoutX="-88.0" layoutY="10.0" prefHeight="26.0" prefWidth="382.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="400.0" AnchorPane.topAnchor="10.0" />
-            <Button fx:id="bttnSearch" layoutX="380.0" layoutY="9.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" text="Search" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="10.0" />
-            <ComboBox fx:id="combLists" layoutX="457.0" layoutY="10.0" prefWidth="150.0" promptText="-- My Lists --" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="10.0" />
-            <TableView fx:id="tableReview" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
-              <columns>
-                <TableColumn fx:id="tcGame" minWidth="-1.0" prefWidth="154.39996719360352" resizable="false" text="GAME" />
-                <TableColumn fx:id="tcRelease" minWidth="-1.0" prefWidth="103.19993591308594" resizable="false" text="RELEASE" />
-                  <TableColumn fx:id="tcPlatform" minWidth="-1.0" prefWidth="111.20001220703125" resizable="false" text="PLATFORM" />
-                  <TableColumn fx:id="tcScore" minWidth="-1.0" prefWidth="69.60003662109375" resizable="false" text="SCORE" />
-                  <TableColumn fx:id="tcReview" prefWidth="285.60003662109375" resizable="false" text="REVIEW" />
-              </columns>
+<BorderPane prefHeight="650.0" prefWidth="760.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ReviewsWindowController">
+    <top>
+        <StackPane style="-fx-background-color: A7C4E5;">
+            <VBox alignment="CENTER" spacing="10">
+                <HBox alignment="CENTER_RIGHT" spacing="10" style="-fx-padding: 15;">
+                    <Region HBox.hgrow="ALWAYS" />
+                    <MenuButton fx:id="menu" mnemonicParsing="false" prefHeight="31.0" prefWidth="168.0">
+                        <graphic>
+                            <ImageView>
+                                <image>
+                                    <Image url="@../images/person_23dp_789DE5_FILL0_wght400_GRAD0_opsz24.png" />
+                                </image>
+                            </ImageView>
+                        </graphic>
+                        <items>
+                            <MenuItem fx:id="miProfile" mnemonicParsing="false" text="PROFILE" />
+                            <MenuItem fx:id="miLists" mnemonicParsing="false" text="LISTS" />
+                            <MenuItem fx:id="miMainMenu" mnemonicParsing="false" text="MAIN MENU" />
+                            <MenuItem fx:id="miLogOut" mnemonicParsing="false" text="LOG OUT" />
+                        </items>
+                    </MenuButton>
+                </HBox>
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="REVIEWS" textAlignment="CENTER">
+                    <font>
+                        <Font name="System Bold" size="30.0" />
+                    </font>
+                </Text>
+                <VBox.margin>
+                    <Insets bottom="50.0" />
+                </VBox.margin>
+            </VBox>
+        </StackPane>
+    </top>
+    
+    <center>
+        <VBox spacing="10" style="-fx-padding: 10;">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <TextField fx:id="searchBar" prefHeight="26.0" HBox.hgrow="ALWAYS" />
+                <Button fx:id="bttnSearch" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" text="Search" />
+                <Region HBox.hgrow="ALWAYS" />
+                <ComboBox fx:id="combLists" prefWidth="150.0" promptText="-- My Lists --" />
+            </HBox>
+            
+            <TableView fx:id="tableReview" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="tcGame" minWidth="100" text="GAME" />
+                    <TableColumn fx:id="tcRelease" minWidth="80" text="RELEASE" />
+                    <TableColumn fx:id="tcPlatform" minWidth="80" text="PLATFORM" />
+                    <TableColumn fx:id="tcScore" minWidth="60" text="SCORE" />
+                    <TableColumn fx:id="tcReview" minWidth="150" text="REVIEW" />
+                </columns>
             </TableView>
-            <Button fx:id="bttnNewReview" layoutX="476.0" layoutY="472.0" mnemonicParsing="false" onAction="#newReview" prefHeight="26.0" prefWidth="133.0" text="New Review" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0" />
-         </children>
-      </AnchorPane>
-   </children>
-
-</AnchorPane>
+            
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <Region HBox.hgrow="ALWAYS" />
+                <Button fx:id="bttnNewReview" mnemonicParsing="false" onAction="#newReview" 
+                       prefHeight="26.0" prefWidth="133.0" text="New Review" />
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

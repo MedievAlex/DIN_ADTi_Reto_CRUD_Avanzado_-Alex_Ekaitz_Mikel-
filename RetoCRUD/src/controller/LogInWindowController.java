@@ -109,7 +109,6 @@ public class LogInWindowController implements Initializable
                         Stage stage = new Stage();
                         stage.setScene(new Scene(root));
                         stage.setTitle("MAIN MENU");
-                        stage.setResizable(false);
                         stage.show();
 
                         Stage currentStage = (Stage) Button_LogIn.getScene().getWindow();

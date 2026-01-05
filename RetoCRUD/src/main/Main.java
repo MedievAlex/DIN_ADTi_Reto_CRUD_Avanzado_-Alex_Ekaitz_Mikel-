@@ -12,6 +12,8 @@ import dao.HibernateUtil;
 
 public class Main extends Application
 {
+    private HibernateImplementation dao;
+
     /**
      * Starts the JavaFX application by loading the login window.
      *
@@ -21,7 +23,7 @@ public class Main extends Application
     @Override
     public void start(Stage stage) throws Exception
     {
-        HibernateImplementation dao = new HibernateImplementation();
+        dao = new HibernateImplementation();
         
         dao.initializeDefault();
         
@@ -35,7 +37,6 @@ public class Main extends Application
         
         stage.setTitle("LOG IN");
         stage.setScene(new Scene(root));
-        stage.setResizable(false);
         stage.show();
     }
 
@@ -52,6 +53,7 @@ public class Main extends Application
     @Override
     public void stop()
     {
+        dao.cleanupThreads();
         HibernateUtil.close();
     }
 }

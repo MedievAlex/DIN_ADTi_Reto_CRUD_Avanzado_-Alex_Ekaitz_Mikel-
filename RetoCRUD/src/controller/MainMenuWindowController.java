@@ -26,6 +26,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Pegi;
@@ -33,11 +34,6 @@ import model.Platform;
 import model.Profile;
 import model.VideoGame;
 
-/**
- * FXML Controller class
- *
- * @author ema
- */
 public class MainMenuWindowController implements Initializable
 {
     @FXML
@@ -54,6 +50,10 @@ public class MainMenuWindowController implements Initializable
     private TextField searchBar;
     @FXML
     private Button bttnSearch;
+    @FXML
+    private Button toggleFiltersButton;
+    @FXML
+    private VBox filtersContainer;
     @FXML
     private CheckBox chkNintendo;
     @FXML
@@ -92,6 +92,7 @@ public class MainMenuWindowController implements Initializable
     private Profile profile;
     private Controller cont;
     private ObservableList<VideoGame> videoGames;
+    private boolean filtersVisible = false;
 
     public void setUsuario(Profile profile)
     {
@@ -157,7 +158,6 @@ public class MainMenuWindowController implements Initializable
                 Stage stage = (Stage) menu.getScene().getWindow();
                 stage.setScene(new Scene(root));
                 stage.setTitle("LISTS");
-                stage.setResizable(false);
             }
             catch (IOException ex)
             {
@@ -179,7 +179,6 @@ public class MainMenuWindowController implements Initializable
                 Stage stage = (Stage) menu.getScene().getWindow();
                 stage.setScene(new Scene(root));
                 stage.setTitle("REVIEWS");
-                stage.setResizable(false);
             }
             catch (IOException ex)
             {
@@ -194,17 +193,49 @@ public class MainMenuWindowController implements Initializable
         });
     }
 
-    private void setOnActionHandlers() {}
+    private void setOnActionHandlers() 
+    {
+        setupAccordion();
+    }
 
-    /**
-     * Initializes the controller class.
-     */
+    private void setupAccordion()
+    {
+        toggleFiltersButton.setOnAction(event -> toggleFilters());
+        hideFilters();
+    }
+    
+    private void toggleFilters()
+    {
+        filtersVisible = !filtersVisible;
+        if (filtersVisible) {
+            showFilters();
+        } else {
+            hideFilters();
+        }
+    }
+    
+    private void showFilters()
+    {
+        filtersContainer.setVisible(true);
+        filtersContainer.setManaged(true);
+        toggleFiltersButton.setText("-");
+    }
+    
+    private void hideFilters()
+    {
+        filtersContainer.setVisible(false);
+        filtersContainer.setManaged(false);
+        toggleFiltersButton.setText("+");
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
         setMenuOptions();
         setOnActionHandlers();
         tableGames.setSelectionModel(null);
+        tableGames.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        hideFilters();
     }
 
     private void loadVideoGames()

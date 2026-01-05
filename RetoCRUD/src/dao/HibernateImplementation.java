@@ -19,7 +19,29 @@ import org.hibernate.criterion.Restrictions;
 import threads.SessionThread;
 
 public class HibernateImplementation implements ClassDAO
-{    
+{
+    private final List<SessionThread> activeThreads = new ArrayList<>();
+
+    private SessionThread startSessionThread() {
+        SessionThread thread = new SessionThread();
+        activeThreads.add(thread);
+        thread.start();
+        return thread;
+    }
+
+    public void cleanupThreads() {
+        for (SessionThread t : activeThreads) {
+            t.releaseSession();
+        }
+
+        for (SessionThread t : activeThreads) {
+            try {
+                t.join();
+            } catch (InterruptedException e) {}
+        }
+        activeThreads.clear();
+    }
+    
     @Override
     public Profile logIn(String username, String password) throws OurException
     {
@@ -58,8 +80,7 @@ public class HibernateImplementation implements ClassDAO
     @Override
     public boolean signUp(String gender, String cardNumber, String username, String password, String email, String name, String telephone, String surname) throws OurException
     {
-        SessionThread thread = new SessionThread();
-        thread.start();
+        SessionThread thread = startSessionThread();
 
         try
         {
@@ -106,8 +127,7 @@ public class HibernateImplementation implements ClassDAO
     public boolean dropOutUser(String username, String password) throws OurException
     {
         boolean success = false;
-        SessionThread thread = new SessionThread();
-        thread.start();
+        SessionThread thread = startSessionThread();
 
         try
         {
@@ -174,8 +194,7 @@ public class HibernateImplementation implements ClassDAO
     public boolean dropOutAdmin(String usernameToDelete, String adminUsername, String adminPassword) throws OurException
     {
         boolean success = false;
-        SessionThread thread = new SessionThread();
-        thread.start();
+        SessionThread thread = startSessionThread();
 
         try
         {
@@ -256,8 +275,7 @@ public class HibernateImplementation implements ClassDAO
     public boolean modificarUser(String password, String email, String name, String telephone, String surname, String username, String gender) throws OurException
     {
         boolean success = false;
-        SessionThread thread = new SessionThread();
-        thread.start();
+        SessionThread thread = startSessionThread();
 
         try
         {
@@ -350,7 +368,7 @@ public class HibernateImplementation implements ClassDAO
             session = HibernateUtil.getSession();
             session.beginTransaction();
 
-            gamesList = new ArrayList<>(session.createQuery("from VideoGame", VideoGame.class).list());
+            gamesList = new ArrayList<>(session.createQuery("FROM VideoGame v", VideoGame.class).list());
 
             session.getTransaction().commit();
         }
@@ -376,9 +394,8 @@ public class HibernateImplementation implements ClassDAO
     @Override
     public ArrayList<VideoGame> getGamesFromList(String username, String listName) throws OurException
     {
-        SessionThread thread = new SessionThread();
-        thread.start();
         ArrayList<VideoGame> games = new ArrayList<>();
+        SessionThread thread = startSessionThread();
 
         try
         {
@@ -396,10 +413,11 @@ public class HibernateImplementation implements ClassDAO
             if (profile != null)
             {
                 List<Listed> listedGames = session.createQuery(
-                    "FROM Listed WHERE profile.username = :username AND listName = :listName", Listed.class)
+                    "FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName", Listed.class)
                     .setParameter("username", username)
                     .setParameter("listName", listName)
                     .list();
+
 
                 for (Listed listed : listedGames)
                 {
@@ -436,8 +454,7 @@ public class HibernateImplementation implements ClassDAO
     @Override
     public void addGameToList(String username, String listName, int gameId) throws OurException
     {
-        SessionThread thread = new SessionThread();
-        thread.start();
+        SessionThread thread = startSessionThread();
 
         try
         {
@@ -486,8 +503,7 @@ public class HibernateImplementation implements ClassDAO
     @Override
     public void removeGameFromList(String username, String listName, int gameId) throws OurException
     {
-        SessionThread thread = new SessionThread();
-        thread.start();
+        SessionThread thread = startSessionThread();
 
         try
         {

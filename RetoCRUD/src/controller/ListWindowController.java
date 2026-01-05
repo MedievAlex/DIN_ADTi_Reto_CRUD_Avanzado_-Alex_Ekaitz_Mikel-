@@ -39,10 +39,9 @@ import model.VideoGame;
 /**
  * FXML Controller class
  *
- * @author 2dami
+ * @author ema
  */
 public class ListWindowController implements Initializable {
-
     @FXML
     private MenuButton menu;
     @FXML
@@ -295,7 +294,6 @@ public class ListWindowController implements Initializable {
                 Stage stage = (Stage) menu.getScene().getWindow();
                 stage.setScene(new Scene(root));
                 stage.setTitle("REVIEWS");
-                stage.setResizable(false);
             } catch (IOException ex) {
                 Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -313,7 +311,6 @@ public class ListWindowController implements Initializable {
                 Stage stage = (Stage) menu.getScene().getWindow();
                 stage.setScene(new Scene(root));
                 stage.setTitle("MAIN MENU");
-                stage.setResizable(false);
             } catch (IOException ex) {
                 Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -359,6 +356,7 @@ public class ListWindowController implements Initializable {
         setMenuOptions();
         setOnActionHandlers();
         tableLists.setSelectionModel(null);
+        tableLists.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         
         tcGame.setCellValueFactory(new PropertyValueFactory<>("v_name"));
         tcRelease.setCellValueFactory(new PropertyValueFactory<>("v_release"));

@@ -72,13 +72,13 @@ public class SessionThread extends Thread
             try
             {
                 session.beginTransaction();
-                session.doWork(connection -> {
-                    try
-                    {
-                        Thread.sleep(delay * 1000L);
-                    }
-                    catch (InterruptedException e) {}
-                });
+
+                try {
+                    Thread.sleep(delay * 1000L);
+                } catch (InterruptedException e) {
+                    return;
+                }
+
                 session.getTransaction().commit();
             }
             catch (Exception e)

@@ -133,7 +133,6 @@ public class ReviewsWindowController implements Initializable {
                 Stage stage = (Stage) menu.getScene().getWindow();
                 stage.setScene(new Scene(root));
                 stage.setTitle("LISTS");
-                stage.setResizable(false);
             } catch (IOException ex) {
                 Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -151,7 +150,6 @@ public class ReviewsWindowController implements Initializable {
                 Stage stage = (Stage) menu.getScene().getWindow();
                 stage.setScene(new Scene(root));
                 stage.setTitle("MAIN MENU");
-                stage.setResizable(false);
             } catch (IOException ex) {
                 Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -174,5 +172,6 @@ public class ReviewsWindowController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         setMenuOptions();
         setOnActionHandlers();
+        tableReview.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 }
