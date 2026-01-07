@@ -2,6 +2,7 @@ package model;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 import javax.persistence.*;
 import org.hibernate.annotations.Check;
 
@@ -43,6 +44,10 @@ public abstract class Profile implements Serializable {
         this.name = name;
         this.telephone = telephone;
         this.surname = surname;
+    }
+
+    public Profile getProfile() {
+        return this;
     }
 
     public String getUsername() {
@@ -99,11 +104,6 @@ public abstract class Profile implements Serializable {
 
     public void setListedGames(Set<Listed> listedGames) {
         this.listedGames = listedGames;
-    }
-    
-    private void defaultList() {
-        this.listedGames = new HashMap<>();
-        this.listedGames.put("My Games", new ArrayList<>());
     }
 
     public HashMap<String, ArrayList<VideoGame>> getListsView() {

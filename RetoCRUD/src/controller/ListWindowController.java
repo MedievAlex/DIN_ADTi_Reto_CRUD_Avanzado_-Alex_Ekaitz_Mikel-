@@ -1,5 +1,6 @@
 package controller;
 
+import exception.OurException;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -31,6 +33,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import model.Listed;
 import model.Pegi;
 import model.Platform;
 import model.Profile;
@@ -42,6 +45,7 @@ import model.VideoGame;
  * @author ema
  */
 public class ListWindowController implements Initializable {
+
     @FXML
     private MenuButton menu;
     @FXML
@@ -220,15 +224,21 @@ public class ListWindowController implements Initializable {
 
         for (VideoGame game : videoGames) {
             if (game.isChecked()) {
-                if (!profile.addGame(name, game)) {
-                    Alert alert = new Alert(AlertType.WARNING);
-                    alert.setTitle("WARNING");
-                    alert.setHeaderText("Error when adding " + game.getV_name() + " to the list " + name + ".");
-                    alert.setContentText("It was already in the list.");
-                    alert.showAndWait();
-                } else {
-                    anyAdded = true;
-                    game.setChecked(false);
+                try {
+                    if (cont.verifyGameInList(profile.getUsername(), name, game.getV_id())) {
+                        Alert alert = new Alert(AlertType.WARNING);
+                        alert.setTitle("WARNING");
+                        alert.setHeaderText("Error when adding " + game.getV_name() + " to the list " + name + ".");
+                        alert.setContentText("It was already in the list.");
+                        alert.showAndWait();
+                    } else {
+                        cont.addGameToList(profile.getUsername(), name, game.getV_id());
+                        anyAdded = true;
+                        game.setChecked(false);
+
+                    }
+                } catch (OurException ex) {
+                    Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
@@ -244,9 +254,9 @@ public class ListWindowController implements Initializable {
         for (VideoGame game : new ArrayList<>(videoGames)) {
             if (game.isChecked()) {
                 if ("My Games".equals(selectedList)) {
-                    HashMap<String, ArrayList<VideoGame>> lists = profile.getListsView();
-                    for (String listName : lists.keySet()) {
-                        profile.removeGame(listName, game);
+                    Set<Listed> lists = profile.getListedGames();
+                    for (Listed list : lists) {
+                        profile.removeGame(list.getListName(), game);
                     }
                 } else {
                     profile.removeGame(selectedList, game);
@@ -357,7 +367,7 @@ public class ListWindowController implements Initializable {
         setOnActionHandlers();
         tableLists.setSelectionModel(null);
         tableLists.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        
+
         tcGame.setCellValueFactory(new PropertyValueFactory<>("v_name"));
         tcRelease.setCellValueFactory(new PropertyValueFactory<>("v_release"));
         tcPlatform.setCellValueFactory(new PropertyValueFactory<>("v_platform"));
@@ -372,6 +382,7 @@ public class ListWindowController implements Initializable {
          */
     }
 
+    /*
     public void test() {
         VideoGame owlboy = new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3);
         VideoGame animalCrossing = new VideoGame(2, "Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3);
@@ -394,4 +405,5 @@ public class ListWindowController implements Initializable {
         profile.addGame("My Games", detroit);
         profile.addGame("My Games", bo2);
     }
+     */
 }
