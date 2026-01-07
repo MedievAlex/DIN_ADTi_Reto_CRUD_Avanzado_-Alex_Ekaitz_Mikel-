@@ -33,7 +33,8 @@ public abstract class Profile implements Serializable {
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<Listed> listedGames = new HashSet<>();
 
-    public Profile() {}
+    public Profile() {
+    }
 
     public Profile(String username, String password, String email, String name, String telephone, String surname) {
         this.username = username;
@@ -44,26 +45,66 @@ public abstract class Profile implements Serializable {
         this.surname = surname;
     }
 
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
+    public String getUsername() {
+        return username;
+    }
 
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public String getPassword() {
+        return password;
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-    public String getTelephone() { return telephone; }
-    public void setTelephone(String telephone) { this.telephone = telephone; }
+    public String getEmail() {
+        return email;
+    }
 
-    public String getSurname() { return surname; }
-    public void setSurname(String surname) { this.surname = surname; }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-    public Set<Listed> getListedGames() { return listedGames; }
-    public void setListedGames(Set<Listed> listedGames) { this.listedGames = listedGames; }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public Set<Listed> getListedGames() {
+        return listedGames;
+    }
+
+    public void setListedGames(Set<Listed> listedGames) {
+        this.listedGames = listedGames;
+    }
+    
+    private void defaultList() {
+        this.listedGames = new HashMap<>();
+        this.listedGames.put("My Games", new ArrayList<>());
+    }
 
     public HashMap<String, ArrayList<VideoGame>> getListsView() {
         HashMap<String, ArrayList<VideoGame>> map = new HashMap<>();
@@ -71,7 +112,7 @@ public abstract class Profile implements Serializable {
         if (listedGames != null) {
             for (Listed listed : listedGames) {
                 map.computeIfAbsent(listed.getListName(), k -> new ArrayList<>())
-                   .add(listed.getVideogame());
+                        .add(listed.getVideogame());
             }
         }
 
@@ -82,25 +123,26 @@ public abstract class Profile implements Serializable {
 
     public boolean newList(String listName) {
         HashMap<String, ArrayList<VideoGame>> memLists = getListsView();
-        if (memLists.containsKey(listName)) return false;
+        if (memLists.containsKey(listName)) {
+            return false;
+        }
 
         memLists.put(listName, new ArrayList<>());
 
         return true;
     }
 
-    public boolean renameList(String oldName, String newName)
-    {
+    public boolean renameList(String oldName, String newName) {
         HashMap<String, ArrayList<VideoGame>> memLists = getListsView();
-        if (!memLists.containsKey(oldName) || memLists.containsKey(newName)) return false;
+        if (!memLists.containsKey(oldName) || memLists.containsKey(newName)) {
+            return false;
+        }
 
         ArrayList<VideoGame> games = memLists.remove(oldName);
         memLists.put(newName, games);
 
-        for (Listed listed : listedGames)
-        {
-            if (listed.getListName().equals(oldName))
-            {
+        for (Listed listed : listedGames) {
+            if (listed.getListName().equals(oldName)) {
                 listed.setListName(newName);
             }
         }
@@ -108,12 +150,9 @@ public abstract class Profile implements Serializable {
         return true;
     }
 
-    public boolean addGame(String listName, VideoGame game)
-    {
-        for (Listed l : listedGames)
-        {
-            if (l.getListName().equals(listName) && l.getVideogame().getV_id() == game.getV_id())
-            {
+    public boolean addGame(String listName, VideoGame game) {
+        for (Listed l : listedGames) {
+            if (l.getListName().equals(listName) && l.getVideogame().getV_id() == game.getV_id()) {
                 return false;
             }
         }
@@ -122,23 +161,21 @@ public abstract class Profile implements Serializable {
         return true;
     }
 
-    public boolean removeGame(String listName, VideoGame game)
-    {
+    public boolean removeGame(String listName, VideoGame game) {
         boolean removed = listedGames.removeIf(l -> l.getListName().equals(listName) && l.getVideogame().getV_id() == game.getV_id());
 
         return removed;
     }
 
     @Override
-    public String toString()
-    {
-        return "Profile{" +
-                "username=" + username +
-                ", email=" + email +
-                ", name=" + name +
-                ", telephone=" + telephone +
-                ", surname=" + surname +
-                "}";
+    public String toString() {
+        return "Profile{"
+                + "username=" + username
+                + ", email=" + email
+                + ", name=" + name
+                + ", telephone=" + telephone
+                + ", surname=" + surname
+                + "}";
     }
 
     public abstract String show();
