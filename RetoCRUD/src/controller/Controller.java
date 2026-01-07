@@ -110,6 +110,10 @@ public class Controller {
     public boolean verifyGameInList(String username, String listName, int gameId) throws OurException {
         return DAO.verifyGameInList(username, listName, gameId);
     }
+    
+    public ArrayList<String> listComboBoxInsert(String username) throws OurException {
+        return DAO.listComboBoxInsert(username);
+    }
 
     public void addGameToList(String username, String listName, int gameId) throws OurException {
         DAO.addGameToList(username, listName, gameId);

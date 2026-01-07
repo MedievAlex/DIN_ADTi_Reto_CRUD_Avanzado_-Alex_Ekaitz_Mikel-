@@ -110,11 +110,16 @@ public class ListWindowController implements Initializable {
     }
 
     public void loadLists() {
-        HashMap<String, ArrayList<VideoGame>> lists = profile.getListsView();
-        for (HashMap.Entry<String, ArrayList<VideoGame>> entry : lists.entrySet()) {
-            String list = entry.getKey();
+        ArrayList<String> listsNames = new ArrayList();
+        try {
+            listsNames = cont.listComboBoxInsert(profile.getUsername());
+        } catch (OurException ex) {
+            Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        for (String name : listsNames) {
 
-            Button button = new Button(list);
+            Button button = new Button(name);
             buttonStyle(button);
             button.setOnAction(e
                     -> {
@@ -192,13 +197,12 @@ public class ListWindowController implements Initializable {
     }
 
     public void setComboBox() {
-        HashMap<String, ArrayList<VideoGame>> hmLists = profile.getListsView();
-        ArrayList<String> listsNames = new ArrayList<>();
-
-        for (HashMap.Entry<String, ArrayList<VideoGame>> entry : hmLists.entrySet()) {
-            if (!"My Games".equals(entry.getKey())) {
-                listsNames.add(entry.getKey());
-            }
+        
+        ArrayList<String> listsNames = new ArrayList();
+        try {
+            listsNames = cont.listComboBoxInsert(profile.getUsername());
+        } catch (OurException ex) {
+            Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         combLists.getItems().clear();

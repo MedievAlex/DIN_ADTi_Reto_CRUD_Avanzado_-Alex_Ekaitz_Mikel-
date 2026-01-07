@@ -27,6 +27,8 @@ public interface ClassDAO {
 
     public boolean verifyGameInList(String username, String listName, int gameId) throws OurException;
     
+    public ArrayList<String> listComboBoxInsert(String username) throws OurException;
+    
     public void addGameToList(String username, String listName, int gameId) throws OurException;
 
     public void removeGameFromList(String username, String listName, int gameId) throws OurException;
