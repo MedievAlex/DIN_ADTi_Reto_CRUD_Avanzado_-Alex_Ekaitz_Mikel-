@@ -22,27 +22,33 @@ public interface ClassDAO {
 
     public boolean modificarUser(String password, String email, String name, String telephone, String surname, String username, String gender) throws OurException;
 
+    public ArrayList<String> comboBoxInsert() throws OurException;
+
     //[VIDEOGAMES]
-    public ArrayList<VideoGame> getVideoGames() throws OurException;
+    public ArrayList<VideoGame> getAllVideoGames() throws OurException;
 
     public ArrayList<VideoGame> getGamesFromList(String username, String listName) throws OurException;
 
-    public VideoGame getSingleVideoGame(String username, int gameId) throws OurException;
-    
     public boolean verifyGameInList(String username, String listName, int gameId) throws OurException;
-
-    public ArrayList<String> listComboBoxInsert(String username) throws OurException;
 
     public void addGameToList(String username, String listName, int gameId) throws OurException;
 
+    public void addGamesToList(String username, String listName, ArrayList<VideoGame> games) throws OurException;
+
     public void removeGameFromList(String username, String listName, int gameId) throws OurException;
 
-    public ArrayList<String> comboBoxInsert() throws OurException;
+    public void removeGamesFromList(String username, String listName, ArrayList<VideoGame> games) throws OurException;
 
     //[LISTS]
+    public ArrayList<String> getUserLists(String username) throws OurException;
+
     public void newList(Profile profile, VideoGame videogame, String listName) throws OurException;
 
     public void deleteList(String username, String listName) throws OurException;
+
+    public boolean verifyListName();
+
+    public boolean renameList();
 
     //[REVIEWS]
     //[OTHER]

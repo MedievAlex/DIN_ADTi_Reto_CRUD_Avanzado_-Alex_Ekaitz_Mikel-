@@ -126,7 +126,7 @@ public class ReviewsWindowController implements Initializable {
                 controllerWindow.setUsuario(profile);
                 controllerWindow.setCont(cont);
 
-                controllerWindow.test();
+                
                 controllerWindow.loadLists();
                 controllerWindow.setComboBox();
 

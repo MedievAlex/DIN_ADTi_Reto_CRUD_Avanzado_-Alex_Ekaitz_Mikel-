@@ -286,7 +286,7 @@ public class MainMenuWindowController implements Initializable
     {
         try
         {
-            ArrayList<VideoGame> allGames = cont.getVideoGames();
+            ArrayList<VideoGame> allGames = cont.getAllVideoGames();
 
             ArrayList<VideoGame> myGames = cont.getGamesFromList(profile.getUsername(), "My Games");
 

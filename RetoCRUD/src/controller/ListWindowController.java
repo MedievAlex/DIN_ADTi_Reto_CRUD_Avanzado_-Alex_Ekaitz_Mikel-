@@ -113,7 +113,7 @@ public class ListWindowController implements Initializable {
     public void loadLists() {
         ArrayList<String> listsNames = new ArrayList();
         try {
-            listsNames = cont.listComboBoxInsert(profile.getUsername());
+            listsNames = cont.getUserLists(profile.getUsername());
         } catch (OurException ex) {
             Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -207,11 +207,11 @@ public class ListWindowController implements Initializable {
 
         ArrayList<String> listsNames = new ArrayList();
         try {
-            listsNames = cont.listComboBoxInsert(profile.getUsername());
+            listsNames = cont.getUserLists(profile.getUsername());
         } catch (OurException ex) {
             Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        listsNames.add("Create a new List");
+        listsNames.add("Create a New List");
         combLists.getItems().clear();
         combLists.getItems().addAll(listsNames);
     }
@@ -300,7 +300,7 @@ public class ListWindowController implements Initializable {
         }
 
         boolean anyAdded = false;
-
+/*
         for (VideoGame game : videoGames) {
             if (game.isChecked()) {
                 try {
@@ -311,7 +311,7 @@ public class ListWindowController implements Initializable {
                         alert.setContentText("It was already in the list.");
                         alert.showAndWait();
                     } else {
-                        if ("Create a new List".equals(selectedListName)) {
+                        if ("Create a New List".equals(selectedListName)) {
                             selectedListName = "New List " + getListNumber();
                             newList(selectedListName);
                         }
@@ -329,7 +329,7 @@ public class ListWindowController implements Initializable {
 
         if (anyAdded) {
             tableLists.refresh();
-        }
+        }*/
     }
 
     private void removeFromList() {

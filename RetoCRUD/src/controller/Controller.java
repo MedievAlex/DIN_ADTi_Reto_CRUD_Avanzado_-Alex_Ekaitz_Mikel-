@@ -101,41 +101,55 @@ public class Controller {
     }
 
     //[VIDEOGAMES]
-    public ArrayList<VideoGame> getVideoGames() throws OurException {
-        return DAO.getVideoGames();
+    public ArrayList<VideoGame> getAllVideoGames() throws OurException {
+        return DAO.getAllVideoGames();
     }
 
     public ArrayList<VideoGame> getGamesFromList(String username, String listName) throws OurException {
         return DAO.getGamesFromList(username, listName);
     }
 
-    public VideoGame getSingleVideoGame(String username, int gameId) throws OurException{
-        return DAO.getSingleVideoGame(username, gameId);
-    }
-    
     public boolean verifyGameInList(String username, String listName, int gameId) throws OurException {
         return DAO.verifyGameInList(username, listName, gameId);
-    }
-
-    public ArrayList<String> listComboBoxInsert(String username) throws OurException {
-        return DAO.listComboBoxInsert(username);
     }
 
     public void addGameToList(String username, String listName, int gameId) throws OurException {
         DAO.addGameToList(username, listName, gameId);
     }
 
+    public void addGamesToList(String username, String listName, ArrayList<VideoGame> games) throws OurException {
+        DAO.addGamesToList(username, listName, games);
+    }
+
     public void removeGameFromList(String username, String listName, int gameId) throws OurException {
         DAO.removeGameFromList(username, listName, gameId);
     }
 
+    public void removeGamesFromList(String username, String listName, ArrayList<VideoGame> games) throws OurException {
+        DAO.removeGamesFromList(username, listName, games);
+    }
+
     //[LISTS]
+    public ArrayList<String> getUserLists(String username) throws OurException {
+        return DAO.getUserLists(username);
+    }
+
     public void newList(Profile profile, VideoGame videogame, String listName) throws OurException {
         DAO.newList(profile, videogame, listName);
     }
 
     public void deleteList(String username, String listName) throws OurException {
         DAO.deleteList(username, listName);
+    }
+
+    public boolean verifyListName() {
+
+        return true;
+    }
+
+    public boolean renameList() {
+
+        return true;
     }
 
     //[REVIEWS]
