@@ -127,7 +127,7 @@ public class ReviewsWindowController implements Initializable {
                 controllerWindow.setCont(cont);
 
                 
-                controllerWindow.loadLists();
+                controllerWindow.loadListButtons();
                 controllerWindow.setComboBox();
 
                 Stage stage = (Stage) menu.getScene().getWindow();

@@ -110,8 +110,9 @@ public class ListWindowController implements Initializable {
         button.wrapTextProperty().setValue(true);
     }
 
-    public void loadLists() {
+    public void loadListButtons() {
         ArrayList<String> listsNames = new ArrayList();
+
         try {
             listsNames = cont.getUserLists(profile.getUsername());
         } catch (OurException ex) {
@@ -260,76 +261,63 @@ public class ListWindowController implements Initializable {
     }
 
     private void addToList() {
-        String name;
-        VideoGame game;
-
-        // Saves them on a list and if it already is shows an alert
         if (combLists.getValue() == null) {
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("ERROR");
-            alert.setHeaderText("[No list selected]"); // O null si no quieres encabezado
-            alert.setContentText("Select a list to add the games.");
-            alert.showAndWait();
-        } else {
-            name = combLists.getValue();
-
-            if (tableLists.getSelectionModel().getSelectedItem() != null) {
-                game = tableLists.getSelectionModel().getSelectedItem();
-                if (!profile.addGame(name, game)) {
-                    Alert alert = new Alert(AlertType.WARNING);
-                    alert.setTitle("WARNING");
-                    alert.setHeaderText("Error when adding games to the list " + name + "."); // O null si no quieres encabezado
-                    alert.setContentText("The game " + game.getV_name() + " it has not been added to the list " + name + " because it is already there.");
-                    alert.showAndWait();
-                } else {
-                    // Actualizar
-                }
-            }
-        }
-        
-        
-        
-        String selectedListName = combLists.getValue();
-        if (selectedListName == null) {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("ERROR");
             alert.setHeaderText("[No list selected]");
             alert.setContentText("Select a list to add the games.");
             alert.showAndWait();
-            return;
-        }
+        } else {
+            final String selectedListName = combLists.getValue();
 
-        boolean anyAdded = false;
-/*
-        for (VideoGame game : videoGames) {
-            if (game.isChecked()) {
+            if ("Create a New List".equals(selectedListName)) {
+                
+                cont.newList(profile, videogame, selectedListName);
+                
+            } else {
                 try {
-                    if (cont.verifyGameInList(profile.getUsername(), selectedListName, game.getV_id())) {
-                        Alert alert = new Alert(AlertType.WARNING);
-                        alert.setTitle("WARNING");
-                        alert.setHeaderText("Error when adding " + game.getV_name() + " to the list " + selectedListName + ".");
-                        alert.setContentText("It was already in the list.");
-                        alert.showAndWait();
-                    } else {
-                        if ("Create a New List".equals(selectedListName)) {
-                            selectedListName = "New List " + getListNumber();
-                            newList(selectedListName);
+                    ArrayList<VideoGame> actualListGames = cont.getGamesFromList(profile.getUsername(), selectedList);
+                    ArrayList<VideoGame> nextListGames = cont.getGamesFromList(profile.getUsername(), selectedListName);
+
+                    for (VideoGame game : actualListGames) {
+                        boolean isInMyGames = nextListGames.stream().anyMatch(g -> g.getV_id() == game.getV_id());
+                        game.setChecked(isInMyGames);
+
+                        if (isInMyGames) {
+                            profile.addGame(selectedListName, game);
                         }
 
-                        cont.addGameToList(profile.getUsername(), selectedListName, game.getV_id());
-                        anyAdded = true;
-                        game.setChecked(false);
+                        final boolean[] isUpdating = {false};
 
+                        game.checkedProperty().addListener((obs, oldVal, newVal)
+                                -> {
+                            if (isUpdating[0]) {
+                                return;
+                            }
+
+                            try {
+                                if (newVal) {
+                                    cont.addGameToList(profile.getUsername(), selectedListName, game.getV_id());
+                                    profile.addGame(selectedListName, game);
+                                } else {
+                                    cont.removeGameFromList(profile.getUsername(), selectedListName, game.getV_id());
+                                    profile.removeGame(selectedListName, game);
+                                }
+                            } catch (OurException ex) {
+                                ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
+                                isUpdating[0] = true;
+                                isUpdating[0] = false;
+                            }
+                        });
+                    }
+                    for (VideoGame uncheckGame : actualListGames) {
+                        uncheckGame.setChecked(false);
                     }
                 } catch (OurException ex) {
-                    Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                    ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
                 }
             }
         }
-
-        if (anyAdded) {
-            tableLists.refresh();
-        }*/
     }
 
     private void removeFromList() {

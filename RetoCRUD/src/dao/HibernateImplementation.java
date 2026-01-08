@@ -424,10 +424,8 @@ public class HibernateImplementation implements ClassDAO {
 
             session.beginTransaction();
 
-            Profile profile = session.get(Profile.class,
-                    username);
-            VideoGame game = session.get(VideoGame.class,
-                    gameId);
+            Profile profile = session.get(Profile.class, username);
+            VideoGame game = session.get(VideoGame.class, gameId);
 
             if (profile != null && game != null) {
                 Listed listed = new Listed(profile, game, listName);
@@ -702,7 +700,7 @@ public class HibernateImplementation implements ClassDAO {
         } finally {
             thread.releaseSession();
         }
-        
+
         return listRenamed;
     }
 
@@ -774,7 +772,12 @@ public class HibernateImplementation implements ClassDAO {
 
             }
 
+            session.save(new Listed(session.get(User.class, "jlopez"), allGames.get(0), "My Games")); // Primero tiene que estar registrado en la lista por defecto
             session.save(new Listed(session.get(User.class, "jlopez"), allGames.get(0), "test"));
+
+            session.save(new Listed(session.get(Admin.class, "asanchez"), allGames.get(0), "My Games")); // Primero tiene que estar registrado en la lista por defecto
+            session.save(new Listed(session.get(Admin.class, "asanchez"), allGames.get(1), "My Games")); // Primero tiene que estar registrado en la lista por defecto
+            session.save(new Listed(session.get(Admin.class, "asanchez"), allGames.get(3), "My Games")); // Primero tiene que estar registrado en la lista por defecto
 
             session.save(new Listed(session.get(Admin.class, "asanchez"), allGames.get(0), "NINTENDO"));
             session.save(new Listed(session.get(Admin.class, "asanchez"), allGames.get(1), "NINTENDO"));
@@ -805,107 +808,4 @@ public class HibernateImplementation implements ClassDAO {
         return thread.getSession();
     }
 
-    /*
-        Session session = null;
-
-        try {
-            session = HibernateUtil.getSession();
-            session.beginTransaction();
-
-            VideoGame owlboy = new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3);
-            VideoGame animalCrossing = new VideoGame(2, "Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3);
-            VideoGame detroit = new VideoGame(3, "Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18);
-            VideoGame astrobot = new VideoGame(4, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3);
-            VideoGame cod = new VideoGame(5, "Call of Duty: Black Ops II", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3);
-
-            ArrayList<VideoGame> allGames = new ArrayList<>();
-             for (VideoGame game : allGames) {
-                VideoGame existing = session
-                        .createQuery("FROM VideoGame v WHERE v.v_name = :name", VideoGame.class)
-                        .setParameter("name", game.getV_name())
-                        .uniqueResult();
-
-                if (existing == null) {
-                    session.save(game);
-                }
-            }
-             
-            allGames.add(owlboy);
-            allGames.add(animalCrossing);
-            allGames.add(detroit);
-            allGames.add(astrobot);
-            allGames.add(cod);
-            
-            Profile user = new User();
-            Profile admin = new Admin();
-
-            user = new User("Masculino", "AB1234567890123456789012",
-                    "jlopez", "pass123", "jlopez@example.com",
-                    "Juan", "987654321", "Lopez");
-
-            user.addGame("My Games", owlboy);
-            user.addGame("My Games", animalCrossing);
-            user.addGame("My Games", cod);
-            
-            user.newList("Nintendo Switch");
-            user.addGame("Nintendo Switch", owlboy);
-            user.addGame("Nintendo Switch", animalCrossing);
-
-            if (session.get(User.class, "jlopez") == null) {
-                session.save(user);
-            }
-
-            user = new User("Femenino", "ZX9081726354891027364512",
-                    "mramirez", "pass456", "mramirez@example.com",
-                    "Maria", "912345678", "Ramirez");
-
-            user.addGame("My Games", owlboy);
-            user.addGame("My Games", astrobot);
-            user.addGame("My Games", detroit);
-            
-            user.newList("PlayStation");
-            user.addGame("PlayStation", detroit);
-            user.addGame("PlayStation", astrobot);
-
-            if (session.get(User.class, "mramirez") == null) {
-                session.save(user);
-            }
-
-            user = new User("Masculino", "LM0011223344556677889900",
-                        "cperez", "pass789", "cperez@example.com",
-                        "Carlos", "934567890", "Perez");
-            
-            user.addGame("My Games", owlboy);
-            user.addGame("My Games", astrobot);
-            user.addGame("My Games", animalCrossing);
-            user.addGame("My Games", detroit);
-            user.addGame("My Games", cod);
-
-            if (session.get(User.class, "cperez") == null) {
-                session.save(user);
-            }
-
-            if (session.get(Admin.class, "asanchez") == null) {
-                session.save(new Admin("CTA-001", "asanchez", "qwerty",
-                        "asanchez@example.com", "Ana", "900112233", "Sanchez"));
-            }
-
-            if (session.get(Admin.class, "rluna") == null) {
-                session.save(new Admin("CTA-002", "rluna", "zxcvbn",
-                        "rluna@example.com", "Rosa", "955667788", "Luna"));
-            }
-
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            if (session != null && session.getTransaction().isActive()) {
-                session.getTransaction().rollback();
-            }
-            throw new OurException(ErrorMessages.DATABASE);
-        } finally {
-            if (session != null && session.isOpen()) {
-                session.close();
-            }
-        }
-    }
-     */
 }
