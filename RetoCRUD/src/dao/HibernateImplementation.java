@@ -43,6 +43,7 @@ public class HibernateImplementation implements ClassDAO {
         activeThreads.clear();
     }
 
+    //[USERS]
     @Override
     public Profile logIn(String username, String password) throws OurException {
         Session session = null;
@@ -289,6 +290,7 @@ public class HibernateImplementation implements ClassDAO {
         return listaUsuarios;
     }
 
+    //[VIDEOGAMES]
     @Override
     public ArrayList<VideoGame> getVideoGames() throws OurException {
         Session session = null;
@@ -524,6 +526,13 @@ public class HibernateImplementation implements ClassDAO {
         }
     }
 
+    //[LISTS]
+    
+    
+    //[REVIEWS]
+    
+    
+    //[OTHER]
     @Override
     public void initializeDefault() throws OurException {
 

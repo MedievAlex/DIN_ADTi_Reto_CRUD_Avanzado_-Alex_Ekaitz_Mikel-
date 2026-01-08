@@ -25,6 +25,7 @@ public class Controller {
         this.DAO = dao;
     }
 
+    //[USERS]
     /**
      * Attempts to log in a user or admin.
      *
@@ -99,6 +100,7 @@ public class Controller {
         return DAO.comboBoxInsert();
     }
 
+    //[VIDEOGAMES]
     public ArrayList<VideoGame> getVideoGames() throws OurException {
         return DAO.getVideoGames();
     }
@@ -123,6 +125,13 @@ public class Controller {
         DAO.removeGameFromList(username, listName, gameId);
     }
 
+    //[LISTS]
+    
+    
+    //[REVIEWS]
+    
+    
+    //[OTHER]
     public void initializeDefault() throws OurException {
         DAO.initializeDefault();
     }

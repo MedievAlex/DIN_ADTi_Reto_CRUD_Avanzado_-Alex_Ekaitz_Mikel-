@@ -116,7 +116,7 @@ public class ListWindowController implements Initializable {
         } catch (OurException ex) {
             Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         for (String name : listsNames) {
 
             Button button = new Button(name);
@@ -145,18 +145,23 @@ public class ListWindowController implements Initializable {
     }
 
     private void showList(Button button) {
+
         selectedList = button.getText();
 
         selectedButton(button);
+        try {
+            ArrayList<VideoGame> list = cont.getGamesFromList(profile.getUsername(), selectedList);
 
-        ArrayList<VideoGame> list = profile.getListsView().get(selectedList);
-        listName.setText(selectedList);
+            listName.setText(selectedList);
 
-        videoGames = FXCollections.observableArrayList();
-        for (VideoGame game : list) {
-            videoGames.add(game);
+            videoGames = FXCollections.observableArrayList();
+            for (VideoGame game : list) {
+                videoGames.add(game);
+            }
+            tableLists.setItems(videoGames);
+        } catch (OurException ex) {
+            Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        tableLists.setItems(videoGames);
     }
 
     private int getListNumber() {
@@ -197,7 +202,7 @@ public class ListWindowController implements Initializable {
     }
 
     public void setComboBox() {
-        
+
         ArrayList<String> listsNames = new ArrayList();
         try {
             listsNames = cont.listComboBoxInsert(profile.getUsername());

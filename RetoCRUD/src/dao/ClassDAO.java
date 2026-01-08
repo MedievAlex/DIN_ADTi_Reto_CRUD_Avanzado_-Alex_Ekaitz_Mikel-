@@ -11,6 +11,7 @@ import model.VideoGame;
  */
 public interface ClassDAO {
 
+    //[USERS]
     public Profile logIn(String username, String password) throws OurException;
 
     public boolean signUp(String gender, String cardNumber, String username, String password, String email, String name, String telephone, String surname) throws OurException;
@@ -21,6 +22,7 @@ public interface ClassDAO {
 
     public boolean modificarUser(String password, String email, String name, String telephone, String surname, String username, String gender) throws OurException;
 
+    //[VIDEOGAMES]
     public ArrayList<VideoGame> getVideoGames() throws OurException;
 
     public ArrayList<VideoGame> getGamesFromList(String username, String listName) throws OurException;
@@ -35,5 +37,12 @@ public interface ClassDAO {
 
     public ArrayList<String> comboBoxInsert() throws OurException;
 
+    //[LISTS]
+    
+    
+    //[REVIEWS]
+    
+    
+    //[OTHER]
     public void initializeDefault() throws OurException;
 }
