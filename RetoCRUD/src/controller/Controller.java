@@ -142,14 +142,14 @@ public class Controller {
         DAO.deleteList(username, listName);
     }
 
-    public boolean verifyListName() {
+    public boolean verifyListName(String username, String listName) throws OurException {
 
-        return true;
+        return DAO.verifyListName(username, listName);
     }
 
-    public boolean renameList() {
+    public boolean renameList(String username, String listName, String listNewName) throws OurException {
 
-        return true;
+        return DAO.renameList(username, listName, listNewName);
     }
 
     //[REVIEWS]

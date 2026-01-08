@@ -46,9 +46,9 @@ public interface ClassDAO {
 
     public void deleteList(String username, String listName) throws OurException;
 
-    public boolean verifyListName();
+    public boolean verifyListName(String username, String listName) throws OurException;
 
-    public boolean renameList();
+    public boolean renameList(String username, String listName, String listNewName) throws OurException;
 
     //[REVIEWS]
     //[OTHER]
