@@ -1,0 +1,114 @@
+package model;
+
+import java.io.Serializable;
+import java.time.LocalDate;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "review")
+@IdClass(ReviewId.class)
+public class Review implements Serializable {
+    
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "username", referencedColumnName = "username")
+    private Profile profile;
+    
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "game_id", referencedColumnName = "v_id")
+    private VideoGame videogame;
+    
+    @Column(name = "score", nullable = false)
+    private int score;
+    
+    @Column(name = "description", nullable = false)
+    private String description;
+    
+    @Column(name = "review_date")  
+    private LocalDate reviewDate;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "platform")
+    private Platform platform;
+    
+    // Constructor vacío
+    public Review() {}
+
+    public Review(Profile profile, VideoGame videogame, int score, String description, 
+                  LocalDate reviewDate, Platform platform) {
+        this.profile = profile;
+        this.videogame = videogame;
+        this.score = score;
+        this.description = description;
+        this.reviewDate = reviewDate;
+        this.platform = platform;
+    }
+
+    public Profile getProfile() {  
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {  
+        this.profile = profile;
+    }
+
+    public VideoGame getVideogame() {
+        return videogame;
+    }
+
+    public void setVideogame(VideoGame videogame) {
+        this.videogame = videogame;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public LocalDate getReviewDate() {
+        return reviewDate;
+    }
+
+    public void setReviewDate(LocalDate reviewDate) {
+        this.reviewDate = reviewDate;
+    }
+
+    public Platform getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(Platform platform) {
+        this.platform = platform;
+    }
+    
+    public String getScoreFormatted() {
+        return this.score + "/10";
+    }
+
+    @Override
+    public String toString() {
+        return "Review{" + "profile=" + profile + ", videogame=" + videogame + 
+               ", score=" + score + ", description=" + description + 
+               ", reviewDate=" + reviewDate + ", platform=" + platform + '}';
+    }
+}
