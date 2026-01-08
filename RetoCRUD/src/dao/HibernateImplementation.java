@@ -20,28 +20,36 @@ import threads.SessionThread;
 
 public class HibernateImplementation implements ClassDAO
 {
+
     private final List<SessionThread> activeThreads = new ArrayList<>();
 
-    private SessionThread startSessionThread() {
+    private SessionThread startSessionThread()
+    {
         SessionThread thread = new SessionThread();
         activeThreads.add(thread);
         thread.start();
         return thread;
     }
 
-    public void cleanupThreads() {
-        for (SessionThread t : activeThreads) {
+    public void cleanupThreads()
+    {
+        for (SessionThread t : activeThreads)
+        {
             t.releaseSession();
         }
 
-        for (SessionThread t : activeThreads) {
-            try {
+        for (SessionThread t : activeThreads)
+        {
+            try
+            {
                 t.join();
-            } catch (InterruptedException e) {}
+            } catch (InterruptedException e)
+            {
+            }
         }
         activeThreads.clear();
     }
-    
+
     @Override
     public Profile logIn(String username, String password) throws OurException
     {
@@ -55,7 +63,10 @@ public class HibernateImplementation implements ClassDAO
             criteria.add(Restrictions.eq("username", username));
             criteria.add(Restrictions.eq("password", password));
             User user = (User) criteria.uniqueResult();
-            if (user != null) return user;
+            if (user != null)
+            {
+                return user;
+            }
 
             criteria = session.createCriteria(Admin.class);
             criteria.add(Restrictions.eq("username", username));
@@ -63,12 +74,10 @@ public class HibernateImplementation implements ClassDAO
             Admin admin = (Admin) criteria.uniqueResult();
 
             return admin;
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             throw new OurException(ErrorMessages.LOGIN);
-        }
-        finally
+        } finally
         {
             if (session != null && session.isOpen())
             {
@@ -85,7 +94,7 @@ public class HibernateImplementation implements ClassDAO
         try
         {
             Session session = waitForSession(thread);
-            
+
             if (session == null)
             {
                 throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
@@ -100,24 +109,21 @@ public class HibernateImplementation implements ClassDAO
             session.getTransaction().commit();
 
             return true;
-        }
-        catch (OurException e)
+        } catch (OurException e)
         {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive())
             {
                 thread.getSession().getTransaction().rollback();
             }
             throw e;
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive())
             {
                 thread.getSession().getTransaction().rollback();
             }
             throw new OurException(ErrorMessages.REGISTER_USER);
-        }
-        finally
+        } finally
         {
             thread.releaseSession();
         }
@@ -132,12 +138,12 @@ public class HibernateImplementation implements ClassDAO
         try
         {
             Session session = waitForSession(thread);
-            
+
             if (session == null)
             {
                 throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
             }
-            
+
             session.beginTransaction();
 
             User user = session.get(User.class, username);
@@ -157,8 +163,7 @@ public class HibernateImplementation implements ClassDAO
             session.getTransaction().commit();
 
             success = true;
-        }
-        catch (OurException e)
+        } catch (OurException e)
         {
             try
             {
@@ -166,11 +171,11 @@ public class HibernateImplementation implements ClassDAO
                 {
                     thread.getSession().getTransaction().rollback();
                 }
+            } catch (HibernateException he)
+            {
             }
-            catch (HibernateException he) {}
             throw e;
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             try
             {
@@ -178,11 +183,11 @@ public class HibernateImplementation implements ClassDAO
                 {
                     thread.getSession().getTransaction().rollback();
                 }
+            } catch (HibernateException he)
+            {
             }
-            catch (HibernateException he) {}
             throw new OurException(ErrorMessages.DELETE_USER);
-        }
-        finally
+        } finally
         {
             thread.releaseSession();
         }
@@ -199,12 +204,12 @@ public class HibernateImplementation implements ClassDAO
         try
         {
             Session session = waitForSession(thread);
-            
+
             if (session == null)
             {
                 throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
             }
-            
+
             session.beginTransaction();
 
             Admin admin = session.get(Admin.class, adminUsername);
@@ -238,8 +243,7 @@ public class HibernateImplementation implements ClassDAO
             session.getTransaction().commit();
 
             success = true;
-        }
-        catch (OurException e)
+        } catch (OurException e)
         {
             try
             {
@@ -247,11 +251,11 @@ public class HibernateImplementation implements ClassDAO
                 {
                     thread.getSession().getTransaction().rollback();
                 }
+            } catch (HibernateException he)
+            {
             }
-            catch (HibernateException he) {}
             throw e;
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             try
             {
@@ -259,11 +263,11 @@ public class HibernateImplementation implements ClassDAO
                 {
                     thread.getSession().getTransaction().rollback();
                 }
+            } catch (HibernateException he)
+            {
             }
-            catch (HibernateException he) {}
             throw new OurException(ErrorMessages.DELETE_USER);
-        }
-        finally
+        } finally
         {
             thread.releaseSession();
         }
@@ -280,12 +284,12 @@ public class HibernateImplementation implements ClassDAO
         try
         {
             Session session = waitForSession(thread);
-            
+
             if (session == null)
             {
                 throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
             }
-            
+
             session.beginTransaction();
 
             User user = session.get(User.class, username);
@@ -302,22 +306,18 @@ public class HibernateImplementation implements ClassDAO
 
                 session.getTransaction().commit();
                 success = true;
-            }
-            else
+            } else
             {
                 session.getTransaction().rollback();
                 throw new OurException(ErrorMessages.UPDATE_USER);
             }
-        }
-        catch (OurException e)
+        } catch (OurException e)
         {
             throw e;
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             throw new OurException(ErrorMessages.UPDATE_USER);
-        }
-        finally
+        } finally
         {
             thread.releaseSession();
         }
@@ -341,12 +341,10 @@ public class HibernateImplementation implements ClassDAO
             {
                 listaUsuarios.add(u.getUsername());
             }
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             throw new OurException(ErrorMessages.GET_USERS);
-        }
-        finally
+        } finally
         {
             if (session != null && session.isOpen())
             {
@@ -356,7 +354,7 @@ public class HibernateImplementation implements ClassDAO
 
         return listaUsuarios;
     }
-    
+
     @Override
     public ArrayList<VideoGame> getVideoGames() throws OurException
     {
@@ -371,16 +369,14 @@ public class HibernateImplementation implements ClassDAO
             gamesList = new ArrayList<>(session.createQuery("FROM VideoGame v", VideoGame.class).list());
 
             session.getTransaction().commit();
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             if (session != null && session.getTransaction().isActive())
             {
                 session.getTransaction().rollback();
             }
             throw new OurException(ErrorMessages.DATABASE);
-        }
-        finally
+        } finally
         {
             if (session != null && session.isOpen())
             {
@@ -390,7 +386,7 @@ public class HibernateImplementation implements ClassDAO
 
         return gamesList;
     }
-    
+
     @Override
     public ArrayList<VideoGame> getGamesFromList(String username, String listName) throws OurException
     {
@@ -413,11 +409,10 @@ public class HibernateImplementation implements ClassDAO
             if (profile != null)
             {
                 List<Listed> listedGames = session.createQuery(
-                    "FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName", Listed.class)
-                    .setParameter("username", username)
-                    .setParameter("listName", listName)
-                    .list();
-
+                        "FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName", Listed.class)
+                        .setParameter("username", username)
+                        .setParameter("listName", listName)
+                        .list();
 
                 for (Listed listed : listedGames)
                 {
@@ -426,24 +421,21 @@ public class HibernateImplementation implements ClassDAO
             }
 
             session.getTransaction().commit();
-        }
-        catch (OurException e)
+        } catch (OurException e)
         {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive())
             {
                 thread.getSession().getTransaction().rollback();
             }
             throw e;
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive())
             {
                 thread.getSession().getTransaction().rollback();
             }
             throw new OurException(ErrorMessages.DATABASE);
-        }
-        finally
+        } finally
         {
             thread.releaseSession();
         }
@@ -477,24 +469,21 @@ public class HibernateImplementation implements ClassDAO
             }
 
             session.getTransaction().commit();
-        }
-        catch (OurException e)
+        } catch (OurException e)
         {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive())
             {
                 thread.getSession().getTransaction().rollback();
             }
             throw e;
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive())
             {
                 thread.getSession().getTransaction().rollback();
             }
             throw new OurException(ErrorMessages.DATABASE);
-        }
-        finally
+        } finally
         {
             thread.releaseSession();
         }
@@ -517,35 +506,32 @@ public class HibernateImplementation implements ClassDAO
             session.beginTransaction();
 
             session.createQuery("DELETE FROM Listed WHERE profile.username = :username AND listName = :listName AND videogame.v_id = :gameId")
-                .setParameter("username", username)
-                .setParameter("listName", listName)
-                .setParameter("gameId", gameId)
-                .executeUpdate();
+                    .setParameter("username", username)
+                    .setParameter("listName", listName)
+                    .setParameter("gameId", gameId)
+                    .executeUpdate();
 
             session.getTransaction().commit();
-        }
-        catch (OurException e)
+        } catch (OurException e)
         {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive())
             {
                 thread.getSession().getTransaction().rollback();
             }
             throw e;
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive())
             {
                 thread.getSession().getTransaction().rollback();
             }
             throw new OurException(ErrorMessages.DATABASE);
-        }
-        finally
+        } finally
         {
             thread.releaseSession();
         }
     }
-    
+
     @Override
     public void initializeDefault() throws OurException
     {
@@ -599,28 +585,28 @@ public class HibernateImplementation implements ClassDAO
             for (VideoGame game : allGames)
             {
                 VideoGame existing = session
-                .createQuery("FROM VideoGame v WHERE v.v_name = :name", VideoGame.class)
-                .setParameter("name", game.getV_name())
-                .uniqueResult();
+                        .createQuery("FROM VideoGame v WHERE v.v_name = :name", VideoGame.class)
+                        .setParameter("name", game.getV_name())
+                        .uniqueResult();
 
-            if (existing == null)
-            {
-                session.save(game);
-            }
+                if (existing == null)
+                {
+                    session.save(game);
+                }
 
             }
+            
+            session.save(new Listed(session.get(User.class, "jlopez"), allGames.get(0), "Test"));
 
             session.getTransaction().commit();
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             if (session != null && session.getTransaction().isActive())
             {
                 session.getTransaction().rollback();
             }
             throw new OurException(ErrorMessages.DATABASE);
-        }
-        finally
+        } finally
         {
             if (session != null && session.isOpen())
             {
@@ -628,7 +614,7 @@ public class HibernateImplementation implements ClassDAO
             }
         }
     }
-    
+
     private Session waitForSession(SessionThread thread) throws InterruptedException
     {
         int attempts = 0;
