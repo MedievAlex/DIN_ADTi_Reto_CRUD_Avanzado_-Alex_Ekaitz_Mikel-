@@ -633,12 +633,10 @@ public class HibernateImplementation implements ClassDAO {
                         .setParameter("listName", listName)
                         .getSingleResult();
 
-                
-
                 if (list == null) {
                     nameExist = false;
                 }
-                
+
                 session.getTransaction().commit();
             }
 
@@ -661,8 +659,50 @@ public class HibernateImplementation implements ClassDAO {
 
     @Override
     public boolean renameList(String username, String listName, String listNewName) throws OurException {
-        boolean listRenamed = true;
+        boolean listRenamed = false;
 
+        SessionThread thread = startSessionThread();
+
+        try {
+            Session session = waitForSession(thread);
+
+            if (session == null) {
+                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
+            }
+
+            session.beginTransaction();
+
+            Profile profile = session.get(Profile.class, username);
+
+            if (profile != null) {
+                int update = session.createQuery(
+                        "UPDATE TABLE Listed l SET l.listName = :listName WHERE l.profile.username = :username AND l.listName = :listName", Listed.class)
+                        .setParameter("username", username)
+                        .setParameter("listName", listName)
+                        .executeUpdate();
+
+                if (update != 0) {
+                    listRenamed = true;
+                }
+
+                session.getTransaction().commit();
+            }
+
+            session.getTransaction().commit();
+        } catch (OurException e) {
+            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+                thread.getSession().getTransaction().rollback();
+            }
+            throw e;
+        } catch (Exception e) {
+            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+                thread.getSession().getTransaction().rollback();
+            }
+            throw new OurException(ErrorMessages.DATABASE);
+        } finally {
+            thread.releaseSession();
+        }
+        
         return listRenamed;
     }
 
