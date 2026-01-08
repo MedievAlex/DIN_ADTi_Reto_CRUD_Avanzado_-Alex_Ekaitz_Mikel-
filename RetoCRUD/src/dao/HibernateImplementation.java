@@ -373,12 +373,7 @@ public class HibernateImplementation implements ClassDAO {
 
         session.beginTransaction();
 
-        VideoGame selectedGame = session.createQuery(
-                "FROM videogame v WHERE v.videogame_id = :gameId", VideoGame.class)
-                .setParameter("videogame_id", gameId)
-                .uniqueResult();
-
-        session.getTransaction().commit();
+        VideoGame selectedGame = session.get(VideoGame.class, gameId);
         
         return selectedGame;
     }
