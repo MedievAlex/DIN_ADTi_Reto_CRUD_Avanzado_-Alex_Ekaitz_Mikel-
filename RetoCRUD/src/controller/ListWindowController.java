@@ -1,6 +1,7 @@
 package controller;
 
 import exception.OurException;
+import exception.ShowAlert;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -183,8 +184,8 @@ public class ListWindowController implements Initializable {
         return newNumber;
     }
 
-    private void newList() {
-        String buttonName = "New List " + getListNumber();
+    private void newList(String newList) {
+        String buttonName = newList;
 
         profile.newList(buttonName);
 
@@ -198,6 +199,7 @@ public class ListWindowController implements Initializable {
 
         vbLists.getChildren().add(button);
         litsButtons.add(button);
+
         setComboBox();
     }
 
@@ -209,18 +211,86 @@ public class ListWindowController implements Initializable {
         } catch (OurException ex) {
             Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        listsNames.add("Create a new List");
         combLists.getItems().clear();
         combLists.getItems().addAll(listsNames);
     }
 
     private void saveToAdd() {
-        // Save in a list to add them when a checkbox is true
+        try {
+            String selectedListName = null;
+            ArrayList<VideoGame> listedGames = cont.getGamesFromList(profile.getUsername(), selectedListName);
+
+            for (VideoGame gameInList : listedGames) {
+                boolean isInMyGames = listedGames.stream().anyMatch(g -> g.getV_id() == gameInList.getV_id());
+                gameInList.setChecked(isInMyGames);
+
+                if (isInMyGames) {
+                    profile.addGame(selectedListName, gameInList);
+                }
+
+                final boolean[] isUpdating = {false};
+                final String choosedListName = selectedListName;
+
+                gameInList.checkedProperty().addListener((obs, oldVal, newVal)
+                        -> {
+                    if (isUpdating[0]) {
+                        return;
+                    }
+
+                    try {
+                        if (newVal) {
+                            cont.addGameToList(profile.getUsername(), choosedListName, gameInList.getV_id());
+                            profile.addGame(choosedListName, gameInList);
+                        } else {
+                            cont.removeGameFromList(profile.getUsername(), choosedListName, gameInList.getV_id());
+                            profile.removeGame(choosedListName, gameInList);
+                        }
+                    } catch (OurException ex) {
+                        ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
+                        isUpdating[0] = true;
+                        gameInList.setChecked(oldVal);
+                        isUpdating[0] = false;
+                    }
+                });
+            }
+        } catch (OurException ex) {
+            ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 
     private void addToList() {
-        String name = combLists.getValue();
-        if (name == null) {
+        String name;
+        VideoGame game;
+
+        // Saves them on a list and if it already is shows an alert
+        if (combLists.getValue() == null) {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("ERROR");
+            alert.setHeaderText("[No list selected]"); // O null si no quieres encabezado
+            alert.setContentText("Select a list to add the games.");
+            alert.showAndWait();
+        } else {
+            name = combLists.getValue();
+
+            if (tableLists.getSelectionModel().getSelectedItem() != null) {
+                game = tableLists.getSelectionModel().getSelectedItem();
+                if (!profile.addGame(name, game)) {
+                    Alert alert = new Alert(AlertType.WARNING);
+                    alert.setTitle("WARNING");
+                    alert.setHeaderText("Error when adding games to the list " + name + "."); // O null si no quieres encabezado
+                    alert.setContentText("The game " + game.getV_name() + " it has not been added to the list " + name + " because it is already there.");
+                    alert.showAndWait();
+                } else {
+                    // Actualizar
+                }
+            }
+        }
+        
+        
+        
+        String selectedListName = combLists.getValue();
+        if (selectedListName == null) {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("ERROR");
             alert.setHeaderText("[No list selected]");
@@ -234,14 +304,19 @@ public class ListWindowController implements Initializable {
         for (VideoGame game : videoGames) {
             if (game.isChecked()) {
                 try {
-                    if (cont.verifyGameInList(profile.getUsername(), name, game.getV_id())) {
+                    if (cont.verifyGameInList(profile.getUsername(), selectedListName, game.getV_id())) {
                         Alert alert = new Alert(AlertType.WARNING);
                         alert.setTitle("WARNING");
-                        alert.setHeaderText("Error when adding " + game.getV_name() + " to the list " + name + ".");
+                        alert.setHeaderText("Error when adding " + game.getV_name() + " to the list " + selectedListName + ".");
                         alert.setContentText("It was already in the list.");
                         alert.showAndWait();
                     } else {
-                        cont.addGameToList(profile.getUsername(), name, game.getV_id());
+                        if ("Create a new List".equals(selectedListName)) {
+                            selectedListName = "New List " + getListNumber();
+                            newList(selectedListName);
+                        }
+
+                        cont.addGameToList(profile.getUsername(), selectedListName, game.getV_id());
                         anyAdded = true;
                         game.setChecked(false);
 
@@ -342,15 +417,6 @@ public class ListWindowController implements Initializable {
     }
 
     private void setOnActionHandlers() {
-        Button button = new Button("+ New List");
-        buttonStyle(button);
-        button.setStyle("-fx-background-radius: 30px; -fx-background-color: #75E773;");
-        button.setOnAction(e
-                -> {
-            newList();
-        });
-        vbLists.getChildren().add(button);
-
         tcCheckBox.setOnEditCommit(event -> {
             //MiItem item = event.getRowValue();
             //System.out.println("Estado cambiado para " + item.getNombre() + ": " + item.isActivo());

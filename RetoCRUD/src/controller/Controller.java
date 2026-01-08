@@ -109,10 +109,14 @@ public class Controller {
         return DAO.getGamesFromList(username, listName);
     }
 
+    public VideoGame getSingleVideoGame(String username, int gameId) throws OurException{
+        return DAO.getSingleVideoGame(username, gameId);
+    }
+    
     public boolean verifyGameInList(String username, String listName, int gameId) throws OurException {
         return DAO.verifyGameInList(username, listName, gameId);
     }
-    
+
     public ArrayList<String> listComboBoxInsert(String username) throws OurException {
         return DAO.listComboBoxInsert(username);
     }
@@ -126,11 +130,15 @@ public class Controller {
     }
 
     //[LISTS]
-    
-    
+    public void newList(Profile profile, VideoGame videogame, String listName) throws OurException {
+        DAO.newList(profile, videogame, listName);
+    }
+
+    public void deleteList(String username, String listName) throws OurException {
+        DAO.deleteList(username, listName);
+    }
+
     //[REVIEWS]
-    
-    
     //[OTHER]
     public void initializeDefault() throws OurException {
         DAO.initializeDefault();

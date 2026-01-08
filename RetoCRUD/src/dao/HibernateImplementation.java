@@ -364,6 +364,26 @@ public class HibernateImplementation implements ClassDAO {
     }
 
     @Override
+    public VideoGame getSingleVideoGame(String username, int gameId) throws OurException {
+        Session session = null;
+
+        if (session == null) {
+            throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
+        }
+
+        session.beginTransaction();
+
+        VideoGame selectedGame = session.createQuery(
+                "FROM videogame v WHERE v.videogame_id = :gameId", VideoGame.class)
+                .setParameter("videogame_id", gameId)
+                .uniqueResult();
+
+        session.getTransaction().commit();
+        
+        return selectedGame;
+    }
+
+    @Override
     public boolean verifyGameInList(String username, String listName, int gameId) throws OurException {
         SessionThread thread = startSessionThread();
         boolean listed = false;
@@ -377,11 +397,13 @@ public class HibernateImplementation implements ClassDAO {
 
             session.beginTransaction();
 
-            Profile profile = session.get(Profile.class, username);
+            Profile profile = session.get(Profile.class,
+                    username);
 
             if (profile != null) {
                 List<Listed> listedGames = session.createQuery(
-                        "FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame_id = :gameId", Listed.class)
+                        "FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame_id = :gameId", Listed.class
+                )
                         .setParameter("username", username)
                         .setParameter("listName", listName)
                         .setParameter("videogame_id", gameId)
@@ -423,11 +445,13 @@ public class HibernateImplementation implements ClassDAO {
 
             session.beginTransaction();
 
-            Profile profile = session.get(Profile.class, username);
+            Profile profile = session.get(Profile.class,
+                    username);
 
             if (profile != null) {
                 List<Listed> listNames = session.createQuery(
-                        "FROM Listed l WHERE l.profile.username = :username GROUP BY listName", Listed.class)
+                        "FROM Listed l WHERE l.profile.username = :username GROUP BY listName", Listed.class
+                )
                         .setParameter("username", username)
                         .list();
 
@@ -467,8 +491,10 @@ public class HibernateImplementation implements ClassDAO {
 
             session.beginTransaction();
 
-            Profile profile = session.get(Profile.class, username);
-            VideoGame game = session.get(VideoGame.class, gameId);
+            Profile profile = session.get(Profile.class,
+                    username);
+            VideoGame game = session.get(VideoGame.class,
+                    gameId);
 
             if (profile != null && game != null) {
                 Listed listed = new Listed(profile, game, listName);
@@ -527,11 +553,74 @@ public class HibernateImplementation implements ClassDAO {
     }
 
     //[LISTS]
-    
-    
+    @Override
+    public void newList(Profile profile, VideoGame videogame, String listName) throws OurException {
+        SessionThread thread = startSessionThread();
+
+        try {
+            Session session = waitForSession(thread);
+
+            if (session == null) {
+                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
+            }
+
+            session.beginTransaction();
+
+            Listed listed = new Listed(profile, videogame, listName);
+
+            session.save(listed);
+
+            session.getTransaction().commit();
+        } catch (OurException e) {
+            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+                thread.getSession().getTransaction().rollback();
+            }
+            throw e;
+        } catch (Exception e) {
+            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+                thread.getSession().getTransaction().rollback();
+            }
+            throw new OurException(ErrorMessages.DATABASE);
+        } finally {
+            thread.releaseSession();
+        }
+    }
+
+    @Override
+    public void deleteList(String username, String listName) throws OurException {
+        SessionThread thread = startSessionThread();
+
+        try {
+            Session session = waitForSession(thread);
+
+            if (session == null) {
+                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
+            }
+
+            session.beginTransaction();
+
+            session.createQuery("DELETE FROM Listed WHERE profile.username = :username AND listName = :listName")
+                    .setParameter("username", username)
+                    .setParameter("listName", listName)
+                    .executeUpdate();
+
+            session.getTransaction().commit();
+        } catch (OurException e) {
+            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+                thread.getSession().getTransaction().rollback();
+            }
+            throw e;
+        } catch (Exception e) {
+            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+                thread.getSession().getTransaction().rollback();
+            }
+            throw new OurException(ErrorMessages.DATABASE);
+        } finally {
+            thread.releaseSession();
+        }
+    }
+
     //[REVIEWS]
-    
-    
     //[OTHER]
     @Override
     public void initializeDefault() throws OurException {
@@ -542,30 +631,39 @@ public class HibernateImplementation implements ClassDAO {
             session = HibernateUtil.getSession();
             session.beginTransaction();
 
-            if (session.get(User.class, "jlopez") == null) {
+            if (session.get(User.class,
+                    "jlopez") == null) {
                 session.save(new User("Masculino", "AB1234567890123456789012",
                         "jlopez", "pass123", "jlopez@example.com",
                         "Juan", "987654321", "Lopez"));
+
             }
 
-            if (session.get(User.class, "mramirez") == null) {
+            if (session.get(User.class,
+                    "mramirez") == null) {
                 session.save(new User("Femenino", "ZX9081726354891027364512",
                         "mramirez", "pass456", "mramirez@example.com",
                         "Maria", "912345678", "Ramirez"));
+
             }
 
-            if (session.get(User.class, "cperez") == null) {
+            if (session.get(User.class,
+                    "cperez") == null) {
                 session.save(new User("Masculino", "LM0011223344556677889900",
                         "cperez", "pass789", "cperez@example.com",
                         "Carlos", "934567890", "Perez"));
+
             }
 
-            if (session.get(Admin.class, "asanchez") == null) {
+            if (session.get(Admin.class,
+                    "asanchez") == null) {
                 session.save(new Admin("CTA-001", "asanchez", "qwerty",
                         "asanchez@example.com", "Ana", "900112233", "Sanchez"));
+
             }
 
-            if (session.get(Admin.class, "rluna") == null) {
+            if (session.get(Admin.class,
+                    "rluna") == null) {
                 session.save(new Admin("CTA-002", "rluna", "zxcvbn",
                         "rluna@example.com", "Rosa", "955667788", "Luna"));
             }
@@ -579,7 +677,8 @@ public class HibernateImplementation implements ClassDAO {
 
             for (VideoGame game : allGames) {
                 VideoGame existing = session
-                        .createQuery("FROM VideoGame v WHERE v.v_name = :name", VideoGame.class)
+                        .createQuery("FROM VideoGame v WHERE v.v_name = :name", VideoGame.class
+                        )
                         .setParameter("name", game.getV_name())
                         .uniqueResult();
 

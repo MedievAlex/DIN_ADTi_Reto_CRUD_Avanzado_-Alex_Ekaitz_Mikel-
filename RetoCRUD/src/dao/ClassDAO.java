@@ -27,10 +27,12 @@ public interface ClassDAO {
 
     public ArrayList<VideoGame> getGamesFromList(String username, String listName) throws OurException;
 
+    public VideoGame getSingleVideoGame(String username, int gameId) throws OurException;
+    
     public boolean verifyGameInList(String username, String listName, int gameId) throws OurException;
-    
+
     public ArrayList<String> listComboBoxInsert(String username) throws OurException;
-    
+
     public void addGameToList(String username, String listName, int gameId) throws OurException;
 
     public void removeGameFromList(String username, String listName, int gameId) throws OurException;
@@ -38,11 +40,11 @@ public interface ClassDAO {
     public ArrayList<String> comboBoxInsert() throws OurException;
 
     //[LISTS]
-    
-    
+    public void newList(Profile profile, VideoGame videogame, String listName) throws OurException;
+
+    public void deleteList(String username, String listName) throws OurException;
+
     //[REVIEWS]
-    
-    
     //[OTHER]
     public void initializeDefault() throws OurException;
 }
