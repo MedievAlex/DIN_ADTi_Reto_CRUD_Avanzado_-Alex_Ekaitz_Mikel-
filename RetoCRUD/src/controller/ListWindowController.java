@@ -155,41 +155,25 @@ public class ListWindowController implements Initializable {
             ArrayList<VideoGame> selectedGames = cont.getGamesFromList(profile.getUsername(), selectedList);
             videoGames = FXCollections.observableArrayList();
 
+            //ArrayList<VideoGame> gamesToAdd = new ArrayList<>();
+            ArrayList<VideoGame> gamesToDelete = new ArrayList<>();
+
             for (VideoGame game : myGames) { // Revisa los Juegos en My Games
                 boolean isInSelectedList = selectedGames.stream().anyMatch(g -> g.getV_id() == game.getV_id()); // Si existe en la lista seleccionada
-
-                if (isInSelectedList) {
-                    if (game.getV_id() != 1) { // AÑADIRLO A LAS OTRAS TABLAS
-                        profile.addGame(selectedList, game);
+                
+                if (game.getV_id() != 1) {
+                    if (isInSelectedList) {
+                        //gamesToAdd.add(game);
+                        //profile.addGame(selectedList, game);
                         videoGames.add(game);
+                    } else {
+                        gamesToDelete.add(game);
+                        profile.removeGame(selectedList, game);
                     }
                 }
-
-                final boolean[] isUpdating = {false};
-
-                game.checkedProperty().addListener((obs, oldVal, newVal)
-                        -> {
-                    if (isUpdating[0]) {
-                        return;
-                    }
-
-                    try {
-                        if (newVal) {
-                            cont.addGameToList(profile.getUsername(), selectedList, game.getV_id());
-                            profile.addGame(selectedList, game);
-                        } else {
-                            cont.removeGameFromList(profile.getUsername(), selectedList, game.getV_id());
-                            profile.removeGame(selectedList, game);
-                        }
-                    } catch (OurException ex) {
-                        ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
-                        isUpdating[0] = true;
-                        game.setChecked(oldVal);
-                        isUpdating[0] = false;
-                    }
-                });
             }
-            //videoGames = FXCollections.observableArrayList();
+            //cont.addGamesToList(profile.getUsername(), selectedList, gamesToAdd);
+            cont.removeGamesFromList(profile.getUsername(), selectedList, gamesToDelete);
 
             tableLists.setItems(videoGames);
         } catch (OurException ex) {
