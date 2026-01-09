@@ -150,15 +150,13 @@ public class ListWindowController implements Initializable {
         selectedList = button.getText();
         selectedButton(button);
 
-        listName.setText(selectedList);
-
         try {
             ArrayList<VideoGame> myGames = cont.getGamesFromList(profile.getUsername(), "My Games");
-
             ArrayList<VideoGame> selectedGames = cont.getGamesFromList(profile.getUsername(), selectedList);
+            videoGames = FXCollections.observableArrayList();
 
-            for (VideoGame game : myGames) {
-                boolean isInSelectedList = selectedGames.stream().anyMatch(g -> g.getV_id() == game.getV_id());
+            for (VideoGame game : myGames) { // Revisa los Juegos en My Games
+                boolean isInSelectedList = selectedGames.stream().anyMatch(g -> g.getV_id() == game.getV_id()); // Si existe en la lista seleccionada
 
                 if (isInSelectedList) {
                     if (game.getV_id() != 1) { // AÑADIRLO A LAS OTRAS TABLAS
@@ -191,14 +189,12 @@ public class ListWindowController implements Initializable {
                     }
                 });
             }
+            //videoGames = FXCollections.observableArrayList();
 
-            /*videoGames = FXCollections.observableArrayList();
-             */
             tableLists.setItems(videoGames);
         } catch (OurException ex) {
             ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
         }
-
     }
 
     private int getListNumber() {
