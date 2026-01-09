@@ -72,6 +72,7 @@ public final class HibernateUtil
                 configuration.addAnnotatedClass(model.Admin.class);
                 configuration.addAnnotatedClass(model.VideoGame.class);
                 configuration.addAnnotatedClass(model.Listed.class);
+                configuration.addAnnotatedClass(model.Review.class);
                 
                 sessionFactory = configuration.buildSessionFactory();
             }

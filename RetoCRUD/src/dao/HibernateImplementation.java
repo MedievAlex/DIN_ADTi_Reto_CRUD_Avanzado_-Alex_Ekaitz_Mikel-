@@ -486,7 +486,7 @@ public class HibernateImplementation implements ClassDAO {
 
             }
             
-            //session.save(new Review(session.get(User.class, "cperez"), allGames.get(0), 8, "hola mundo", LocalDate.now(), Platform.PC ));
+            session.save(new Review(session.get(User.class, "cperez"), allGames.get(0), 8, "hola mundo", LocalDate.now(), Platform.PC ));
             
             session.getTransaction().commit();
         } catch (Exception e) {
