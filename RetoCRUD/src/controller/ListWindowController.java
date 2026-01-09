@@ -89,6 +89,7 @@ public class ListWindowController implements Initializable {
     private String selectedList;
     private ArrayList<Button> litsButtons = new ArrayList<>();
 
+    //[USERS & CONTROLLER]
     public void setUsuario(Profile profile) {
         this.profile = profile;
         menu.setText(profile.getUsername());
@@ -102,6 +103,7 @@ public class ListWindowController implements Initializable {
         return cont;
     }
 
+    //[BUTTONS]
     private void buttonStyle(Button button) {
         button.setMinWidth(vbLists.getPrefWidth());
         button.setMaxWidth(vbLists.getPrefWidth());
@@ -146,6 +148,7 @@ public class ListWindowController implements Initializable {
         }
     }
 
+    //[LISTS]
     private void showList(Button button) {
         selectedList = button.getText();
         selectedButton(button);
@@ -160,7 +163,7 @@ public class ListWindowController implements Initializable {
 
             for (VideoGame game : myGames) { // Revisa los Juegos en My Games
                 boolean isInSelectedList = selectedGames.stream().anyMatch(g -> g.getV_id() == game.getV_id()); // Si existe en la lista seleccionada
-                
+
                 if (game.getV_id() != 1) {
                     if (isInSelectedList) {
                         //gamesToAdd.add(game);
@@ -200,8 +203,8 @@ public class ListWindowController implements Initializable {
         return newNumber;
     }
 
-    private void newList(String newList) {
-        String buttonName = newList;
+    private void newList() {
+        String buttonName = "New List " + getListNumber();
 
         profile.newList(buttonName);
 
@@ -215,7 +218,6 @@ public class ListWindowController implements Initializable {
 
         vbLists.getChildren().add(button);
         litsButtons.add(button);
-
         setComboBox();
     }
 
@@ -227,7 +229,6 @@ public class ListWindowController implements Initializable {
         } catch (OurException ex) {
             Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        listsNames.add("Create a New List");
         combLists.getItems().clear();
         combLists.getItems().addAll(listsNames);
     }
@@ -276,63 +277,32 @@ public class ListWindowController implements Initializable {
     }
 
     private void addToList() {
-        /*if (combLists.getValue() == null) {
+        String name;
+        VideoGame game;
+
+        // Saves them on a list and if it already is shows an alert
+        if (combLists.getValue() == null) {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("ERROR");
-            alert.setHeaderText("[No list selected]");
+            alert.setHeaderText("[No list selected]"); // O null si no quieres encabezado
             alert.setContentText("Select a list to add the games.");
             alert.showAndWait();
         } else {
-            final String selectedListName = combLists.getValue();
+            name = combLists.getValue();
 
-            if ("Create a New List".equals(selectedListName)) {
-                
-                cont.newList(profile, videogame, selectedListName);
-                
-            } else {
-                try {
-                    ArrayList<VideoGame> actualListGames = cont.getGamesFromList(profile.getUsername(), selectedList);
-                    ArrayList<VideoGame> nextListGames = cont.getGamesFromList(profile.getUsername(), selectedListName);
-
-                    for (VideoGame game : actualListGames) {
-                        boolean isInMyGames = nextListGames.stream().anyMatch(g -> g.getV_id() == game.getV_id());
-                        game.setChecked(isInMyGames);
-
-                        if (isInMyGames) {
-                            profile.addGame(selectedListName, game);
-                        }
-
-                        final boolean[] isUpdating = {false};
-
-                        game.checkedProperty().addListener((obs, oldVal, newVal)
-                                -> {
-                            if (isUpdating[0]) {
-                                return;
-                            }
-
-                            try {
-                                if (newVal) {
-                                    cont.addGameToList(profile.getUsername(), selectedListName, game.getV_id());
-                                    profile.addGame(selectedListName, game);
-                                } else {
-                                    cont.removeGameFromList(profile.getUsername(), selectedListName, game.getV_id());
-                                    profile.removeGame(selectedListName, game);
-                                }
-                            } catch (OurException ex) {
-                                ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
-                                isUpdating[0] = true;
-                                isUpdating[0] = false;
-                            }
-                        });
-                    }
-                    for (VideoGame uncheckGame : actualListGames) {
-                        uncheckGame.setChecked(false);
-                    }
-                } catch (OurException ex) {
-                    ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
+            if (tableLists.getSelectionModel().getSelectedItem() != null) {
+                game = tableLists.getSelectionModel().getSelectedItem();
+                if (!profile.addGame(name, game)) {
+                    Alert alert = new Alert(AlertType.WARNING);
+                    alert.setTitle("WARNING");
+                    alert.setHeaderText("Error when adding games to the list " + name + "."); // O null si no quieres encabezado
+                    alert.setContentText("The game " + game.getV_name() + " it has not been added to the list " + name + " because it is already there.");
+                    alert.showAndWait();
+                } else {
+                    // Actualizar
                 }
             }
-        }*/
+        }
     }
 
     private void removeFromList() {
@@ -358,6 +328,7 @@ public class ListWindowController implements Initializable {
         }
     }
 
+    //[MENU]
     private void setMenuOptions() {
         miProfile.setOnAction((event) -> {
             try {
@@ -420,10 +391,16 @@ public class ListWindowController implements Initializable {
     }
 
     private void setOnActionHandlers() {
-        tcCheckBox.setOnEditCommit(event -> {
-            //MiItem item = event.getRowValue();
-            //System.out.println("Estado cambiado para " + item.getNombre() + ": " + item.isActivo());
+        Button button = new Button("+ New List");
+        buttonStyle(button);
+        button.setStyle("-fx-background-radius: 30px; -fx-background-color: #75E773;");
+
+        button.setOnAction(e
+                -> {
+            newList();
         });
+        vbLists.getChildren().add(button);
+        litsButtons = new ArrayList<>();
 
         bttnRemove.setOnAction(e
                 -> {
