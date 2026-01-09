@@ -13,13 +13,15 @@ import java.util.Objects;
  * @author Mikel
  */
 public class ReviewId implements Serializable{
+    private String reviewId;
     private int videogame;
     private String profile;
 
     public ReviewId() {}
 
-    public ReviewId(int videogame, String profile)
+    public ReviewId(String reviewId,int videogame, String profile)
     {
+        this.reviewId = reviewId;
         this.videogame = videogame;
         this.profile = profile;
     }
@@ -31,12 +33,13 @@ public class ReviewId implements Serializable{
         if (!(o instanceof ReviewId)) return false;
         ReviewId that = (ReviewId) o;
         return videogame == that.videogame &&
-               profile.equals(that.profile);
+               profile.equals(that.profile) &&
+                reviewId.equals(that.reviewId);
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(profile, videogame);
+        return Objects.hash(reviewId,profile, videogame);
     }
 }

@@ -459,18 +459,16 @@ public class HibernateImplementation implements ClassDAO {
                         "cperez", "pass789", "cperez@example.com",
                         "Carlos", "934567890", "Perez"));
             }
-            Profile a = new Admin("CTA-001", "asanchez", "qwerty","asanchez@example.com", "Ana", "900112233", "Sanchez");
             if (session.get(Admin.class, "asanchez") == null) {
-                session.save(a);
+                session.save(new Admin("CTA-001", "asanchez", "qwerty","asanchez@example.com", "Ana", "900112233", "Sanchez"));
             }
 
             if (session.get(Admin.class, "rluna") == null) {
                 session.save(new Admin("CTA-002", "rluna", "zxcvbn",
                         "rluna@example.com", "Rosa", "955667788", "Luna"));
             }
-            VideoGame b = new VideoGame("Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3);
             ArrayList<VideoGame> allGames = new ArrayList<>();
-            allGames.add(b);
+            allGames.add(new VideoGame("Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
             allGames.add(new VideoGame("ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
             allGames.add(new VideoGame("Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
             allGames.add(new VideoGame("Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
@@ -488,7 +486,7 @@ public class HibernateImplementation implements ClassDAO {
 
             }
             
-            session.save(new Review(a,b, 8, "hola mundo", LocalDate.now(), Platform.PC ));
+            //session.save(new Review(session.get(User.class, "cperez"), allGames.get(0), 8, "hola mundo", LocalDate.now(), Platform.PC ));
             
             session.getTransaction().commit();
         } catch (Exception e) {
