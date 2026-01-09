@@ -790,6 +790,7 @@ public class HibernateImplementation implements ClassDAO {
             /**
              * ******************************************************USERS*******************************************************
              */
+            
             if (session.get(User.class,
                     "jlopez") == null) {
                 session.save(new User("Masculino", "AB1234567890123456789012",
@@ -826,6 +827,7 @@ public class HibernateImplementation implements ClassDAO {
             /**
              * ******************************************************GAMES*******************************************************
              */
+            
             ArrayList<VideoGame> allGames = new ArrayList<>();
             allGames.add(new VideoGame());
             allGames.add(new VideoGame("Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
@@ -849,6 +851,7 @@ public class HibernateImplementation implements ClassDAO {
             /**
              * ******************************************************LISTS*******************************************************
              */
+            
             profile = session.get(User.class, "asanchez");
             game = session.get(VideoGame.class, 1);
 
@@ -960,6 +963,11 @@ public class HibernateImplementation implements ClassDAO {
             if (existingList == null) {
                 session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 5), "PLAYSTATION"));
             }
+            
+            /**
+             * ******************************************************REVIEWS*******************************************************
+             */
+            
 
             session.getTransaction().commit();
         } catch (Exception e) {
