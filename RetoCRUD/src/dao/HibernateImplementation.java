@@ -90,6 +90,9 @@ public class HibernateImplementation implements ClassDAO {
             User user = new User(gender, cardNumber, username, password, email, name, telephone, surname);
 
             session.save(user);
+            
+            ArrayList<VideoGame> allGames = getAllVideoGames();
+            session.save(new Listed(session.get(User.class, username), allGames.get(0), "My Games"));
 
             session.getTransaction().commit();
 
@@ -715,6 +718,14 @@ public class HibernateImplementation implements ClassDAO {
             session = HibernateUtil.getSession();
             session.beginTransaction();
 
+            ArrayList<VideoGame> allGames = new ArrayList<>();
+            allGames.add(new VideoGame());
+            allGames.add(new VideoGame("Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
+            allGames.add(new VideoGame("Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI6));
+            allGames.add(new VideoGame("Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI16));
+            allGames.add(new VideoGame("ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
+            allGames.add(new VideoGame("Call of Duty: Black Ops II", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
+            
             if (session.get(User.class,
                     "jlopez") == null) {
                 session.save(new User("Masculino", "AB1234567890123456789012",
@@ -752,13 +763,6 @@ public class HibernateImplementation implements ClassDAO {
                         "rluna@example.com", "Rosa", "955667788", "Luna"));
             }
 
-            ArrayList<VideoGame> allGames = new ArrayList<>();
-            allGames.add(new VideoGame("Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
-            allGames.add(new VideoGame("Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI6));
-            allGames.add(new VideoGame("Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI16));
-            allGames.add(new VideoGame("ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
-            allGames.add(new VideoGame("Call of Duty: Black Ops II", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
-
             for (VideoGame game : allGames) {
                 VideoGame existing = session
                         .createQuery("FROM VideoGame v WHERE v.v_name = :name", VideoGame.class
@@ -769,20 +773,17 @@ public class HibernateImplementation implements ClassDAO {
                 if (existing == null) {
                     session.save(game);
                 }
-
             }
 
-            session.save(new Listed(session.get(User.class, "jlopez"), allGames.get(0), "My Games")); // Primero tiene que estar registrado en la lista por defecto
-            session.save(new Listed(session.get(User.class, "jlopez"), allGames.get(0), "test"));
-
-            session.save(new Listed(session.get(Admin.class, "asanchez"), allGames.get(0), "My Games")); // Primero tiene que estar registrado en la lista por defecto
+            session.save(new Listed(session.get(Admin.class, "asanchez"), allGames.get(0), "My Games"));
             session.save(new Listed(session.get(Admin.class, "asanchez"), allGames.get(1), "My Games")); // Primero tiene que estar registrado en la lista por defecto
-            session.save(new Listed(session.get(Admin.class, "asanchez"), allGames.get(3), "My Games")); // Primero tiene que estar registrado en la lista por defecto
+            session.save(new Listed(session.get(Admin.class, "asanchez"), allGames.get(2), "My Games")); // Primero tiene que estar registrado en la lista por defecto
+            session.save(new Listed(session.get(Admin.class, "asanchez"), allGames.get(4), "My Games")); // Primero tiene que estar registrado en la lista por defecto
 
-            session.save(new Listed(session.get(Admin.class, "asanchez"), allGames.get(0), "NINTENDO"));
             session.save(new Listed(session.get(Admin.class, "asanchez"), allGames.get(1), "NINTENDO"));
+            session.save(new Listed(session.get(Admin.class, "asanchez"), allGames.get(2), "NINTENDO"));
 
-            session.save(new Listed(session.get(Admin.class, "asanchez"), allGames.get(3), "PLAYSTATION"));
+            session.save(new Listed(session.get(Admin.class, "asanchez"), allGames.get(4), "PLAYSTATION"));
 
             session.getTransaction().commit();
         } catch (Exception e) {

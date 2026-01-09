@@ -147,23 +147,58 @@ public class ListWindowController implements Initializable {
     }
 
     private void showList(Button button) {
-
         selectedList = button.getText();
-
         selectedButton(button);
+
+        listName.setText(selectedList);
+
         try {
-            ArrayList<VideoGame> list = cont.getGamesFromList(profile.getUsername(), selectedList);
+            ArrayList<VideoGame> myGames = cont.getGamesFromList(profile.getUsername(), "My Games");
 
-            listName.setText(selectedList);
+            ArrayList<VideoGame> selectedGames = cont.getGamesFromList(profile.getUsername(), selectedList);
 
-            videoGames = FXCollections.observableArrayList();
-            for (VideoGame game : list) {
-                videoGames.add(game);
+            for (VideoGame game : myGames) {
+                boolean isInSelectedList = selectedGames.stream().anyMatch(g -> g.getV_id() == game.getV_id());
+
+                if (isInSelectedList) {
+                    if (game.getV_id() != 1) { // AÑADIRLO A LAS OTRAS TABLAS
+                        profile.addGame(selectedList, game);
+                        videoGames.add(game);
+                    }
+                }
+
+                final boolean[] isUpdating = {false};
+
+                game.checkedProperty().addListener((obs, oldVal, newVal)
+                        -> {
+                    if (isUpdating[0]) {
+                        return;
+                    }
+
+                    try {
+                        if (newVal) {
+                            cont.addGameToList(profile.getUsername(), selectedList, game.getV_id());
+                            profile.addGame(selectedList, game);
+                        } else {
+                            cont.removeGameFromList(profile.getUsername(), selectedList, game.getV_id());
+                            profile.removeGame(selectedList, game);
+                        }
+                    } catch (OurException ex) {
+                        ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
+                        isUpdating[0] = true;
+                        game.setChecked(oldVal);
+                        isUpdating[0] = false;
+                    }
+                });
             }
+
+            /*videoGames = FXCollections.observableArrayList();
+             */
             tableLists.setItems(videoGames);
         } catch (OurException ex) {
-            Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
         }
+
     }
 
     private int getListNumber() {
@@ -261,7 +296,7 @@ public class ListWindowController implements Initializable {
     }
 
     private void addToList() {
-        if (combLists.getValue() == null) {
+        /*if (combLists.getValue() == null) {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("ERROR");
             alert.setHeaderText("[No list selected]");
@@ -317,7 +352,7 @@ public class ListWindowController implements Initializable {
                     ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
                 }
             }
-        }
+        }*/
     }
 
     private void removeFromList() {
