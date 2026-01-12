@@ -134,8 +134,8 @@ public class Controller {
         return DAO.getUserLists(username);
     }
 
-    public void newList(Profile profile, VideoGame videogame, String listName) throws OurException {
-        DAO.newList(profile, videogame, listName);
+    public void newList(Profile profile, String listName) throws OurException {
+        DAO.newList(profile, listName);
     }
 
     public void deleteList(String username, String listName) throws OurException {

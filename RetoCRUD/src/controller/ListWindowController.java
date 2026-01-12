@@ -185,42 +185,47 @@ public class ListWindowController implements Initializable {
     }
 
     private int getListNumber() {
-        HashMap<String, ArrayList<VideoGame>> lists = profile.getListsView();
-        String name, prevNumber;
+        String prevNumber;
         int newNumber = 1;
 
-        for (HashMap.Entry<String, ArrayList<VideoGame>> entry : lists.entrySet()) {
-            name = entry.getKey();
+        try {
+            ArrayList<String> lists = cont.getUserLists(profile.getUsername());
+            for (String name : lists) {
+                if ("New List".equals(name.substring(0, 8))) {
+                    prevNumber = name.substring(9, name.length());
 
-            if ("New List".equals(name.substring(0, 8))) {
-                prevNumber = name.substring(9, name.length());
-
-                if (newNumber <= Integer.parseInt(prevNumber)) {
-                    newNumber = Integer.parseInt(prevNumber) + 1;
+                    if (newNumber <= Integer.parseInt(prevNumber)) {
+                        newNumber = Integer.parseInt(prevNumber) + 1;
+                    }
                 }
             }
+        } catch (OurException ex) {
+            Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return newNumber;
     }
 
     private void newList() {
+
         String buttonName = "New List " + getListNumber();
 
-        profile.newList(buttonName);
+        try {
+            cont.newList(profile, buttonName);
 
-        
-        
-        Button button = new Button(buttonName);
-        buttonStyle(button);
+            Button button = new Button(buttonName);
+            buttonStyle(button);
 
-        button.setOnAction(e
-                -> {
-            showList(button);
-        });
+            button.setOnAction(e
+                    -> {
+                showList(button);
+            });
 
-        vbLists.getChildren().add(button);
-        litsButtons.add(button);
-        setComboBox();
+            vbLists.getChildren().add(button);
+            litsButtons.add(button);
+            setComboBox();
+        } catch (OurException ex) {
+            Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void setComboBox() {

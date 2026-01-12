@@ -42,7 +42,7 @@ public interface ClassDAO {
     //[LISTS]
     public ArrayList<String> getUserLists(String username) throws OurException;
 
-    public void newList(Profile profile, VideoGame videogame, String listName) throws OurException;
+    public void newList(Profile profile, String listName) throws OurException;
 
     public void deleteList(String username, String listName) throws OurException;
 

@@ -106,34 +106,8 @@ public abstract class Profile implements Serializable {
         this.listedGames = listedGames;
     }
 
-    public HashMap<String, ArrayList<VideoGame>> getListsView() {
-        HashMap<String, ArrayList<VideoGame>> map = new HashMap<>();
-
-        if (listedGames != null) {
-            for (Listed listed : listedGames) {
-                map.computeIfAbsent(listed.getListName(), k -> new ArrayList<>())
-                        .add(listed.getVideogame());
-            }
-        }
-
-        map.computeIfAbsent("My Games", k -> new ArrayList<>());
-
-        return map;
-    }
-
-    public boolean newList(String listName) {
-        HashMap<String, ArrayList<VideoGame>> memLists = getListsView();
-        if (memLists.containsKey(listName)) {
-            return false;
-        }
-
-        memLists.put(listName, new ArrayList<>());
-
-        return true;
-    }
-
     public boolean renameList(String oldName, String newName) {
-        HashMap<String, ArrayList<VideoGame>> memLists = getListsView();
+        HashMap<String, ArrayList<VideoGame>> memLists = null;
         if (!memLists.containsKey(oldName) || memLists.containsKey(newName)) {
             return false;
         }

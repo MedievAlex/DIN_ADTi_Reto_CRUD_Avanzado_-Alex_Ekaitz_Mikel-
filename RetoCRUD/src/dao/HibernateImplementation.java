@@ -611,7 +611,7 @@ public class HibernateImplementation implements ClassDAO {
     }
 
     @Override
-    public void newList(Profile profile, VideoGame videogame, String listName) throws OurException {
+    public void newList(Profile profile, String listName) throws OurException {
         SessionThread thread = startSessionThread();
 
         try {
@@ -623,7 +623,7 @@ public class HibernateImplementation implements ClassDAO {
 
             session.beginTransaction();
 
-            Listed listed = new Listed(profile, videogame, listName);
+            Listed listed = new Listed(profile, session.get(VideoGame.class, 1), listName);
 
             session.save(listed);
 
