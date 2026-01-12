@@ -151,6 +151,7 @@ public class ListWindowController implements Initializable {
     //[LISTS]
     private void showList(Button button) {
         selectedList = button.getText();
+        listName.setText(selectedList);
         selectedButton(button);
 
         try {
