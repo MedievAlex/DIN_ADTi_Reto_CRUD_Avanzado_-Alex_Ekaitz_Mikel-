@@ -101,6 +101,11 @@ public class Controller {
         return DAO.comboBoxInsert();
     }
 
+    //[USERS]
+    public Profile findProfileByUsername(String username) throws OurException {
+        return DAO.findProfileByUsername(username);
+    }
+    
     //[VIDEOGAMES]
     public ArrayList<VideoGame> getAllVideoGames() throws OurException {
         return DAO.getAllVideoGames();
@@ -128,6 +133,10 @@ public class Controller {
 
     public void removeGamesFromList(String username, String listName, ArrayList<VideoGame> games) throws OurException {
         DAO.removeGamesFromList(username, listName, games);
+    }
+    
+    public VideoGame findVideoGameByName(String gameName) throws OurException {
+        return DAO.findVideoGameByName(gameName);
     }
 
     //[LISTS]
@@ -158,20 +167,12 @@ public class Controller {
         return DAO.findReview(username, gameId);
     }
 
-    public VideoGame findVideoGameByName(String gameName) throws OurException {
-        return DAO.findVideoGameByName(gameName);
-    }
-
-    public boolean saveOrUpdateReview(Review review) throws OurException {
-        return DAO.saveOrUpdateReview(review);
-    }
-
     public ArrayList<Review> getAllReviews() throws OurException {
         return DAO.getAllReviews();
     }
-
-    public Profile findProfileByUsername(String username) throws OurException {
-        return DAO.findProfileByUsername(username);
+    
+    public boolean saveOrUpdateReview(Review review) throws OurException {
+        return DAO.saveOrUpdateReview(review);
     }
 
     //[OTHER]
