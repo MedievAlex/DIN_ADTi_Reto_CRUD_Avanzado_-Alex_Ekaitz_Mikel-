@@ -174,7 +174,7 @@ public class NewReviewWindowController implements Initializable {
     private void populateGameComboBox(String selectedPlatform) throws OurException {
         comboBoxGame.getItems().clear();
 
-        ArrayList<VideoGame> games = cont.getVideoGames();
+        ArrayList<VideoGame> games = cont.getAllVideoGames();
         Platform platform = Platform.valueOf(selectedPlatform);
         ObservableList<String> gameNames = FXCollections.observableArrayList();
         if (platform.equals("-- Choose Platform --")) {
