@@ -5,7 +5,7 @@ import java.util.Objects;
 
 /**
  *
- * @author ema
+ * @author Mikel
  */
 public class ReviewId implements Serializable{
     private int videogame;
@@ -18,6 +18,23 @@ public class ReviewId implements Serializable{
         this.videogame = videogame;
         this.profile = profile;
     }
+
+    public int getVideogame() {
+        return videogame;
+    }
+
+    public String getProfile() {
+        return profile;
+    }
+
+    public void setVideogame(int videogame) {
+        this.videogame = videogame;
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
+    }
+    
 
     @Override
     public boolean equals(Object o)

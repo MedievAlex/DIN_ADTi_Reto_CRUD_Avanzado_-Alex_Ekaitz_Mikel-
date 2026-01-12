@@ -51,6 +51,16 @@ public interface ClassDAO {
     public boolean renameList(String username, String listName, String listNewName) throws OurException;
 
     //[REVIEWS]
+    public Review findReview(String username, int gameId) throws OurException;
+
+    public VideoGame findVideoGameByName(String gameName) throws OurException;
+
+    public boolean saveOrUpdateReview(Review review) throws OurException;
+
+    public ArrayList<Review> getAllReviews() throws OurException;
+
+    public Profile findProfileByUsername(String username) throws OurException;
+
     //[OTHER]
     public void initializeDefault() throws OurException;
 }

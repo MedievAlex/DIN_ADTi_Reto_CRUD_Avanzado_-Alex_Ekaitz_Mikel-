@@ -10,6 +10,8 @@ import model.Listed;
 import model.Pegi;
 import model.Platform;
 import model.Profile;
+import model.Review;
+import model.ReviewId;
 import model.User;
 import model.VideoGame;
 import org.hibernate.Criteria;
@@ -774,6 +776,212 @@ public class HibernateImplementation implements ClassDAO {
     }
 
     //[REVIEWS]
+    @Override
+    public Review findReview(String username, int gameId) throws OurException {
+        SessionThread thread = startSessionThread();
+        Review review = null;
+        try {
+            Session session = waitForSession(thread);
+
+            if (session == null) {
+                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
+            }
+
+            session.beginTransaction();
+            review = session.createQuery("SELECT r FROM Review r JOIN r.profile p JOIN r.videogame v WHERE p.username = :username AND v.v_id = :gameId", Review.class)
+                    .setParameter("username", username)
+                    .setParameter("gameId", gameId)
+                    .setMaxResults(1)
+                    .uniqueResult();
+
+            session.getTransaction().commit();
+
+        } catch (OurException e) {
+            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+                thread.getSession().getTransaction().rollback();
+            }
+            throw e;
+        } catch (Exception e) {
+            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+                thread.getSession().getTransaction().rollback();
+            }
+            throw new OurException(ErrorMessages.DATABASE);
+        } finally {
+            thread.releaseSession();
+        }
+
+        return review;
+    }
+
+    @Override
+    public VideoGame findVideoGameByName(String gameName) throws OurException {
+        SessionThread thread = startSessionThread();
+        VideoGame videoGame = null;
+
+        try {
+            Session session = waitForSession(thread);
+
+            if (session == null) {
+                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
+            }
+            session.beginTransaction();
+            List<VideoGame> games = session.createQuery(
+                    "FROM VideoGame v WHERE v.v_name = :gameName", VideoGame.class)
+                    .setParameter("gameName", gameName)
+                    .list();
+
+            if (!games.isEmpty()) {
+                videoGame = games.get(0);
+            }
+
+            session.getTransaction().commit();
+
+        } catch (OurException e) {
+            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+                thread.getSession().getTransaction().rollback();
+            }
+            throw e;
+        } catch (Exception e) {
+            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+                thread.getSession().getTransaction().rollback();
+            }
+            throw new OurException(ErrorMessages.DATABASE);
+        } finally {
+            thread.releaseSession();
+        }
+
+        return videoGame;
+    }
+
+    @Override
+    public Profile findProfileByUsername(String username) throws OurException {
+        SessionThread thread = startSessionThread();
+        Profile profile = null;
+
+        try {
+            Session session = waitForSession(thread);
+
+            if (session == null) {
+                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
+            }
+
+            session.beginTransaction();
+
+            // Query para buscar el perfil por username
+            List<Profile> profiles = session.createQuery(
+                    "FROM Profile p WHERE p.username = :username", Profile.class)
+                    .setParameter("username", username)
+                    .list();
+
+            if (!profiles.isEmpty()) {
+                profile = profiles.get(0);
+            }
+
+            session.getTransaction().commit();
+
+        } catch (OurException e) {
+            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+                thread.getSession().getTransaction().rollback();
+            }
+            throw e;
+        } catch (Exception e) {
+            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+                thread.getSession().getTransaction().rollback();
+            }
+            throw new OurException(ErrorMessages.DATABASE);
+        } finally {
+            thread.releaseSession();
+        }
+
+        return profile;
+    }
+
+    @Override
+    public boolean saveOrUpdateReview(Review review) throws OurException {
+
+        SessionThread thread = startSessionThread();
+
+        try {
+            Session session = waitForSession(thread);
+            if (session == null) {
+                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
+            }
+
+            session.beginTransaction();
+
+            Profile managedProfile = session.get(Profile.class, review.getProfile().getUsername());
+            if (managedProfile == null) {
+                throw new OurException(ErrorMessages.PROFILE_NOT_FOUND);
+            }
+
+            VideoGame managedGame = session.get(VideoGame.class, review.getVideogame().getV_id());
+            if (managedGame == null) {
+                throw new OurException(ErrorMessages.GAME_NOT_FOUND);
+            }
+            review.setProfile(managedProfile);
+            review.setVideogame(managedGame);
+
+            ReviewId pk = new ReviewId(
+                    managedGame.getV_id(),
+                    managedProfile.getUsername()
+            );
+            Review existing = session.get(Review.class, pk);
+
+            if (existing != null) {
+                // UPDATE
+                existing.setScore(review.getScore());
+                existing.setDescription(review.getDescription());
+                existing.setPlatform(review.getPlatform());
+                existing.setReviewDate(review.getReviewDate());
+            } else {
+                session.persist(review);
+            }
+
+            session.getTransaction().commit();
+            return true;
+
+        } catch (Exception e) {
+            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+                thread.getSession().getTransaction().rollback();
+            }
+            throw new OurException(ErrorMessages.SAVE_REVIEW_ERROR);
+        } finally {
+            thread.releaseSession();
+        }
+    }
+
+    @Override
+    public ArrayList<Review> getAllReviews() throws OurException {
+        ArrayList<Review> reviews = new ArrayList<>();
+        SessionThread thread = startSessionThread();
+
+        try {
+            Session session = waitForSession(thread);
+
+            if (session == null) {
+                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
+            }
+            session.beginTransaction();
+            List<Review> reviewList = session.createQuery("FROM Review r ORDER BY r.reviewDate DESC", Review.class).list();
+            reviews = new ArrayList<>(reviewList);
+
+            session.getTransaction().commit();
+        } catch (OurException e) {
+            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+                thread.getSession().getTransaction().rollback();
+            }
+            throw e;
+        } catch (Exception e) {
+            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+                thread.getSession().getTransaction().rollback();
+            }
+            throw new OurException(ErrorMessages.DATABASE);
+        } finally {
+            thread.releaseSession();
+        }
+        return reviews;
+    }
+
     //[OTHER]
     @Override
     public void initializeDefault() throws OurException {
@@ -786,6 +994,7 @@ public class HibernateImplementation implements ClassDAO {
             Profile profile;
             VideoGame game;
             Listed existingList;
+            Review existingReview;
 
             /**
              * ******************************************************USERS*******************************************************
@@ -953,6 +1162,42 @@ public class HibernateImplementation implements ClassDAO {
             /**
              * ******************************************************REVIEWS*******************************************************
              */
+            /*if (session.get(Review.class, "cperez-1") == null) {
+            session.save(new Review(session.get(User.class, "cperez"), allGames.get(1), 4, "Mal", LocalDate.now(), Platform.NINTENDO));
+                
+            }
+            if (session.get(Review.class, "asanchez-2") == null) {
+                session.save(new Review(session.get(Admin.class, "asanchez"), allGames.get(1), 7, "hola mundo", LocalDate.now(), Platform.PLAYSTATION));
+            }
+            if (session.get(Review.class, "mramirez-3") == null) {
+                session.save(new Review(session.get(User.class, "mramirez"), allGames.get(0), 7, "hola mundo", LocalDate.now(), Platform.XBOX));
+            }*/
+            VideoGame game1 = session.get(VideoGame.class, 2);
+            Profile profile1 = session.get(Admin.class, "asanchez");
+            existingReview = session.createQuery(
+                    "FROM Review r WHERE r.profile.username = :username AND r.videogame.v_id = :gameId",
+                    Review.class)
+                    .setParameter("username", profile.getUsername())
+                    .setParameter("gameId", game1.getV_id())
+                    .uniqueResult();
+
+            if (existingReview == null) {
+                Review newReview = new Review(profile1, game1, 7, "Descripción de la review", LocalDate.now(), Platform.XBOX);
+                session.save(newReview);
+            }
+            game1 = session.get(VideoGame.class, 3);
+            existingReview = session.createQuery(
+                    "FROM Review r WHERE r.profile.username = :username AND r.videogame.v_id = :gameId",
+                    Review.class)
+                    .setParameter("username", profile.getUsername())
+                    .setParameter("gameId", game1.getV_id())
+                    .uniqueResult();
+
+            if (existingReview == null) {
+                Review newReview = new Review(profile1, game1, 7, "Descripción de la review", LocalDate.now(), Platform.XBOX);
+                session.save(newReview);
+            }
+
             session.getTransaction().commit();
         } catch (Exception e) {
             if (session != null && session.getTransaction().isActive()) {

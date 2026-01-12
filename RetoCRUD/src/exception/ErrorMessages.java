@@ -52,4 +52,9 @@ public class ErrorMessages
     public static final String CONNECTION_POOL_FULL = "No connections available. The system is busy, please try again in a few moments.";
     public static final String SESSION_TIMEOUT = "Session timeout while obtaining connection.";
     public static final String INVALID_ADMIN_CREDENTIALS = "Invalid administrator credentials.";
+    public static final String INVALID_REVIEW_DATA = "Invalid review data.";
+    public static final String PROFILE_NOT_FOUND = "Profile not found.";
+    public static final String GAME_NOT_FOUND = "Game not found.";
+    public static final String SAVE_REVIEW_ERROR = "Error Saving the review.";
+    
 }

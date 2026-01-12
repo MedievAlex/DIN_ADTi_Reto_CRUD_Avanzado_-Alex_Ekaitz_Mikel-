@@ -153,6 +153,26 @@ public class Controller {
     }
 
     //[REVIEWS]
+    public Review findReview(String username, int gameId) throws OurException {
+        return DAO.findReview(username, gameId);
+    }
+
+    public VideoGame findVideoGameByName(String gameName) throws OurException {
+        return DAO.findVideoGameByName(gameName);
+    }
+
+    public boolean saveOrUpdateReview(Review review) throws OurException {
+        return DAO.saveOrUpdateReview(review);
+    }
+
+    public ArrayList<Review> getAllReviews() throws OurException {
+        return DAO.getAllReviews();
+    }
+
+    public Profile findProfileByUsername(String username) throws OurException {
+        return DAO.findProfileByUsername(username);
+    }
+
     //[OTHER]
     public void initializeDefault() throws OurException {
         DAO.initializeDefault();

@@ -69,24 +69,24 @@
         <VBox spacing="10" style="-fx-padding: 10;">
             <HBox alignment="CENTER_LEFT" spacing="10">
                 <TextField fx:id="searchBar" prefHeight="26.0" HBox.hgrow="ALWAYS" />
-                <Button fx:id="bttnSearch" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" text="Search" />
+                <Button fx:id="btnSearch" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" text="Search" />
                 <Region HBox.hgrow="ALWAYS" />
                 <ComboBox fx:id="combLists" prefWidth="150.0" promptText="-- My Lists --" />
             </HBox>
                   
             <TableView fx:id="tableReview" VBox.vgrow="ALWAYS">
                 <columns>
-                    <TableColumn fx:id="tcGame" minWidth="100" prefWidth="129.59998166561127" text="GAME" />
-                    <TableColumn fx:id="tcRelease" minWidth="73.5999755859375" prefWidth="101.60003662109375" text="RELEASE" />
-                    <TableColumn fx:id="tcPlatform" minWidth="72.79998779296875" prefWidth="104.79998779296875" text="PLATFORM" />
-                    <TableColumn fx:id="tcScore" minWidth="60" prefWidth="67.99993896484375" text="SCORE" />
-                    <TableColumn fx:id="tcReview" minWidth="150" prefWidth="333.5999450683594" text="REVIEW" />
+                    <TableColumn fx:id="tcGame" minWidth="100" text="GAME" />
+                    <TableColumn fx:id="tcRelease" minWidth="80" text="RELEASE" />
+                    <TableColumn fx:id="tcPlatform" minWidth="80" text="PLATFORM" />
+                    <TableColumn fx:id="tcRate" minWidth="60" text="SCORE" />
+                    <TableColumn fx:id="tcReview" minWidth="150" text="REVIEW" />
                 </columns>
             </TableView>
                   
             <HBox alignment="CENTER_RIGHT" spacing="10">
                 <Region HBox.hgrow="ALWAYS" />
-                <Button fx:id="bttnNewReview" mnemonicParsing="false" onAction="#newReview" prefHeight="26.0" prefWidth="133.0" text="New Review" />
+                <Button fx:id="btnNewReview" mnemonicParsing="false" onAction="#newReview" prefHeight="26.0" prefWidth="133.0" text="New Review" />
             </HBox>
         </VBox>
     </children>

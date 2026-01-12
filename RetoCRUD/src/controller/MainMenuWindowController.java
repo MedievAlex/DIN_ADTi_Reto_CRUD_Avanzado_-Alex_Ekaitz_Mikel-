@@ -186,8 +186,11 @@ public class MainMenuWindowController implements Initializable
                 Parent root = fxmlLoader.load();
 
                 controller.ReviewsWindowController controllerWindow = fxmlLoader.getController();
-                controllerWindow.setUsuario(profile);
                 controllerWindow.setCont(cont);
+                controllerWindow.setUsuario(profile);
+                //controllerWindow.setComboBox();
+                controllerWindow.loadReview();
+                
 
                 Stage stage = (Stage) menu.getScene().getWindow();
                 stage.setScene(new Scene(root));
@@ -196,6 +199,8 @@ public class MainMenuWindowController implements Initializable
             catch (IOException ex)
             {
                 Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (OurException ex) {
+                Logger.getLogger(MainMenuWindowController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
 

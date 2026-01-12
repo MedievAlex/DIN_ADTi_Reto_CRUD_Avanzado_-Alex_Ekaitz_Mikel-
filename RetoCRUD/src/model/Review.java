@@ -12,6 +12,11 @@ import javax.persistence.*;
 @Table(name = "review")
 @IdClass(ReviewId.class)
 public class Review implements Serializable {
+    
+    @Id
+    @Column(name = "r_id", nullable = false)
+    private String reviewId;
+    
     @Id
     @ManyToOne
     @JoinColumn(name = "username", referencedColumnName = "username")
@@ -39,6 +44,7 @@ public class Review implements Serializable {
 
     public Review(Profile profile, VideoGame videogame, int score, String description, 
                   LocalDate reviewDate, Platform platform) {
+        this.reviewId = profile.getUsername() + "-" + videogame.getV_id();
         this.profile = profile;
         this.videogame = videogame;
         this.score = score;
@@ -47,6 +53,15 @@ public class Review implements Serializable {
         this.platform = platform;
     }
 
+    public String getReviewId() {
+        return reviewId;
+    }
+
+    public void setReviewId(String reviewId) {
+        this.reviewId = reviewId;
+    }
+
+    
     public Profile getProfile() {  
         return profile;
     }
@@ -94,13 +109,15 @@ public class Review implements Serializable {
     public void setPlatform(Platform platform) {
         this.platform = platform;
     }
-    
+    public String getGameName() {
+        return this.videogame.getV_name();
+    }
     public String getScoreFormatted() {
         return this.score + "/10";
     }
 
     @Override
     public String toString() {
-        return "Review{" + "profile=" + profile + ", videogame=" + videogame + ", score=" + score + ", description=" + description + ", reviewDate=" + reviewDate + ", platform=" + platform + '}';
-    }
+        return "Review{" + "reviewId=" + reviewId + ", profile=" + profile + ", videogame=" + videogame + ", score=" + score + ", description=" + description + ", reviewDate=" + reviewDate + ", platform=" + platform + '}';
+    }   
 }
