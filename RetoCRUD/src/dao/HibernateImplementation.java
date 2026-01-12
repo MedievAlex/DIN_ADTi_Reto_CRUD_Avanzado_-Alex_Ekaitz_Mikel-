@@ -596,7 +596,7 @@ public class HibernateImplementation implements ClassDAO
 
             }
             
-            session.save(new Listed(session.get(User.class, "jlopez"), allGames.get(0), "Test"));
+            // session.save(new Listed(session.get(User.class, "jlopez"), allGames.get(0), "Test"));
 
             session.getTransaction().commit();
         } catch (Exception e)

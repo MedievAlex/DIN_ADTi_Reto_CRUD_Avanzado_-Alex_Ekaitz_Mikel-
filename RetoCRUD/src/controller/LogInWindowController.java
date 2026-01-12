@@ -16,7 +16,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import model.Profile;
 
@@ -41,6 +45,12 @@ public class LogInWindowController implements Initializable
     @FXML
     private Label labelIncorrecto;
 
+    @FXML
+    private Menu menuHelp;
+
+    @FXML
+    private MenuItem menuItemHelp;
+    
     private Controller CONT;
 
     public void setController(Controller controller)
@@ -129,6 +139,12 @@ public class LogInWindowController implements Initializable
                 ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
             }
         }
+    }
+    
+    @FXML
+    public void handleHelpAction()
+    {
+        System.out.println("Help");
     }
 
     @Override
