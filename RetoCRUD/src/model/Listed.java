@@ -6,8 +6,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "listed")
 @IdClass(ListedId.class)
-public class Listed implements Serializable
-{
+public class Listed implements Serializable {
 
     @Id
     @ManyToOne
@@ -23,21 +22,36 @@ public class Listed implements Serializable
     @Column(name = "list_name")
     private String listName;
 
-    public Listed() {}
+    public Listed() {
+    }
 
-    public Listed(Profile profile, VideoGame videogame, String listName)
-    {
+    public Listed(Profile profile, VideoGame videogame, String listName) {
         this.profile = profile;
         this.videogame = videogame;
         this.listName = listName;
     }
 
-    public Profile getProfile() { return profile; }
-    public void setProfile(Profile profile) { this.profile = profile; }
+    public Profile getProfile() {
+        return profile;
+    }
 
-    public VideoGame getVideogame() { return videogame; }
-    public void setVideogame(VideoGame videogame) { this.videogame = videogame; }
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
 
-    public String getListName() { return listName; }
-    public void setListName(String listName) { this.listName = listName; }
+    public VideoGame getVideogame() {
+        return videogame;
+    }
+
+    public void setVideogame(VideoGame videogame) {
+        this.videogame = videogame;
+    }
+
+    public String getListName() {
+        return listName;
+    }
+
+    public void setListName(String listName) {
+        this.listName = listName;
+    }
 }
