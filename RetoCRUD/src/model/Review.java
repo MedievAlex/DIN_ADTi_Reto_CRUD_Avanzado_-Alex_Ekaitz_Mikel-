@@ -24,7 +24,7 @@ public class Review implements Serializable {
     
     @Id
     @ManyToOne
-    @JoinColumn(name = "videogame_id", referencedColumnName = "v_id")
+    @JoinColumn(name = "v_id", referencedColumnName = "v_id")
     private VideoGame videogame;
     
     @Column(name = "score", nullable = false)

@@ -1162,39 +1162,30 @@ public class HibernateImplementation implements ClassDAO {
             /**
              * ******************************************************REVIEWS*******************************************************
              */
-            /*if (session.get(Review.class, "cperez-1") == null) {
-            session.save(new Review(session.get(User.class, "cperez"), allGames.get(1), 4, "Mal", LocalDate.now(), Platform.NINTENDO));
-                
-            }
-            if (session.get(Review.class, "asanchez-2") == null) {
-                session.save(new Review(session.get(Admin.class, "asanchez"), allGames.get(1), 7, "hola mundo", LocalDate.now(), Platform.PLAYSTATION));
-            }
-            if (session.get(Review.class, "mramirez-3") == null) {
-                session.save(new Review(session.get(User.class, "mramirez"), allGames.get(0), 7, "hola mundo", LocalDate.now(), Platform.XBOX));
-            }*/
-            VideoGame game1 = session.get(VideoGame.class, 2);
-            Profile profile1 = session.get(Admin.class, "asanchez");
+            game = session.get(VideoGame.class, 2);
+            profile = session.get(Admin.class, "asanchez");
             existingReview = session.createQuery(
                     "FROM Review r WHERE r.profile.username = :username AND r.videogame.v_id = :gameId",
                     Review.class)
                     .setParameter("username", profile.getUsername())
-                    .setParameter("gameId", game1.getV_id())
+                    .setParameter("gameId", game.getV_id())
                     .uniqueResult();
 
             if (existingReview == null) {
-                Review newReview = new Review(profile1, game1, 7, "Descripción de la review", LocalDate.now(), Platform.XBOX);
+                Review newReview = new Review(profile, game, 7, "Descripción de la review", LocalDate.now(), Platform.XBOX);
                 session.save(newReview);
             }
-            game1 = session.get(VideoGame.class, 3);
+
+            game = session.get(VideoGame.class, 3);
             existingReview = session.createQuery(
                     "FROM Review r WHERE r.profile.username = :username AND r.videogame.v_id = :gameId",
                     Review.class)
                     .setParameter("username", profile.getUsername())
-                    .setParameter("gameId", game1.getV_id())
+                    .setParameter("gameId", game.getV_id())
                     .uniqueResult();
 
             if (existingReview == null) {
-                Review newReview = new Review(profile1, game1, 7, "Descripción de la review", LocalDate.now(), Platform.XBOX);
+                Review newReview = new Review(profile, game, 7, "Descripción de la review", LocalDate.now(), Platform.XBOX);
                 session.save(newReview);
             }
 
