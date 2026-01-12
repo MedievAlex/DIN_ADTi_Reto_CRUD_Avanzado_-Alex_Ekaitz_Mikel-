@@ -32,6 +32,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.beans.value.ChangeListener;
+import javafx.event.ActionEvent;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
 import model.Pegi;
 import model.Platform;
 import model.Profile;
@@ -94,6 +97,16 @@ public class MainMenuWindowController implements Initializable
     private Controller cont;
     private ObservableList<VideoGame> videoGames;
     private boolean filtersVisible = false;
+    @FXML
+    private MenuBar menuBar;
+    @FXML
+    private Menu menuActions;
+    @FXML
+    private MenuItem menuItemReport;
+    @FXML
+    private Menu menuHelp;
+    @FXML
+    private MenuItem menuItemHelp;
 
     public void setUsuario(Profile profile)
     {
@@ -374,5 +387,9 @@ public class MainMenuWindowController implements Initializable
         ChangeListener<LocalDate> dateListener = (obs, oldVal, newVal) -> filterGames();
         fromDate.valueProperty().addListener(dateListener);
         toDate.valueProperty().addListener(dateListener);
+    }
+
+    @FXML
+    private void handleHelpAction(ActionEvent event) {
     }
 }

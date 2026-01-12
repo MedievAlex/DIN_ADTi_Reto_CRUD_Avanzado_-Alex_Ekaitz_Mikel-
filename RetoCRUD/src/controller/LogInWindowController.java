@@ -52,6 +52,12 @@ public class LogInWindowController implements Initializable
     private MenuItem menuItemHelp;
     
     private Controller CONT;
+    @FXML
+    private MenuBar menuBar;
+    @FXML
+    private Menu menuActions;
+    @FXML
+    private MenuItem menuItemReport;
 
     public void setController(Controller controller)
     {
