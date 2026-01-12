@@ -26,6 +26,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitMenuButton;
@@ -250,8 +252,8 @@ public class ReviewsWindowController implements Initializable {
                 controller.ListWindowController controllerWindow = fxmlLoader.getController();
                 controllerWindow.setUsuario(profile);
                 controllerWindow.setCont(cont);
-
-                controllerWindow.loadLists();
+              
+                controllerWindow.loadListButtons();
                 controllerWindow.setComboBox();
 
                 Stage stage = (Stage) menu.getScene().getWindow();
@@ -306,5 +308,9 @@ public class ReviewsWindowController implements Initializable {
                 showReviewsByList(selectedList);
             }
         });*/
+    }
+
+    @FXML
+    private void handleHelpAction(ActionEvent event) {
     }
 }

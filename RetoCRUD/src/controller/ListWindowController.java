@@ -1,5 +1,7 @@
 package controller;
 
+import exception.OurException;
+import exception.ShowAlert;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -7,10 +9,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,6 +24,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
@@ -31,6 +37,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import model.Listed;
 import model.Pegi;
 import model.Platform;
 import model.Profile;
@@ -42,6 +49,7 @@ import model.VideoGame;
  * @author ema
  */
 public class ListWindowController implements Initializable {
+
     @FXML
     private MenuButton menu;
     @FXML
@@ -83,7 +91,18 @@ public class ListWindowController implements Initializable {
     private ObservableList<VideoGame> videoGames;
     private String selectedList;
     private ArrayList<Button> litsButtons = new ArrayList<>();
+    @FXML
+    private MenuBar menuBar;
+    @FXML
+    private Menu menuActions;
+    @FXML
+    private MenuItem menuItemReport;
+    @FXML
+    private Menu menuHelp;
+    @FXML
+    private MenuItem menuItemHelp;
 
+    //[USERS & CONTROLLER]
     public void setUsuario(Profile profile) {
         this.profile = profile;
         menu.setText(profile.getUsername());
@@ -97,6 +116,7 @@ public class ListWindowController implements Initializable {
         return cont;
     }
 
+    //[BUTTONS]
     private void buttonStyle(Button button) {
         button.setMinWidth(vbLists.getPrefWidth());
         button.setMaxWidth(vbLists.getPrefWidth());
@@ -105,12 +125,18 @@ public class ListWindowController implements Initializable {
         button.wrapTextProperty().setValue(true);
     }
 
-    public void loadLists() {
-        HashMap<String, ArrayList<VideoGame>> lists = profile.getListsView();
-        for (HashMap.Entry<String, ArrayList<VideoGame>> entry : lists.entrySet()) {
-            String list = entry.getKey();
+    public void loadListButtons() {
+        ArrayList<String> listsNames = new ArrayList();
 
-            Button button = new Button(list);
+        try {
+            listsNames = cont.getUserLists(profile.getUsername());
+        } catch (OurException ex) {
+            Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        for (String name : listsNames) {
+
+            Button button = new Button(name);
             buttonStyle(button);
             button.setOnAction(e
                     -> {
@@ -135,106 +161,168 @@ public class ListWindowController implements Initializable {
         }
     }
 
+    //[LISTS]
     private void showList(Button button) {
         selectedList = button.getText();
-
+        listName.setText(selectedList);
         selectedButton(button);
 
-        ArrayList<VideoGame> list = profile.getListsView().get(selectedList);
-        listName.setText(selectedList);
+        try {
+            ArrayList<VideoGame> myGames = cont.getGamesFromList(profile.getUsername(), "My Games");
+            ArrayList<VideoGame> selectedGames = cont.getGamesFromList(profile.getUsername(), selectedList);
+            videoGames = FXCollections.observableArrayList();
 
-        videoGames = FXCollections.observableArrayList();
-        for (VideoGame game : list) {
-            videoGames.add(game);
+            //ArrayList<VideoGame> gamesToAdd = new ArrayList<>();
+            ArrayList<VideoGame> gamesToDelete = new ArrayList<>();
+
+            for (VideoGame game : myGames) { // Revisa los Juegos en My Games
+                boolean isInSelectedList = selectedGames.stream().anyMatch(g -> g.getV_id() == game.getV_id()); // Si existe en la lista seleccionada
+
+                if (game.getV_id() != 1) {
+                    if (isInSelectedList) {
+                        //gamesToAdd.add(game);
+                        //profile.addGame(selectedList, game);
+                        videoGames.add(game);
+                    } else {
+                        gamesToDelete.add(game);
+                        profile.removeGame(selectedList, game);
+                    }
+                }
+            }
+            //cont.addGamesToList(profile.getUsername(), selectedList, gamesToAdd);
+            cont.removeGamesFromList(profile.getUsername(), selectedList, gamesToDelete);
+
+            tableLists.setItems(videoGames);
+        } catch (OurException ex) {
+            ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
         }
-        tableLists.setItems(videoGames);
     }
 
     private int getListNumber() {
-        HashMap<String, ArrayList<VideoGame>> lists = profile.getListsView();
-        String name, prevNumber;
+        String prevNumber;
         int newNumber = 1;
 
-        for (HashMap.Entry<String, ArrayList<VideoGame>> entry : lists.entrySet()) {
-            name = entry.getKey();
+        try {
+            ArrayList<String> lists = cont.getUserLists(profile.getUsername());
+            for (String name : lists) {
+                if ("New List".equals(name.substring(0, 8))) {
+                    prevNumber = name.substring(9, name.length());
 
-            if ("New List".equals(name.substring(0, 8))) {
-                prevNumber = name.substring(9, name.length());
-
-                if (newNumber <= Integer.parseInt(prevNumber)) {
-                    newNumber = Integer.parseInt(prevNumber) + 1;
+                    if (newNumber <= Integer.parseInt(prevNumber)) {
+                        newNumber = Integer.parseInt(prevNumber) + 1;
+                    }
                 }
             }
+        } catch (OurException ex) {
+            Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return newNumber;
     }
 
     private void newList() {
+
         String buttonName = "New List " + getListNumber();
 
-        profile.newList(buttonName);
+        try {
+            cont.newList(profile, buttonName);
 
-        Button button = new Button(buttonName);
-        buttonStyle(button);
+            Button button = new Button(buttonName);
+            buttonStyle(button);
 
-        button.setOnAction(e
-                -> {
-            showList(button);
-        });
+            button.setOnAction(e
+                    -> {
+                showList(button);
+            });
 
-        vbLists.getChildren().add(button);
-        litsButtons.add(button);
-        setComboBox();
+            vbLists.getChildren().add(button);
+            litsButtons.add(button);
+            setComboBox();
+        } catch (OurException ex) {
+            Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void setComboBox() {
-        HashMap<String, ArrayList<VideoGame>> hmLists = profile.getListsView();
-        ArrayList<String> listsNames = new ArrayList<>();
 
-        for (HashMap.Entry<String, ArrayList<VideoGame>> entry : hmLists.entrySet()) {
-            if (!"My Games".equals(entry.getKey())) {
-                listsNames.add(entry.getKey());
-            }
+        ArrayList<String> listsNames = new ArrayList();
+        try {
+            listsNames = cont.getUserLists(profile.getUsername());
+        } catch (OurException ex) {
+            Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         combLists.getItems().clear();
         combLists.getItems().addAll(listsNames);
     }
 
     private void saveToAdd() {
-        // Save in a list to add them when a checkbox is true
+        try {
+            String selectedListName = null;
+            ArrayList<VideoGame> listedGames = cont.getGamesFromList(profile.getUsername(), selectedListName);
+
+            for (VideoGame gameInList : listedGames) {
+                boolean isInMyGames = listedGames.stream().anyMatch(g -> g.getV_id() == gameInList.getV_id());
+                gameInList.setChecked(isInMyGames);
+
+                if (isInMyGames) {
+                    profile.addGame(selectedListName, gameInList);
+                }
+
+                final boolean[] isUpdating = {false};
+                final String choosedListName = selectedListName;
+
+                gameInList.checkedProperty().addListener((obs, oldVal, newVal)
+                        -> {
+                    if (isUpdating[0]) {
+                        return;
+                    }
+
+                    try {
+                        if (newVal) {
+                            cont.addGameToList(profile.getUsername(), choosedListName, gameInList.getV_id());
+                            profile.addGame(choosedListName, gameInList);
+                        } else {
+                            cont.removeGameFromList(profile.getUsername(), choosedListName, gameInList.getV_id());
+                            profile.removeGame(choosedListName, gameInList);
+                        }
+                    } catch (OurException ex) {
+                        ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
+                        isUpdating[0] = true;
+                        gameInList.setChecked(oldVal);
+                        isUpdating[0] = false;
+                    }
+                });
+            }
+        } catch (OurException ex) {
+            ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 
     private void addToList() {
-        String name = combLists.getValue();
-        if (name == null) {
+        String name;
+        VideoGame game;
+
+        // Saves them on a list and if it already is shows an alert
+        if (combLists.getValue() == null) {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("ERROR");
-            alert.setHeaderText("[No list selected]");
+            alert.setHeaderText("[No list selected]"); // O null si no quieres encabezado
             alert.setContentText("Select a list to add the games.");
             alert.showAndWait();
-            return;
-        }
+        } else {
+            name = combLists.getValue();
 
-        boolean anyAdded = false;
-
-        for (VideoGame game : videoGames) {
-            if (game.isChecked()) {
+            if (tableLists.getSelectionModel().getSelectedItem() != null) {
+                game = tableLists.getSelectionModel().getSelectedItem();
                 if (!profile.addGame(name, game)) {
                     Alert alert = new Alert(AlertType.WARNING);
                     alert.setTitle("WARNING");
-                    alert.setHeaderText("Error when adding " + game.getV_name() + " to the list " + name + ".");
-                    alert.setContentText("It was already in the list.");
+                    alert.setHeaderText("Error when adding games to the list " + name + "."); // O null si no quieres encabezado
+                    alert.setContentText("The game " + game.getV_name() + " it has not been added to the list " + name + " because it is already there.");
                     alert.showAndWait();
                 } else {
-                    anyAdded = true;
-                    game.setChecked(false);
+                    // Actualizar
                 }
             }
-        }
-
-        if (anyAdded) {
-            tableLists.refresh();
         }
     }
 
@@ -244,9 +332,9 @@ public class ListWindowController implements Initializable {
         for (VideoGame game : new ArrayList<>(videoGames)) {
             if (game.isChecked()) {
                 if ("My Games".equals(selectedList)) {
-                    HashMap<String, ArrayList<VideoGame>> lists = profile.getListsView();
-                    for (String listName : lists.keySet()) {
-                        profile.removeGame(listName, game);
+                    Set<Listed> lists = profile.getListedGames();
+                    for (Listed list : lists) {
+                        profile.removeGame(list.getListName(), game);
                     }
                 } else {
                     profile.removeGame(selectedList, game);
@@ -261,6 +349,7 @@ public class ListWindowController implements Initializable {
         }
     }
 
+    //[MENU]
     private void setMenuOptions() {
         miProfile.setOnAction((event) -> {
             try {
@@ -326,16 +415,13 @@ public class ListWindowController implements Initializable {
         Button button = new Button("+ New List");
         buttonStyle(button);
         button.setStyle("-fx-background-radius: 30px; -fx-background-color: #75E773;");
+
         button.setOnAction(e
                 -> {
             newList();
         });
         vbLists.getChildren().add(button);
-
-        tcCheckBox.setOnEditCommit(event -> {
-            //MiItem item = event.getRowValue();
-            //System.out.println("Estado cambiado para " + item.getNombre() + ": " + item.isActivo());
-        });
+        litsButtons = new ArrayList<>();
 
         bttnRemove.setOnAction(e
                 -> {
@@ -357,7 +443,7 @@ public class ListWindowController implements Initializable {
         setOnActionHandlers();
         tableLists.setSelectionModel(null);
         tableLists.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        
+
         tcGame.setCellValueFactory(new PropertyValueFactory<>("v_name"));
         tcRelease.setCellValueFactory(new PropertyValueFactory<>("v_release"));
         tcPlatform.setCellValueFactory(new PropertyValueFactory<>("v_platform"));
@@ -372,26 +458,8 @@ public class ListWindowController implements Initializable {
          */
     }
 
-    public void test() {
-        VideoGame owlboy = new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3);
-        VideoGame animalCrossing = new VideoGame(2, "Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3);
-
-        profile.newList("Nintendo Switch");
-        profile.addGame("Nintendo Switch", owlboy);
-        profile.addGame("Nintendo Switch", animalCrossing);
-
-        VideoGame detroit = new VideoGame(3, "Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18);
-        VideoGame astrobot = new VideoGame(4, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3);
-        VideoGame bo2 = new VideoGame(5, "Call of Duty: Black Ops II", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3);
-
-        profile.newList("PlayStation");
-        profile.addGame("PlayStation", detroit);
-        profile.addGame("PlayStation", astrobot);
-
-        profile.addGame("My Games", owlboy);
-        profile.addGame("My Games", astrobot);
-        profile.addGame("My Games", animalCrossing);
-        profile.addGame("My Games", detroit);
-        profile.addGame("My Games", bo2);
+    @FXML
+    private void handleHelpAction(ActionEvent event) {
     }
+
 }

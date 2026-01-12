@@ -2,16 +2,12 @@ package model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+/**
+ *
+ * @author ema
+ */
 @Entity
 @Table(name = "review")
 @IdClass(ReviewId.class)
@@ -28,7 +24,7 @@ public class Review implements Serializable {
     
     @Id
     @ManyToOne
-    @JoinColumn(name = "game_id", referencedColumnName = "v_id")
+    @JoinColumn(name = "videogame_id", referencedColumnName = "v_id")
     private VideoGame videogame;
     
     @Column(name = "score", nullable = false)
@@ -44,7 +40,6 @@ public class Review implements Serializable {
     @Column(name = "platform")
     private Platform platform;
     
-    // Constructor vacío
     public Review() {}
 
     public Review(Profile profile, VideoGame videogame, int score, String description, 
@@ -124,8 +119,5 @@ public class Review implements Serializable {
     @Override
     public String toString() {
         return "Review{" + "reviewId=" + reviewId + ", profile=" + profile + ", videogame=" + videogame + ", score=" + score + ", description=" + description + ", reviewDate=" + reviewDate + ", platform=" + platform + '}';
-    }
-        
-
-
+    }   
 }

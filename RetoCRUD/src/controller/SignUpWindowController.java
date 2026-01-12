@@ -105,13 +105,12 @@ public class SignUpWindowController implements Initializable
                     Parent root = fxmlLoader.load();
                     
                     controller.MainMenuWindowController controllerWindow = fxmlLoader.getController();
-                    controllerWindow.setUsuario(profile);
                     controllerWindow.setCont(this.cont);
+                    controllerWindow.setUsuario(profile);
                     
                     Stage stage = new Stage();
                     stage.setScene(new Scene(root));
                     stage.setTitle("MAIN MENU");
-                    stage.setResizable(false);
                     stage.show();
                     
                     Stage currentStage = (Stage) buttonSignUp.getScene().getWindow();

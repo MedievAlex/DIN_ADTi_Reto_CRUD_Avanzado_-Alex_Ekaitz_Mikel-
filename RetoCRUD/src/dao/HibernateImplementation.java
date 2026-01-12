@@ -296,7 +296,7 @@ public class HibernateImplementation implements ClassDAO {
     }
 
     //[VIDEOGAMES]
-    //@Override
+    @Override
     public ArrayList<VideoGame> getAllVideoGames() throws OurException {
         Session session = null;
         ArrayList<VideoGame> gamesList = new ArrayList<>();
@@ -368,7 +368,7 @@ public class HibernateImplementation implements ClassDAO {
         return games;
     }
 
-    //@Override
+    @Override
     public boolean verifyGameInList(String username, String listName, int gameId) throws OurException {
         SessionThread thread = startSessionThread();
         boolean listed = false;
@@ -453,7 +453,7 @@ public class HibernateImplementation implements ClassDAO {
         }
     }
 
-    //@Override
+    @Override
     public void addGamesToList(String username, String listName, ArrayList<VideoGame> games) throws OurException {
         SessionThread thread = startSessionThread();
 
@@ -526,7 +526,7 @@ public class HibernateImplementation implements ClassDAO {
         }
     }
 
-    //@Override
+    @Override
     public void removeGamesFromList(String username, String listName, ArrayList<VideoGame> games) throws OurException {
         SessionThread thread = startSessionThread();
 
@@ -565,7 +565,7 @@ public class HibernateImplementation implements ClassDAO {
     }
 
     //[LISTS]
-    //@Override
+    @Override
     public ArrayList<String> getUserLists(String username) throws OurException {
         ArrayList<String> lists = new ArrayList<>();
         SessionThread thread = startSessionThread();
@@ -584,7 +584,8 @@ public class HibernateImplementation implements ClassDAO {
 
             if (profile != null) {
                 List<Listed> listNames = session.createQuery(
-                        "FROM Listed l WHERE l.profile.username = :username GROUP BY listName", Listed.class)
+                        "FROM Listed l WHERE l.profile.username = :username GROUP BY listName", Listed.class
+                )
                         .setParameter("username", username)
                         .list();
 
@@ -611,8 +612,8 @@ public class HibernateImplementation implements ClassDAO {
         return lists;
     }
 
-    //@Override
-    public void newList(Profile profile, VideoGame videogame, String listName) throws OurException {
+    @Override
+    public void newList(Profile profile, String listName) throws OurException {
         SessionThread thread = startSessionThread();
 
         try {
@@ -624,7 +625,7 @@ public class HibernateImplementation implements ClassDAO {
 
             session.beginTransaction();
 
-            Listed listed = new Listed(profile, videogame, listName);
+            Listed listed = new Listed(profile, session.get(VideoGame.class, 1), listName);
 
             session.save(listed);
 
@@ -644,7 +645,7 @@ public class HibernateImplementation implements ClassDAO {
         }
     }
 
-    //@Override
+    @Override
     public void deleteList(String username, String listName) throws OurException {
         SessionThread thread = startSessionThread();
 
@@ -678,7 +679,7 @@ public class HibernateImplementation implements ClassDAO {
         }
     }
 
-    //@Override
+    @Override
     public boolean verifyListName(String username, String listName) throws OurException {
         boolean nameExist = true;;
         SessionThread thread = startSessionThread();
@@ -725,7 +726,7 @@ public class HibernateImplementation implements ClassDAO {
         return nameExist;
     }
 
-    //@Override
+    @Override
     public boolean renameList(String username, String listName, String listNewName) throws OurException {
         boolean listRenamed = false;
 
@@ -1057,11 +1058,11 @@ public class HibernateImplementation implements ClassDAO {
             /**
              * ******************************************************LISTS*******************************************************
              */
-            profile = session.get(Admin.class, "asanchez");
+            profile = session.get(User.class, "asanchez");
             game = session.get(VideoGame.class, 1);
 
             existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame = :gameId", Listed.class)
-                    .setParameter("username", profile.getUsername())
+                    .setParameter("username", profile)
                     .setParameter("listName", "My Games")
                     .setParameter("gameId", game)
                     .uniqueResult();
@@ -1072,7 +1073,7 @@ public class HibernateImplementation implements ClassDAO {
 
             game = session.get(VideoGame.class, 2);
             existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame = :gameId", Listed.class)
-                    .setParameter("username", profile.getUsername())
+                    .setParameter("username", profile)
                     .setParameter("listName", "My Games")
                     .setParameter("gameId", game)
                     .uniqueResult();
@@ -1083,7 +1084,7 @@ public class HibernateImplementation implements ClassDAO {
 
             game = session.get(VideoGame.class, 3);
             existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame = :gameId", Listed.class)
-                    .setParameter("username", profile.getUsername())
+                    .setParameter("username", profile)
                     .setParameter("listName", "My Games")
                     .setParameter("gameId", game)
                     .uniqueResult();
@@ -1094,7 +1095,7 @@ public class HibernateImplementation implements ClassDAO {
 
             game = session.get(VideoGame.class, 5);
             existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame = :gameId", Listed.class)
-                    .setParameter("username", profile.getUsername())
+                    .setParameter("username", profile)
                     .setParameter("listName", "My Games")
                     .setParameter("gameId", game)
                     .uniqueResult();
@@ -1105,7 +1106,7 @@ public class HibernateImplementation implements ClassDAO {
 
             game = session.get(VideoGame.class, 1);
             existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame = :gameId", Listed.class)
-                    .setParameter("username", profile.getUsername())
+                    .setParameter("username", profile)
                     .setParameter("listName", "NINTENDO")
                     .setParameter("gameId", game)
                     .uniqueResult();
@@ -1114,20 +1115,20 @@ public class HibernateImplementation implements ClassDAO {
                 session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 1), "NINTENDO"));
             }
 
-            game = session.get(VideoGame.class, 6);
+            game = session.get(VideoGame.class, 2);
             existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame = :gameId", Listed.class)
-                    .setParameter("username", profile.getUsername())
+                    .setParameter("username", profile)
                     .setParameter("listName", "NINTENDO")
                     .setParameter("gameId", game)
                     .uniqueResult();
 
             if (existingList == null) {
-                session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 6), "NINTENDO"));
+                session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 2), "NINTENDO"));
             }
 
             game = session.get(VideoGame.class, 3);
             existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame = :gameId", Listed.class)
-                    .setParameter("username", profile.getUsername())
+                    .setParameter("username", profile)
                     .setParameter("listName", "NINTENDO")
                     .setParameter("gameId", game)
                     .uniqueResult();
@@ -1138,7 +1139,7 @@ public class HibernateImplementation implements ClassDAO {
 
             game = session.get(VideoGame.class, 1);
             existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame = :gameId", Listed.class)
-                    .setParameter("username", profile.getUsername())
+                    .setParameter("username", profile)
                     .setParameter("listName", "PLAYSTATION")
                     .setParameter("gameId", game)
                     .uniqueResult();
@@ -1149,7 +1150,7 @@ public class HibernateImplementation implements ClassDAO {
 
             game = session.get(VideoGame.class, 5);
             existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame = :gameId", Listed.class)
-                    .setParameter("username", profile.getUsername())
+                    .setParameter("username", profile)
                     .setParameter("listName", "PLAYSTATION")
                     .setParameter("gameId", game)
                     .uniqueResult();
@@ -1172,7 +1173,7 @@ public class HibernateImplementation implements ClassDAO {
                 session.save(new Review(session.get(User.class, "mramirez"), allGames.get(0), 7, "hola mundo", LocalDate.now(), Platform.XBOX));
             }*/
             VideoGame game1 = session.get(VideoGame.class, 2);
-            Profile profile1 =  session.get(Admin.class, "asanchez");
+            Profile profile1 = session.get(Admin.class, "asanchez");
             existingReview = session.createQuery(
                     "FROM Review r WHERE r.profile.username = :username AND r.videogame.v_id = :gameId",
                     Review.class)
@@ -1181,7 +1182,7 @@ public class HibernateImplementation implements ClassDAO {
                     .uniqueResult();
 
             if (existingReview == null) {
-                Review newReview = new Review(profile1,game1, 7, "Descripción de la review", LocalDate.now(), Platform.XBOX );
+                Review newReview = new Review(profile1, game1, 7, "Descripción de la review", LocalDate.now(), Platform.XBOX);
                 session.save(newReview);
             }
             game1 = session.get(VideoGame.class, 3);
@@ -1193,7 +1194,7 @@ public class HibernateImplementation implements ClassDAO {
                     .uniqueResult();
 
             if (existingReview == null) {
-                Review newReview = new Review(profile1,game1, 7, "Descripción de la review", LocalDate.now(), Platform.XBOX );
+                Review newReview = new Review(profile1, game1, 7, "Descripción de la review", LocalDate.now(), Platform.XBOX);
                 session.save(newReview);
             }
 
@@ -1220,5 +1221,4 @@ public class HibernateImplementation implements ClassDAO {
 
         return thread.getSession();
     }
-
 }
