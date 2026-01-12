@@ -11,6 +11,7 @@ import model.Profile;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 
 /**
@@ -109,7 +110,7 @@ public class DeleteAccountController implements Initializable
             return;
         }
 
-        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
+        Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
         alert.setTitle("Delete account");
         alert.setHeaderText("Are you sure you want to delete your account?");
         alert.setContentText("This action cannot be undone..");
@@ -126,7 +127,7 @@ public class DeleteAccountController implements Initializable
 
                 if (success)
                 {
-                    javafx.scene.control.Alert successAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+                    Alert successAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
                     successAlert.setTitle("Deleted account");
                     successAlert.setHeaderText(null);
                     successAlert.setContentText("Your account has been successfully deleted.");

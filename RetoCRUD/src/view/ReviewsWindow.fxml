@@ -57,7 +57,7 @@
         <VBox spacing="10" style="-fx-padding: 10;">
             <HBox spacing="10" alignment="CENTER_LEFT">
                 <TextField fx:id="searchBar" prefHeight="26.0" HBox.hgrow="ALWAYS" />
-                <Button fx:id="bttnSearch" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" text="Search" />
+                <Button fx:id="btnSearch" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" text="Search" />
                 <Region HBox.hgrow="ALWAYS" />
                 <ComboBox fx:id="combLists" prefWidth="150.0" promptText="-- My Lists --" />
             </HBox>
@@ -67,15 +67,14 @@
                     <TableColumn fx:id="tcGame" minWidth="100" text="GAME" />
                     <TableColumn fx:id="tcRelease" minWidth="80" text="RELEASE" />
                     <TableColumn fx:id="tcPlatform" minWidth="80" text="PLATFORM" />
-                    <TableColumn fx:id="tcScore" minWidth="60" text="SCORE" />
+                    <TableColumn fx:id="tcRate" minWidth="60" text="SCORE" />
                     <TableColumn fx:id="tcReview" minWidth="150" text="REVIEW" />
                 </columns>
             </TableView>
             
             <HBox spacing="10" alignment="CENTER_RIGHT">
                 <Region HBox.hgrow="ALWAYS" />
-                <Button fx:id="bttnNewReview" mnemonicParsing="false" onAction="#newReview" 
-                       prefHeight="26.0" prefWidth="133.0" text="New Review" />
+                <Button fx:id="btnNewReview" mnemonicParsing="false" onAction="#newReview" prefHeight="26.0" prefWidth="133.0" text="New Review" />
             </HBox>
         </VBox>
     </center>

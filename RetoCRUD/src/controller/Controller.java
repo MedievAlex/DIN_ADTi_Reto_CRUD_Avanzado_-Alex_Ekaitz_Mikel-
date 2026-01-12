@@ -3,6 +3,7 @@ import dao.ClassDAO;
 import exception.OurException;
 import java.util.ArrayList;
 import model.Profile;
+import model.Review;
 import model.VideoGame;
 /**
  * Controller class that handles interaction between the GUI and the database.
@@ -97,7 +98,7 @@ public class Controller
     
     public ArrayList<VideoGame> getVideoGames() throws OurException
     {
-        return DAO.getVideoGames();
+        return DAO.getAllVideoGames();
     }
     
     public ArrayList<VideoGame> getGamesFromList(String username, String listName) throws OurException
@@ -114,6 +115,28 @@ public class Controller
     {
         DAO.removeGameFromList(username, listName, gameId);
     }
+    public ArrayList<String> getUserLists(String username) throws OurException{
+        return DAO.getUserLists(username);
+    }
+    /*Reviews*/
+    public Review findReview(String username, int gameId) throws OurException{
+        return DAO.findReview(username, gameId);
+    }
+    public VideoGame findVideoGameByName(String gameName) throws OurException{
+        return DAO.findVideoGameByName(gameName);
+    }
+    public boolean saveOrUpdateReview(Review review) throws OurException{
+        return DAO.saveOrUpdateReview(review);
+    }
+    public ArrayList<Review> getAllReviews() throws OurException{
+        return DAO.getAllReviews();
+    }
+    public Profile findProfileByUsername(String username) throws OurException{
+        return DAO.findProfileByUsername(username);
+    }
+    
+    
+    
     
     public void initializeDefault() throws OurException
     {

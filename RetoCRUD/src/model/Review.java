@@ -114,7 +114,9 @@ public class Review implements Serializable {
     public void setPlatform(Platform platform) {
         this.platform = platform;
     }
-    
+    public String getGameName() {
+        return this.videogame.getV_name();
+    }
     public String getScoreFormatted() {
         return this.score + "/10";
     }

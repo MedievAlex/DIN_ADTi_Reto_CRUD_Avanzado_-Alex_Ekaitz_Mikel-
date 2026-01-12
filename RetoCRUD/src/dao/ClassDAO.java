@@ -3,6 +3,7 @@ package dao;
 import exception.OurException;
 import java.util.ArrayList;
 import model.Profile;
+import model.Review;
 import model.VideoGame;
 
 /**
@@ -16,10 +17,19 @@ public interface ClassDAO
     public boolean dropOutUser(String username, String password) throws OurException;
     public boolean dropOutAdmin(String usernameToDelete, String adminUsername, String adminPassword) throws OurException;
     public boolean modificarUser(String password, String email, String name, String telephone, String surname, String username, String gender) throws OurException;
-    public ArrayList<VideoGame> getVideoGames() throws OurException;
+    public ArrayList<VideoGame> getAllVideoGames() throws OurException;
     public ArrayList<VideoGame> getGamesFromList(String username, String listName) throws OurException;
     public void addGameToList(String username, String listName, int gameId) throws OurException;
     public void removeGameFromList(String username, String listName, int gameId) throws OurException;
+    public ArrayList<String> getUserLists(String username) throws OurException;
+    /*Reviews*/
+    public Review findReview(String username, int gameId) throws OurException;
+    public VideoGame findVideoGameByName(String gameName) throws OurException;
+    public boolean saveOrUpdateReview(Review review) throws OurException;
+    public ArrayList<Review> getAllReviews() throws OurException;
+    public Profile findProfileByUsername(String username) throws OurException;
+    
+    
     
     public ArrayList<String> comboBoxInsert() throws OurException;
     public void initializeDefault() throws OurException;
