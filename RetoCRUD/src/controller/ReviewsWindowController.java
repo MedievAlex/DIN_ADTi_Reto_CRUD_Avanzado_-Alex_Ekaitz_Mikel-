@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -12,6 +13,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
@@ -61,6 +64,16 @@ public class ReviewsWindowController implements Initializable {
 
     private Profile profile;
     private Controller cont;
+    @FXML
+    private MenuBar menuBar;
+    @FXML
+    private Menu menuActions;
+    @FXML
+    private MenuItem menuItemReport;
+    @FXML
+    private Menu menuHelp;
+    @FXML
+    private MenuItem menuItemHelp;
 
     public void setUsuario(Profile profile) {
         this.profile = profile;
@@ -173,5 +186,9 @@ public class ReviewsWindowController implements Initializable {
         setMenuOptions();
         setOnActionHandlers();
         tableReview.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+    }
+
+    @FXML
+    private void handleHelpAction(ActionEvent event) {
     }
 }

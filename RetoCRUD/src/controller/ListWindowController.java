@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -23,6 +24,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
@@ -88,6 +91,16 @@ public class ListWindowController implements Initializable {
     private ObservableList<VideoGame> videoGames;
     private String selectedList;
     private ArrayList<Button> litsButtons = new ArrayList<>();
+    @FXML
+    private MenuBar menuBar;
+    @FXML
+    private Menu menuActions;
+    @FXML
+    private MenuItem menuItemReport;
+    @FXML
+    private Menu menuHelp;
+    @FXML
+    private MenuItem menuItemHelp;
 
     //[USERS & CONTROLLER]
     public void setUsuario(Profile profile) {
@@ -443,6 +456,10 @@ public class ListWindowController implements Initializable {
             VideoGame videoGame = event.getTableView().getItems().grt(event.getTablePosition().getRow());
         >};
          */
+    }
+
+    @FXML
+    private void handleHelpAction(ActionEvent event) {
     }
 
 }
