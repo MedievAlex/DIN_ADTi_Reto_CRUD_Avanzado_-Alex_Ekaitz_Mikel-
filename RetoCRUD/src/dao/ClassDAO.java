@@ -3,6 +3,7 @@ package dao;
 import exception.OurException;
 import java.util.ArrayList;
 import model.Profile;
+import model.Review;
 import model.VideoGame;
 
 /**
