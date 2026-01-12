@@ -62,7 +62,6 @@ public interface ClassDAO {
 
     public boolean saveOrUpdateReview(Review review) throws OurException;
 
-
     //[OTHER]
     public void initializeDefault() throws OurException;
 }

@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -24,6 +25,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuButton;
@@ -37,6 +39,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import model.Listed;
 import model.Pegi;
 import model.Platform;
@@ -102,6 +105,8 @@ public class ListWindowController implements Initializable {
     @FXML
     private MenuItem menuItemHelp;
 
+    private ContextMenu contextMenu;
+
     //[USERS & CONTROLLER]
     public void setUsuario(Profile profile) {
         this.profile = profile;
@@ -133,6 +138,32 @@ public class ListWindowController implements Initializable {
         } catch (OurException ex) {
             Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        contextMenu = new ContextMenu();
+        contextMenu.setOnShowing(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent e) {
+                System.out.println("showing");
+            }
+        });
+        contextMenu.setOnShown(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent e) {
+                System.out.println("shown");
+            }
+        });
+
+        MenuItem renameList = new MenuItem("Rename List");
+        renameList.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e) {
+                cont.renameList(selectedList, selectedList, selectedList);
+            }
+        });
+        MenuItem deleteList = new MenuItem("Delete List");
+        deleteList.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e) {
+                cont.deleteList(selectedList, selectedList);
+            }
+        });
+        contextMenu.getItems().addAll(renameList, deleteList);
 
         for (String name : listsNames) {
 
