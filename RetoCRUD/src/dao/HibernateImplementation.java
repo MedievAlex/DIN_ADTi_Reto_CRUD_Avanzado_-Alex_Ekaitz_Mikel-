@@ -876,17 +876,6 @@ public class HibernateImplementation implements ClassDAO {
                 session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 2), "My Games"));
             }
 
-            game = session.get(VideoGame.class, 2);
-            existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame = :gameId", Listed.class)
-                    .setParameter("username", profile)
-                    .setParameter("listName", "My Games")
-                    .setParameter("gameId", game)
-                    .uniqueResult();
-
-            if (existingList == null) {
-                session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 2), "My Games"));
-            }
-
             game = session.get(VideoGame.class, 3);
             existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame = :gameId", Listed.class)
                     .setParameter("username", profile)

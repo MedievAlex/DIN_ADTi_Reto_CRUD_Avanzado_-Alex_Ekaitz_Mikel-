@@ -208,6 +208,8 @@ public class ListWindowController implements Initializable {
 
         profile.newList(buttonName);
 
+        
+        
         Button button = new Button(buttonName);
         buttonStyle(button);
 
@@ -437,28 +439,4 @@ public class ListWindowController implements Initializable {
          */
     }
 
-    /*
-    public void test() {
-        VideoGame owlboy = new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3);
-        VideoGame animalCrossing = new VideoGame(2, "Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3);
-
-        profile.newList("Nintendo Switch");
-        profile.addGame("Nintendo Switch", owlboy);
-        profile.addGame("Nintendo Switch", animalCrossing);
-
-        VideoGame detroit = new VideoGame(3, "Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18);
-        VideoGame astrobot = new VideoGame(4, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3);
-        VideoGame bo2 = new VideoGame(5, "Call of Duty: Black Ops II", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3);
-
-        profile.newList("PlayStation");
-        profile.addGame("PlayStation", detroit);
-        profile.addGame("PlayStation", astrobot);
-
-        profile.addGame("My Games", owlboy);
-        profile.addGame("My Games", astrobot);
-        profile.addGame("My Games", animalCrossing);
-        profile.addGame("My Games", detroit);
-        profile.addGame("My Games", bo2);
-    }
-     */
 }
