@@ -142,27 +142,21 @@ public class ListWindowController implements Initializable {
         }
     }
 
-    private ContextMenu contextualMenu() {
+    private ContextMenu contextualMenu(String buttonName) {
         ContextMenu contextualMenu = new ContextMenu();
 
         contextualMenu.setOnShowing(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent e) {
-                System.out.println("showing");
-            }
-        });
-        contextualMenu.setOnShown(new EventHandler<WindowEvent>() {
-            public void handle(WindowEvent e) {
-                System.out.println("shown");
+                System.out.println("List: " + buttonName);
             }
         });
 
         MenuItem renameList = new MenuItem("Rename List");
         renameList.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
-
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Lists New Name");
-                alert.setHeaderText("Insert " + selectedList + " new name.");
+                alert.setHeaderText("Insert " + buttonName + " new name.");
 
                 TextField listNewName = new TextField();
                 listNewName.setPromptText("New name.");
@@ -174,12 +168,11 @@ public class ListWindowController implements Initializable {
 
                 alert.getDialogPane().setContent(grid);
                 alert.getButtonTypes().setAll(ButtonType.OK, ButtonType.CANCEL);
-                alert.showAndWait();
 
                 Optional<ButtonType> accept = alert.showAndWait();
                 if (accept.get() == ButtonType.OK) {
                     try {
-                        cont.renameList(profile.getUsername(), selectedList, listNewName.getText());
+                        cont.renameList(profile.getUsername(), buttonName, listNewName.getText());
                     } catch (OurException ex) {
                         Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -191,7 +184,8 @@ public class ListWindowController implements Initializable {
         deleteList.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
                 try {
-                    cont.deleteList(selectedList, selectedList);
+                    cont.deleteList(profile.getUsername(), buttonName);
+                    loadListButtons();
                 } catch (OurException ex) {
                     Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -221,7 +215,7 @@ public class ListWindowController implements Initializable {
                 vbLists.getChildren().add(button);
                 litsButtons.add(button);
                 if (!"My Games".equals(button.getText())) {
-                    button.setContextMenu(contextualMenu());
+                    button.setContextMenu(contextualMenu(button.getText()));
                 }
             }
 
@@ -307,7 +301,7 @@ public class ListWindowController implements Initializable {
 
             vbLists.getChildren().add(button);
             litsButtons.add(button);
-            button.setContextMenu(contextualMenu());
+            button.setContextMenu(contextualMenu(button.getText()));
 
             setComboBox();
         } catch (OurException ex) {

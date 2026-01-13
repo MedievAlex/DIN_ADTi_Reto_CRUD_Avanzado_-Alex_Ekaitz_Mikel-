@@ -825,14 +825,14 @@ public class HibernateImplementation implements ClassDAO {
             session.beginTransaction();
 
             Profile profile = session.get(Profile.class, username);
-
             if (profile != null) {
+
                 int update = session.createQuery(
-                        "UPDATE TABLE Listed l SET l.listName = :listName WHERE l.profile.username = :username AND l.listName = :listName", Listed.class)
+                        "UPDATE Listed SET listName = :listNewName WHERE username = :username AND list_name = :listName", Listed.class)
                         .setParameter("username", username)
                         .setParameter("listName", listName)
+                        .setParameter("listNewName", listNewName)
                         .executeUpdate();
-
                 if (update != 0) {
                     listRenamed = true;
                 }
@@ -847,6 +847,7 @@ public class HibernateImplementation implements ClassDAO {
             }
             throw e;
         } catch (Exception e) {
+            e.printStackTrace(); //test
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
             }
