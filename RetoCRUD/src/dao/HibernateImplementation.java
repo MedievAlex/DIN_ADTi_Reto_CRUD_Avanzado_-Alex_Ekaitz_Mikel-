@@ -829,9 +829,9 @@ public class HibernateImplementation implements ClassDAO {
 
                 int update = session.createQuery(
                         "UPDATE Listed SET listName = :listNewName WHERE username = :username AND list_name = :listName", Listed.class)
-                        .setParameter("username", username)
                         .setParameter("listName", listName)
                         .setParameter("listNewName", listNewName)
+                        .setParameter("username", username)
                         .executeUpdate();
                 if (update != 0) {
                     listRenamed = true;

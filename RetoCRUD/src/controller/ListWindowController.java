@@ -197,7 +197,22 @@ public class ListWindowController implements Initializable {
         return contextualMenu;
     }
 
+    private void newListButton(){
+        Button button = new Button("+ New List");
+        buttonStyle(button);
+        button.setStyle("-fx-background-radius: 30px; -fx-background-color: #75E773;");
+
+        button.setOnAction(e
+                -> {
+            newList();
+        });
+        vbLists.getChildren().add(button);
+    }
+    
     public void loadListButtons() {
+        vbLists.getChildren().clear();
+        newListButton();
+        
         ArrayList<String> listsNames = new ArrayList();
 
         try {
@@ -479,15 +494,8 @@ public class ListWindowController implements Initializable {
     }
 
     private void setOnActionHandlers() {
-        Button button = new Button("+ New List");
-        buttonStyle(button);
-        button.setStyle("-fx-background-radius: 30px; -fx-background-color: #75E773;");
-
-        button.setOnAction(e
-                -> {
-            newList();
-        });
-        vbLists.getChildren().add(button);
+        newListButton();
+        
         litsButtons = new ArrayList<>();
 
         bttnRemove.setOnAction(e
