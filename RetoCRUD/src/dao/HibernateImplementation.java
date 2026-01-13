@@ -779,26 +779,25 @@ public class HibernateImplementation implements ClassDAO {
             Profile profile = session.get(Profile.class, username);
 
             if (profile != null) {
-                Listed list = session.createQuery(
+                List<Listed> list = session.createQuery(
                         "FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName", Listed.class)
                         .setParameter("username", username)
                         .setParameter("listName", listName)
-                        .getSingleResult();
+                        .list();
 
-                if (list == null) {
+                if (!list.isEmpty()) {
                     nameExist = false;
                 }
 
                 session.getTransaction().commit();
             }
-
-            session.getTransaction().commit();
         } catch (OurException e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
             }
             throw e;
         } catch (Exception e) {
+            e.printStackTrace();
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
             }
@@ -810,9 +809,7 @@ public class HibernateImplementation implements ClassDAO {
     }
 
     @Override
-    public boolean renameList(String username, String listName, String listNewName) throws OurException {
-        boolean listRenamed = false;
-
+    public void renameList(String username, String listName, String listNewName) throws OurException {
         SessionThread thread = startSessionThread();
 
         try {
@@ -827,20 +824,15 @@ public class HibernateImplementation implements ClassDAO {
             Profile profile = session.get(Profile.class, username);
             if (profile != null) {
 
-                int update = session.createQuery(
+                session.createQuery(
                         "UPDATE Listed SET listName = :listNewName WHERE username = :username AND list_name = :listName", Listed.class)
                         .setParameter("listName", listName)
                         .setParameter("listNewName", listNewName)
                         .setParameter("username", username)
                         .executeUpdate();
-                if (update != 0) {
-                    listRenamed = true;
-                }
 
                 session.getTransaction().commit();
             }
-
-            session.getTransaction().commit();
         } catch (OurException e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
@@ -855,8 +847,6 @@ public class HibernateImplementation implements ClassDAO {
         } finally {
             thread.releaseSession();
         }
-
-        return listRenamed;
     }
 
     //[REVIEWS]
@@ -896,7 +886,7 @@ public class HibernateImplementation implements ClassDAO {
 
         return review;
     }
-   
+
     @Override
     public ArrayList<Review> getAllReviews() throws OurException {
         ArrayList<Review> reviews = new ArrayList<>();
@@ -928,7 +918,7 @@ public class HibernateImplementation implements ClassDAO {
         }
         return reviews;
     }
-    
+
     @Override
     public boolean saveOrUpdateReview(Review review) throws OurException {
 

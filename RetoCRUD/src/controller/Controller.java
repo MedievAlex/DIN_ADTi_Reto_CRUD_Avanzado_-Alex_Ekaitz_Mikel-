@@ -157,9 +157,9 @@ public class Controller {
         return DAO.verifyListName(username, listName);
     }
 
-    public boolean renameList(String username, String listName, String listNewName) throws OurException {
+    public void renameList(String username, String listName, String listNewName) throws OurException {
 
-        return DAO.renameList(username, listName, listNewName);
+        DAO.renameList(username, listName, listNewName);
     }
 
     //[REVIEWS]

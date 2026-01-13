@@ -28,6 +28,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuButton;
@@ -91,13 +92,6 @@ public class ListWindowController implements Initializable {
     private Button bttnRemove;
     @FXML
     private Button bttnAdd;
-
-    private Profile profile;
-    private Controller cont;
-
-    private ObservableList<VideoGame> videoGames;
-    private String selectedList;
-    private ArrayList<Button> litsButtons = new ArrayList<>();
     @FXML
     private MenuBar menuBar;
     @FXML
@@ -108,6 +102,13 @@ public class ListWindowController implements Initializable {
     private Menu menuHelp;
     @FXML
     private MenuItem menuItemHelp;
+
+    private Profile profile;
+    private Controller cont;
+
+    private ObservableList<VideoGame> videoGames;
+    private String selectedList;
+    private ArrayList<Button> litsButtons = new ArrayList<>();
 
     //[USERS & CONTROLLER]
     public void setUsuario(Profile profile) {
@@ -154,33 +155,31 @@ public class ListWindowController implements Initializable {
         MenuItem renameList = new MenuItem("Rename List");
         renameList.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Lists New Name");
-                alert.setHeaderText("Insert " + buttonName + " new name.");
+                try {
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/RenameListWindow.fxml"));
+                    Parent root = fxmlLoader.load();
 
-                TextField listNewName = new TextField();
-                listNewName.setPromptText("New name.");
+                    controller.RenameListWindowController controllerWindow = fxmlLoader.getController();
+                    controllerWindow.setUsuario(profile);
+                    controllerWindow.setCont(cont);
+                    System.out.println("List pre cont: " + buttonName);
+                    controllerWindow.setListName(buttonName);
+                    System.out.println("List post cont: " + buttonName);
 
-                GridPane grid = new GridPane();
-                grid.setHgap(10);
-                grid.setVgap(10);
-                grid.add(listNewName, 1, 0);
-
-                alert.getDialogPane().setContent(grid);
-                alert.getButtonTypes().setAll(ButtonType.OK, ButtonType.CANCEL);
-
-                Optional<ButtonType> accept = alert.showAndWait();
-                if (accept.get() == ButtonType.OK) {
-                    try {
-                        cont.renameList(profile.getUsername(), buttonName, listNewName.getText());
-                    } catch (OurException ex) {
-                        Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    Stage stage = new Stage();
+                    stage.setScene(new Scene(root));
+                    stage.setTitle("RENAME " + buttonName + " LIST");
+                    stage.setResizable(false);
+                    stage.initModality(Modality.APPLICATION_MODAL);
+                    stage.showAndWait();
+                } catch (IOException ex) {
+                    Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
 
         MenuItem deleteList = new MenuItem("Delete List");
+
         deleteList.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
                 try {
@@ -197,7 +196,7 @@ public class ListWindowController implements Initializable {
         return contextualMenu;
     }
 
-    private void newListButton(){
+    private void newListButton() {
         Button button = new Button("+ New List");
         buttonStyle(button);
         button.setStyle("-fx-background-radius: 30px; -fx-background-color: #75E773;");
@@ -208,11 +207,11 @@ public class ListWindowController implements Initializable {
         });
         vbLists.getChildren().add(button);
     }
-    
+
     public void loadListButtons() {
         vbLists.getChildren().clear();
         newListButton();
-        
+
         ArrayList<String> listsNames = new ArrayList();
 
         try {
@@ -495,7 +494,7 @@ public class ListWindowController implements Initializable {
 
     private void setOnActionHandlers() {
         newListButton();
-        
+
         litsButtons = new ArrayList<>();
 
         bttnRemove.setOnAction(e
@@ -525,12 +524,6 @@ public class ListWindowController implements Initializable {
         tcPegi.setCellValueFactory(new PropertyValueFactory<>("v_pegi"));
         tcCheckBox.setCellValueFactory(cellData -> cellData.getValue().checkedProperty());
         tcCheckBox.setCellFactory(CheckBoxTableCell.forTableColumn(tcCheckBox));
-
-        /*
-        tcCheckBox.setOnEditColumn(new EventHandler<TableColumn.CellEditEvent<VideoGame, Boolean>(){
-            VideoGame videoGame = event.getTableView().getItems().grt(event.getTablePosition().getRow());
-        >};
-         */
     }
 
     @FXML
