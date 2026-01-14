@@ -1049,7 +1049,7 @@ public class HibernateImplementation implements ClassDAO {
             /**
              * ******************************************************LISTS*******************************************************
              */
-            profile = session.get(User.class, "asanchez");
+            profile = session.get(Admin.class, "asanchez");
             game = session.get(VideoGame.class, 1);
 
             existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame = :gameId", Listed.class)
