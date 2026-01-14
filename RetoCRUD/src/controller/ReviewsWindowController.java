@@ -166,7 +166,6 @@ public class ReviewsWindowController implements Initializable {
         });
         tableReview.setItems(filtered);
     }
-    
 
     public void loadLists() {
         ArrayList<VideoGame> games = new ArrayList<VideoGame>();
@@ -253,7 +252,7 @@ public class ReviewsWindowController implements Initializable {
                 controller.ListWindowController controllerWindow = fxmlLoader.getController();
                 controllerWindow.setUsuario(profile);
                 controllerWindow.setCont(cont);
-              
+
                 controllerWindow.loadListButtons();
                 controllerWindow.setComboBox();
 

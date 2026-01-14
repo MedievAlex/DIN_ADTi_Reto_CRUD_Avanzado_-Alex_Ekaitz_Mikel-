@@ -285,7 +285,6 @@ public class ListWindowController implements Initializable {
 
             //ArrayList<VideoGame> gamesToAdd = new ArrayList<>();
             //ArrayList<VideoGame> gamesToDelete = new ArrayList<>();
-
             for (VideoGame game : myGames) { // Revisa los Juegos en My Games
                 boolean isInSelectedList = selectedGames.stream().anyMatch(g -> g.getV_id() == game.getV_id()); // Si existe en la lista seleccionada
 
@@ -490,14 +489,18 @@ public class ListWindowController implements Initializable {
                 Parent root = fxmlLoader.load();
 
                 controller.ReviewsWindowController controllerWindow = fxmlLoader.getController();
-                controllerWindow.setUsuario(profile);
                 controllerWindow.setCont(cont);
+                controllerWindow.setUsuario(profile);
+                controllerWindow.setComboBox();
+                controllerWindow.loadReview();
 
                 Stage stage = (Stage) menu.getScene().getWindow();
                 stage.setScene(new Scene(root));
                 stage.setTitle("REVIEWS");
             } catch (IOException ex) {
                 Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (OurException ex) {
+                Logger.getLogger(MainMenuWindowController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
 
