@@ -14,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Profile;
@@ -26,7 +27,7 @@ import model.Profile;
 public class RenameListWindowController implements Initializable {
 
     @FXML
-    private TextArea listNewName;
+    private TextField listNewName;
     @FXML
     private Button btnCancel;
     @FXML
@@ -36,6 +37,7 @@ public class RenameListWindowController implements Initializable {
 
     private Profile profile;
     private Controller cont;
+    private ListWindowController parentController;
     private String listName;
 
     //[USERS & CONTROLLER]
@@ -46,36 +48,44 @@ public class RenameListWindowController implements Initializable {
     public void setCont(Controller cont) {
         this.cont = cont;
     }
+    
+    public void setParentCont(ListWindowController parentController) {
+        this.parentController = parentController;
+    }
 
     public Controller getCont() {
         return cont;
     }
 
-    public void setListName(String listName) {
+    public void setListToRename(String listName) {
         this.listName = listName;
+        txtMessage.setText(listName + " list new name:");
     }
 
     private void renameList() {
-        boolean nameUpdated = false;
+        String newName = listNewName.getText();
 
-        do {
-            try {
-                if (cont.verifyListName(profile.getUsername(), listNewName.getText())) {
-                    txtMessage.setText(listNewName + " List already exists.");
-                } else {
-                    cont.renameList(profile.getUsername(), listName, listNewName.getText());
-                    nameUpdated = true;
-                }
-            } catch (OurException ex) {
-                Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        try {
+            if (cont.verifyListName(profile.getUsername(), listNewName.getText())) {
+                txtMessage.setText(" List named " + newName + " already exists.");
+            } else {
+                cont.renameList(profile.getUsername(), listName, newName);
+                txtMessage.setText(listName + " updated to " + newName + ".");
+                parentController.loadListButtons();
+                parentController.setComboBox();
+                close();
             }
-
-        } while (nameUpdated);
+        } catch (OurException ex) {
+            Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
+    private void close(){
+        Stage stage = (Stage) btnCancel.getScene().getWindow();
+            stage.close();
+    }
+    
     private void setOnActionHandlers() {
-        txtMessage.setText(listName + " List new name:");
-
         btnConfirm.setOnAction(e
                 -> {
             renameList();
@@ -83,14 +93,12 @@ public class RenameListWindowController implements Initializable {
 
         btnCancel.setOnAction(e
                 -> {
-            Stage stage = (Stage) btnCancel.getScene().getWindow();
-            stage.close();
+            close();
         });
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         setOnActionHandlers();
-        System.out.println("List: " + listName);
     }
 }

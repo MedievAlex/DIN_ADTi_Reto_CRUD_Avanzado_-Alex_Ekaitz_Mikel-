@@ -764,7 +764,7 @@ public class HibernateImplementation implements ClassDAO {
 
     @Override
     public boolean verifyListName(String username, String listName) throws OurException {
-        boolean nameExist = true;;
+        boolean nameExist = true;
         SessionThread thread = startSessionThread();
 
         try {
@@ -780,12 +780,12 @@ public class HibernateImplementation implements ClassDAO {
 
             if (profile != null) {
                 List<Listed> list = session.createQuery(
-                        "FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName", Listed.class)
+                        "FROM Listed WHERE username = :username AND list_name = :listName", Listed.class)
                         .setParameter("username", username)
                         .setParameter("listName", listName)
                         .list();
 
-                if (!list.isEmpty()) {
+                if (list.isEmpty()) {
                     nameExist = false;
                 }
 
@@ -825,7 +825,7 @@ public class HibernateImplementation implements ClassDAO {
             if (profile != null) {
 
                 session.createQuery(
-                        "UPDATE Listed SET listName = :listNewName WHERE username = :username AND list_name = :listName", Listed.class)
+                        "UPDATE Listed SET listName = :listNewName WHERE username = :username AND list_name = :listName")
                         .setParameter("listName", listName)
                         .setParameter("listNewName", listNewName)
                         .setParameter("username", username)
