@@ -188,7 +188,7 @@ public class MainMenuWindowController implements Initializable
                 controller.ReviewsWindowController controllerWindow = fxmlLoader.getController();
                 controllerWindow.setCont(cont);
                 controllerWindow.setUsuario(profile);
-                //controllerWindow.setComboBox();
+                controllerWindow.setComboBox();
                 controllerWindow.loadReview();
                 
 
