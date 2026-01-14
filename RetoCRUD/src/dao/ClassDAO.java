@@ -53,7 +53,7 @@ public interface ClassDAO {
 
     public boolean verifyListName(String username, String listName) throws OurException;
 
-    public boolean renameList(String username, String listName, String listNewName) throws OurException;
+    public void renameList(String username, String listName, String listNewName) throws OurException;
 
     //[REVIEWS]
     public Review findReview(String username, int gameId) throws OurException;
@@ -61,7 +61,6 @@ public interface ClassDAO {
     public ArrayList<Review> getAllReviews() throws OurException;
 
     public boolean saveOrUpdateReview(Review review) throws OurException;
-
 
     //[OTHER]
     public void initializeDefault() throws OurException;
