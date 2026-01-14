@@ -251,7 +251,6 @@ public class ListWindowController implements Initializable {
             listsNames = cont.getUserLists(profile.getUsername());
 
             for (String name : listsNames) {
-
                 Button button = new Button(name);
                 buttonStyle(button);
                 button.setOnAction(e
@@ -285,7 +284,7 @@ public class ListWindowController implements Initializable {
             videoGames = FXCollections.observableArrayList();
 
             //ArrayList<VideoGame> gamesToAdd = new ArrayList<>();
-            ArrayList<VideoGame> gamesToDelete = new ArrayList<>();
+            //ArrayList<VideoGame> gamesToDelete = new ArrayList<>();
 
             for (VideoGame game : myGames) { // Revisa los Juegos en My Games
                 boolean isInSelectedList = selectedGames.stream().anyMatch(g -> g.getV_id() == game.getV_id()); // Si existe en la lista seleccionada
@@ -296,13 +295,13 @@ public class ListWindowController implements Initializable {
                         //profile.addGame(selectedList, game);
                         videoGames.add(game);
                     } else {
-                        gamesToDelete.add(game);
-                        profile.removeGame(selectedList, game);
+                        //gamesToDelete.add(game);
+                        //profile.removeGame(selectedList, game);
                     }
                 }
             }
             //cont.addGamesToList(profile.getUsername(), selectedList, gamesToAdd);
-            cont.removeGamesFromList(profile.getUsername(), selectedList, gamesToDelete);
+            //cont.removeGamesFromList(profile.getUsername(), selectedList, gamesToDelete);
 
             tableLists.setItems(videoGames);
         } catch (OurException ex) {

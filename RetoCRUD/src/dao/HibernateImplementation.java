@@ -583,7 +583,7 @@ public class HibernateImplementation implements ClassDAO {
 
                 session.beginTransaction();
                 for (VideoGame game : games) {
-                    session.createQuery("DELETE FROM Listed WHERE profile.username = :username AND listName = :listName AND videogame.v_id = :gameId")
+                    session.createQuery("DELETE FROM Listed WHERE profile.username = :username AND list_Name = :listName AND videogame.v_id = :gameId")
                             .setParameter("username", username)
                             .setParameter("listName", listName)
                             .setParameter("gameId", game.getV_id())
@@ -1028,11 +1028,13 @@ public class HibernateImplementation implements ClassDAO {
              */
             ArrayList<VideoGame> allGames = new ArrayList<>();
             allGames.add(new VideoGame());
-            allGames.add(new VideoGame("Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
-            allGames.add(new VideoGame("Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI6));
-            allGames.add(new VideoGame("Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI16));
-            allGames.add(new VideoGame("ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
-            allGames.add(new VideoGame("Call of Duty: Black Ops II", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
+            allGames.add(new VideoGame("Owlboy", LocalDate.of(2016, 11, 1), Platform.NINTENDO, Pegi.PEGI3));
+            allGames.add(new VideoGame("Animal Crossing New Horizons", LocalDate.of(2020, 5, 20), Platform.NINTENDO, Pegi.PEGI6));
+            allGames.add(new VideoGame("Detroit: Become Human", LocalDate.of(2018, 5, 25), Platform.PLAYSTATION, Pegi.PEGI16));
+            allGames.add(new VideoGame("ASTROBOT", LocalDate.of(2024, 9, 6), Platform.PLAYSTATION, Pegi.PEGI3));
+            allGames.add(new VideoGame("Call of Duty: Black Ops II", LocalDate.of(2012, 11, 13), Platform.PLAYSTATION, Pegi.PEGI18));
+            allGames.add(new VideoGame("Halo Infinite", LocalDate.of(2021, 12, 8), Platform.XBOX, Pegi.PEGI16));
+            allGames.add(new VideoGame("Balatro", LocalDate.of(2024, 2, 20), Platform.PC, Pegi.PEGI12));
 
             for (VideoGame allGameGames : allGames) {
                 VideoGame existing = session
