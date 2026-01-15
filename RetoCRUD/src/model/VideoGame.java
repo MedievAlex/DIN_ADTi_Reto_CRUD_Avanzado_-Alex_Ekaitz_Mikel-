@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javax.persistence.*;
 
 /**
@@ -34,9 +32,6 @@ public class VideoGame implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "v_pegi")
     private Pegi v_pegi;
-
-    @Transient
-    private BooleanProperty checked = new SimpleBooleanProperty(false);
 
     @OneToMany(mappedBy = "videogame", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Listed> listedInProfiles = new HashSet<>();
@@ -101,18 +96,6 @@ public class VideoGame implements Serializable {
 
     public void setV_pegi(Pegi v_pegi) {
         this.v_pegi = v_pegi;
-    }
-
-    public BooleanProperty checkedProperty() {
-        return checked;
-    }
-
-    public boolean isChecked() {
-        return checked.get();
-    }
-
-    public void setChecked(boolean value) {
-        checked.set(value);
     }
 
     public Set<Listed> getListedInProfiles() {
