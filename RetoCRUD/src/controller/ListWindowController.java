@@ -315,6 +315,7 @@ public class ListWindowController implements Initializable {
         ArrayList<String> listsNames = new ArrayList();
         try {
             listsNames = cont.getUserLists(profile.getUsername());
+            listsNames.remove("My Games");
         } catch (OurException ex) {
             Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
