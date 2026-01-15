@@ -827,33 +827,25 @@ public class HibernateImplementation implements ClassDAO {
 
             session.beginTransaction();
 
-            List<Listed> listedGames = session.createQuery(
-                    "FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName", 
-                    Listed.class)
-                    .setParameter("username", username)
-                    .setParameter("listName", listName)
-                    .list();
+            Profile profile = session.get(Profile.class, username);
+            if (profile != null) {
 
-            for (Listed oldListed : listedGames) {
-                Listed newListed = new Listed(
-                    oldListed.getProfile(),
-                    oldListed.getVideogame(),
-                    listNewName
-                );
+                session.createQuery(
+                        "UPDATE Listed SET listName = :listNewName WHERE username = :username AND list_name = :listName")
+                        .setParameter("listName", listName)
+                        .setParameter("listNewName", listNewName)
+                        .setParameter("username", username)
+                        .executeUpdate();
 
-                session.save(newListed);
-
-                session.delete(oldListed);
+                session.getTransaction().commit();
             }
-
-            session.getTransaction().commit();
         } catch (OurException e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
             }
             throw e;
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); //test
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
             }
@@ -1041,7 +1033,7 @@ public class HibernateImplementation implements ClassDAO {
              * ******************************************************GAMES*******************************************************
              */
             ArrayList<VideoGame> allGames = new ArrayList<>();
-            allGames.add(new VideoGame());
+            allGames.add(new VideoGame("DEFAULT_GAME", LocalDate.now(), Platform.DEFAULT, Pegi.DEFAULT));
             allGames.add(new VideoGame("Owlboy", LocalDate.of(2016, 11, 1), Platform.NINTENDO, Pegi.PEGI3));
             allGames.add(new VideoGame("Animal Crossing New Horizons", LocalDate.of(2020, 5, 20), Platform.NINTENDO, Pegi.PEGI6));
             allGames.add(new VideoGame("Detroit: Become Human", LocalDate.of(2018, 5, 25), Platform.PLAYSTATION, Pegi.PEGI16));

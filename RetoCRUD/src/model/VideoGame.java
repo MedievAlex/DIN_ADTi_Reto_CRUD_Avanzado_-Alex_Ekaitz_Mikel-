@@ -36,13 +36,6 @@ public class VideoGame implements Serializable {
     @OneToMany(mappedBy = "videogame", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Listed> listedInProfiles = new HashSet<>();
 
-    public VideoGame() {
-        this.v_name = "";
-        this.v_release = LocalDate.now();
-        this.v_platform = Platform.DEFAULT;
-        this.v_pegi = Pegi.DEFAULT;
-    }
-
     public VideoGame(String v_name, LocalDate v_release, Platform v_platform, Pegi v_pegi) {
         this.v_name = v_name;
         this.v_release = v_release;

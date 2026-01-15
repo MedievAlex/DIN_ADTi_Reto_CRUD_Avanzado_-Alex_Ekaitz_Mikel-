@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -314,7 +313,7 @@ public class MainMenuWindowController implements Initializable
 
             for (VideoGame game : allGames)
             {
-                if (game.getV_id() == 1) {
+                if ("DEFAULT_GAME".equals(game.getV_name())) {
                     continue;
                 }
 

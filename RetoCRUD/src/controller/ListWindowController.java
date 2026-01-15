@@ -6,11 +6,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -23,12 +19,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuButton;
@@ -36,16 +29,13 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import model.Listed;
 import model.Pegi;
 import model.Platform;
 import model.Profile;
@@ -291,7 +281,7 @@ public class ListWindowController implements Initializable {
             {
                 boolean isInSelectedList = selectedGames.stream().anyMatch(g -> g.getV_id() == game.getV_id());
 
-                if (game.getV_id() != 1 && isInSelectedList)
+                if ("DEFAULT_GAME".equals(game.getV_name()) && isInSelectedList)
                 {
                     SelectableVideoGame selectable = new SelectableVideoGame(game, false);
                     selectableGames.add(selectable);
@@ -364,65 +354,6 @@ public class ListWindowController implements Initializable {
         combLists.getItems().clear();
         combLists.getItems().addAll(listsNames);
     }
-
-    /*
-    private void saveToAdd() {
-        try {
-            String selectedListName = combLists.getValue();
-
-            if (selectedListName == null) {
-                ShowAlert.showAlert("Error", "No list selected", Alert.AlertType.ERROR);
-                return;
-            }
-
-            ArrayList<VideoGame> myGames = cont.getGamesFromList(profile.getUsername(), "My Games");
-            ArrayList<VideoGame> listedGames = cont.getGamesFromList(profile.getUsername(), selectedListName);
-
-            ArrayList<SelectableVideoGame> selectableGames = new ArrayList<>();
-
-            for (VideoGame game : myGames) {
-                boolean isInSelectedList = listedGames.stream().anyMatch(g -> g.getV_id() == game.getV_id());
-
-                SelectableVideoGame selectable = new SelectableVideoGame(game, isInSelectedList);
-
-                if (isInSelectedList) {
-                    profile.addGame(selectedListName, game);
-                }
-
-                final boolean[] isUpdating = {false};
-                final String choosedListName = selectedListName;
-
-                selectable.selectedProperty().addListener((obs, oldVal, newVal) -> {
-                    if (isUpdating[0]) {
-                        return;
-                    }
-
-                    try {
-                        if (newVal) {
-                            cont.addGameToList(profile.getUsername(), choosedListName, game.getV_id());
-                            profile.addGame(choosedListName, game);
-                        } else {
-                            cont.removeGameFromList(profile.getUsername(), choosedListName, game.getV_id());
-                            profile.removeGame(choosedListName, game);
-                        }
-                    } catch (OurException ex) {
-                        ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
-                        isUpdating[0] = true;
-                        selectable.setSelected(oldVal);
-                        isUpdating[0] = false;
-                    }
-                });
-
-                selectableGames.add(selectable);
-            }
-
-            videoGames = FXCollections.observableArrayList(selectableGames);
-            tableLists.setItems(videoGames);
-
-        } catch (OurException ex) {
-            ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
-        }
-    }*/
 
     private void addToList() {
         if (combLists.getValue() == null) {
