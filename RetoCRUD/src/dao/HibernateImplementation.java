@@ -430,7 +430,7 @@ public class HibernateImplementation implements ClassDAO {
 
             if (profile != null) {
                 List<Listed> listedGames = session.createQuery(
-                        "FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame = :gameId", Listed.class
+                        "FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class
                 )
                         .setParameter("username", username)
                         .setParameter("listName", listName)
@@ -517,9 +517,9 @@ public class HibernateImplementation implements ClassDAO {
                     Listed listed = new Listed(profile, gameToAdd, listName);
                     session.save(listed);
                 }
-
-                session.getTransaction().commit();
             }
+            
+            session.getTransaction().commit();
         } catch (OurException e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
@@ -548,10 +548,18 @@ public class HibernateImplementation implements ClassDAO {
 
             session.beginTransaction();
 
-            session.createQuery("DELETE FROM Listed WHERE profile.username = :username AND videogame.v_id = :gameId")
-                    .setParameter("username", username)
-                    .setParameter("gameId", gameId)
-                    .executeUpdate();
+            if ("My Games".equals(listName)) {
+                session.createQuery("DELETE FROM Listed l WHERE l.profile.username = :username AND l.videogame.v_id = :gameId")
+                        .setParameter("username", username)
+                        .setParameter("gameId", gameId)
+                        .executeUpdate();
+            } else {
+                session.createQuery("DELETE FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId")
+                        .setParameter("username", username)
+                        .setParameter("listName", listName)
+                        .setParameter("gameId", gameId)
+                        .executeUpdate();
+            }
 
             session.getTransaction().commit();
         } catch (OurException e) {
@@ -583,14 +591,14 @@ public class HibernateImplementation implements ClassDAO {
 
                 session.beginTransaction();
                 for (VideoGame game : games) {
-                    session.createQuery("DELETE FROM Listed WHERE profile.username = :username AND list_Name = :listName AND videogame.v_id = :gameId")
+                    session.createQuery("DELETE FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId")
                             .setParameter("username", username)
                             .setParameter("listName", listName)
                             .setParameter("gameId", game.getV_id())
                             .executeUpdate();
-
-                    session.getTransaction().commit();
                 }
+                
+                session.getTransaction().commit();
             } catch (OurException e) {
                 if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                     thread.getSession().getTransaction().rollback();
@@ -662,19 +670,17 @@ public class HibernateImplementation implements ClassDAO {
 
             session.beginTransaction();
 
-            Profile profile = session.get(Profile.class,
-                    username);
+            Profile profile = session.get(Profile.class, username);
 
             if (profile != null) {
-                List<Listed> listNames = session.createQuery(
-                        "FROM Listed l WHERE l.profile.username = :username GROUP BY listName", Listed.class
+                List<String> listNames = session.createQuery(
+                        "SELECT DISTINCT l.listName FROM Listed l WHERE l.profile.username = :username", 
+                        String.class
                 )
-                        .setParameter("username", username)
-                        .list();
+                .setParameter("username", username)
+                .list();
 
-                for (Listed listed : listNames) {
-                    lists.add(listed.getListName());
-                }
+                lists.addAll(listNames);
             }
 
             session.getTransaction().commit();
@@ -741,7 +747,7 @@ public class HibernateImplementation implements ClassDAO {
 
             session.beginTransaction();
 
-            session.createQuery("DELETE FROM Listed WHERE profile.username = :username AND listName = :listName")
+            session.createQuery("DELETE FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName")
                     .setParameter("username", username)
                     .setParameter("listName", listName)
                     .executeUpdate();
@@ -780,10 +786,10 @@ public class HibernateImplementation implements ClassDAO {
 
             if (profile != null) {
                 List<Listed> list = session.createQuery(
-                        "FROM Listed WHERE username = :username AND list_name = :listName", Listed.class)
-                        .setParameter("username", username)
-                        .setParameter("listName", listName)
-                        .list();
+                    "FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName", Listed.class)
+                    .setParameter("username", username)
+                    .setParameter("listName", listName)
+                    .list();
 
                 if (list.isEmpty()) {
                     nameExist = false;
@@ -1027,7 +1033,7 @@ public class HibernateImplementation implements ClassDAO {
              * ******************************************************GAMES*******************************************************
              */
             ArrayList<VideoGame> allGames = new ArrayList<>();
-            allGames.add(new VideoGame());
+            allGames.add(new VideoGame("DEFAULT_GAME", LocalDate.now(), Platform.DEFAULT, Pegi.DEFAULT));
             allGames.add(new VideoGame("Owlboy", LocalDate.of(2016, 11, 1), Platform.NINTENDO, Pegi.PEGI3));
             allGames.add(new VideoGame("Animal Crossing New Horizons", LocalDate.of(2020, 5, 20), Platform.NINTENDO, Pegi.PEGI6));
             allGames.add(new VideoGame("Detroit: Become Human", LocalDate.of(2018, 5, 25), Platform.PLAYSTATION, Pegi.PEGI16));

@@ -25,7 +25,6 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
-import model.Pegi;
 import model.Platform;
 import model.Profile;
 import model.Review;

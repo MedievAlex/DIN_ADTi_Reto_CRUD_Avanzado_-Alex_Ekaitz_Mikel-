@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,6 +37,7 @@ import javafx.scene.control.MenuBar;
 import model.Pegi;
 import model.Platform;
 import model.Profile;
+import model.SelectableVideoGame;
 import model.VideoGame;
 
 public class MainMenuWindowController implements Initializable
@@ -81,21 +81,21 @@ public class MainMenuWindowController implements Initializable
     @FXML
     private DatePicker toDate;
     @FXML
-    private TableView<VideoGame> tableGames;
+    private TableView<SelectableVideoGame> tableGames;
     @FXML
-    private TableColumn<VideoGame, String> tcGame;
+    private TableColumn<SelectableVideoGame, String> tcGame;
     @FXML
-    private TableColumn<VideoGame, Date> tcRelease;
+    private TableColumn<SelectableVideoGame, LocalDate> tcRelease;
     @FXML
-    private TableColumn<VideoGame, Platform> tcPlatform;
+    private TableColumn<SelectableVideoGame, Platform> tcPlatform;
     @FXML
-    private TableColumn<VideoGame, Pegi> tcPegi;
+    private TableColumn<SelectableVideoGame, Pegi> tcPegi;
     @FXML
-    private TableColumn<VideoGame, Boolean> tcCheckBox;
+    private TableColumn<SelectableVideoGame, Boolean> tcCheckBox;
 
     private Profile profile;
     private Controller cont;
-    private ObservableList<VideoGame> videoGames;
+    private ObservableList<SelectableVideoGame> videoGames;
     private boolean filtersVisible = false;
     @FXML
     private MenuBar menuBar;
@@ -250,7 +250,9 @@ public class MainMenuWindowController implements Initializable
     {
         if (videoGames == null) return;
 
-        ObservableList<VideoGame> filtered = videoGames.filtered(game -> {
+        ObservableList<SelectableVideoGame> filtered = videoGames.filtered(selectable -> {
+            VideoGame game = selectable.getVideoGame();
+
             String searchText = searchBar.getText().toLowerCase().trim();
             if (!searchText.isEmpty() && !game.getV_name().toLowerCase().contains(searchText)) return false;
 
@@ -305,22 +307,28 @@ public class MainMenuWindowController implements Initializable
         try
         {
             ArrayList<VideoGame> allGames = cont.getAllVideoGames();
-
             ArrayList<VideoGame> myGames = cont.getGamesFromList(profile.getUsername(), "My Games");
+
+            ArrayList<SelectableVideoGame> selectableGames = new ArrayList<>();
 
             for (VideoGame game : allGames)
             {
+                if ("DEFAULT_GAME".equals(game.getV_name())) {
+                    continue;
+                }
+
                 boolean isInMyGames = myGames.stream().anyMatch(g -> g.getV_id() == game.getV_id());
-                game.setChecked(isInMyGames);
 
                 if (isInMyGames)
                 {
                     profile.addGame("My Games", game);
                 }
 
+                SelectableVideoGame selectable = new SelectableVideoGame(game, isInMyGames);
+
                 final boolean[] isUpdating = {false};
 
-                game.checkedProperty().addListener((obs, oldVal, newVal) ->
+                selectable.selectedProperty().addListener((obs, oldVal, newVal) ->
                 {
                     if (isUpdating[0]) return;
 
@@ -341,20 +349,22 @@ public class MainMenuWindowController implements Initializable
                     {
                         ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
                         isUpdating[0] = true;
-                        game.setChecked(oldVal);
+                        selectable.setSelected(oldVal);
                         isUpdating[0] = false;
                     }
                 });
+
+                selectableGames.add(selectable);
             }
 
-            videoGames = FXCollections.observableArrayList(allGames);
+            videoGames = FXCollections.observableArrayList(selectableGames);
 
             tcGame.setCellValueFactory(new PropertyValueFactory<>("v_name"));
             tcRelease.setCellValueFactory(new PropertyValueFactory<>("v_release"));
             tcPlatform.setCellValueFactory(new PropertyValueFactory<>("v_platform"));
             tcPegi.setCellValueFactory(new PropertyValueFactory<>("v_pegi"));
 
-            tcCheckBox.setCellValueFactory(cellData -> cellData.getValue().checkedProperty());
+            tcCheckBox.setCellValueFactory(cellData -> cellData.getValue().selectedProperty());
             tcCheckBox.setCellFactory(CheckBoxTableCell.forTableColumn(tcCheckBox));
 
             tableGames.setItems(videoGames);
