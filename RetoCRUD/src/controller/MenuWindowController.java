@@ -38,6 +38,7 @@ public class MenuWindowController implements Initializable {
 
     private Profile profile;
     private Controller cont;
+    private Stage parentStage;
 
     public void setUsuario(Profile profile) {
         this.profile = profile;
@@ -50,6 +51,10 @@ public class MenuWindowController implements Initializable {
 
     public Controller getCont() {
         return cont;
+    }
+    
+    public void setParentStage(Stage parentStage) {
+        this.parentStage = parentStage;
     }
 
     /**
@@ -93,6 +98,7 @@ public class MenuWindowController implements Initializable {
                 controller.DeleteAccountController controllerWindow = fxmlLoader.getController();
                 controllerWindow.setProfile(profile);
                 controllerWindow.setCont(cont);
+                controllerWindow.setParentStage(parentStage);
 
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root));

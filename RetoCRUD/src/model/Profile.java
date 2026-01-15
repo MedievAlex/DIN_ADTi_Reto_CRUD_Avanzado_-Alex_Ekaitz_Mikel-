@@ -1,60 +1,53 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.io.Serializable;
+import java.util.*;
+import java.util.stream.Collectors;
+import javax.persistence.*;
+import org.hibernate.annotations.Check;
 
-/**
- * Abstract class representing a general profile in the system. Contains common
- * attributes such as username, password, email, and personal information. All
- * profile types (User, Admin) extend this class.
- *
- * @author acer
- */
-public abstract class Profile {
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "profile_")
+@Check(constraints = "TELEPHONE REGEXP '^[0-9]{9}$'")
+public abstract class Profile implements Serializable {
 
+    @Id
+    @Column(name = "username", length = 40)
     private String username;
-    private String password;
-    private String email;
-    private int userCode;
-    private String name;
-    private String telephone;
-    private String surname;
-    private HashMap<String, ArrayList> lists;
 
-    /**
-     * Constructs a profile with the specified attributes.
-     *
-     * @param username
-     * @param password
-     * @param email
-     * @param userCode
-     * @param name
-     * @param telephone
-     * @param surname
-     */
-    public Profile(String username, String password, String email, int userCode, String name, String telephone, String surname) {
+    @Column(name = "password_", length = 40)
+    private String password;
+
+    @Column(name = "email", unique = true, length = 40)
+    private String email;
+
+    @Column(name = "name_", length = 40)
+    private String name;
+
+    @Column(name = "telephone", length = 9)
+    private String telephone;
+
+    @Column(name = "surname", length = 40)
+    private String surname;
+
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<Listed> listedGames = new HashSet<>();
+
+    public Profile() {
+    }
+
+    public Profile(String username, String password, String email, String name, String telephone, String surname) {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.userCode = userCode;
         this.name = name;
         this.telephone = telephone;
         this.surname = surname;
-        defaultList();
     }
 
-    /**
-     * Default constructor initializing attributes with default values.
-     */
-    public Profile() {
-        this.username = "";
-        this.password = "";
-        this.email = "";
-        this.userCode = 0;
-        this.name = "";
-        this.telephone = "";
-        this.surname = "";
-        defaultList();
+    public Profile getProfile() {
+        return this;
     }
 
     public String getUsername() {
@@ -81,14 +74,6 @@ public abstract class Profile {
         this.email = email;
     }
 
-    public int getUserCode() {
-        return userCode;
-    }
-
-    public void setUserCode(int userCode) {
-        this.userCode = userCode;
-    }
-
     public String getName() {
         return name;
     }
@@ -113,78 +98,59 @@ public abstract class Profile {
         this.surname = surname;
     }
 
-    public HashMap<String, ArrayList> getLists() {
-        return lists;
+    public Set<Listed> getListedGames() {
+        return listedGames;
     }
 
-    public void setLists(HashMap<String, ArrayList> lists) {
-        this.lists = lists;
-    }
-
-    private void defaultList() {
-        this.lists = new HashMap<>();
-        this.lists.put("My Games", new ArrayList<>());
-    }
-
-    public boolean newList(String name, ArrayList<VideoGame> videogames) {
-        if (!this.lists.containsKey(name)) {
-            lists.put(name, videogames);
-            return true;
-        } else {
-            return false;
-        }
+    public void setListedGames(Set<Listed> listedGames) {
+        this.listedGames = listedGames;
     }
 
     public boolean renameList(String oldName, String newName) {
-        if (!this.lists.containsKey(newName)) {
-            ArrayList<VideoGame> videogames = lists.remove(oldName);
-            lists.put(newName, videogames);
-            return true;
-        } else {
+        HashMap<String, ArrayList<VideoGame>> memLists = null;
+        if (!memLists.containsKey(oldName) || memLists.containsKey(newName)) {
             return false;
         }
-    }
 
-    public boolean addGame(String name, VideoGame videogame) {
-        ArrayList<VideoGame> list = this.lists.get(name);
-        boolean exist = false;
+        ArrayList<VideoGame> games = memLists.remove(oldName);
+        memLists.put(newName, games);
 
-        for (int i = 0; i < list.size(); i++) {
-            if (videogame.getV_name().equals(list.get(i).getV_name())) {
-                exist = true;
+        for (Listed listed : listedGames) {
+            if (listed.getListName().equals(oldName)) {
+                listed.setListName(newName);
             }
         }
 
-        if (!exist) {
-            this.lists.get(name).add(videogame);
-            return true;
-        } else {
-            return false;
-        }
+        return true;
     }
 
-    public boolean removeGame(String name, VideoGame videogame) {
-        ArrayList<VideoGame> list = this.lists.get(name);
-        boolean removed = false;
-
-        for (int i = 0; i < list.size(); i++) {
-            if (videogame.getV_name().equals(list.get(i).getV_name())) {
-                list.remove(i);
-                newList(name, list);
-                removed = true;
+    public boolean addGame(String listName, VideoGame game) {
+        for (Listed l : listedGames) {
+            if (l.getListName().equals(listName) && l.getVideogame().getV_id() == game.getV_id()) {
+                return false;
             }
         }
+        listedGames.add(new Listed(this, game, listName));
+
+        return true;
+    }
+
+    public boolean removeGame(String listName, VideoGame game) {
+        boolean removed = listedGames.removeIf(l -> l.getListName().equals(listName) && l.getVideogame().getV_id() == game.getV_id());
+
         return removed;
     }
 
     @Override
     public String toString() {
-        return "Profile{" + "username=" + username + ", password=" + password + ", email=" + email
-                + ", userCode=" + userCode + ", name=" + name + ", telephone=" + telephone + ", surname=" + surname + '}';
+        return "Profile{"
+                + "username=" + username
+                + ", email=" + email
+                + ", name=" + name
+                + ", telephone=" + telephone
+                + ", surname=" + surname
+                + "}";
     }
 
-    /**
-     * Performs login logic for the profile. Must be implemented by subclasses.
-     */
-    public abstract void logIn();
+    public abstract String show();
 }
