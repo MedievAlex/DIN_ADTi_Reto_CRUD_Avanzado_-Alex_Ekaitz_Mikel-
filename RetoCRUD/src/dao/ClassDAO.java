@@ -57,10 +57,14 @@ public interface ClassDAO {
 
     //[REVIEWS]
     public Review findReview(String username, int gameId) throws OurException;
+    
+    public ArrayList<Review> findReviews(int gameId) throws OurException;
 
     public ArrayList<Review> getAllReviews() throws OurException;
 
     public boolean saveOrUpdateReview(Review review) throws OurException;
+    
+    public void deleteReview(Review review) throws OurException;
 
     //[OTHER]
     public void initializeDefault() throws OurException;

@@ -166,6 +166,10 @@ public class Controller {
     public Review findReview(String username, int gameId) throws OurException {
         return DAO.findReview(username, gameId);
     }
+    
+    public ArrayList<Review> findReviews(int gameId) throws OurException{
+        return DAO.findReviews(gameId);
+    }
 
     public ArrayList<Review> getAllReviews() throws OurException {
         return DAO.getAllReviews();
@@ -173,6 +177,10 @@ public class Controller {
     
     public boolean saveOrUpdateReview(Review review) throws OurException {
         return DAO.saveOrUpdateReview(review);
+    }
+    
+    public void deleteReview(Review review) throws OurException{
+        DAO.deleteReview(review);
     }
 
     //[OTHER]

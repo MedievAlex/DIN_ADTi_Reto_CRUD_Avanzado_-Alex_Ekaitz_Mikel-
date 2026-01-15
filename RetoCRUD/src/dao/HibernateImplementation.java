@@ -894,6 +894,46 @@ public class HibernateImplementation implements ClassDAO {
     }
 
     @Override
+    public ArrayList<Review> findReviews(int gameId) throws OurException {
+        SessionThread thread = startSessionThread();
+        ArrayList<Review> review = null;
+
+        try {
+            Session session = waitForSession(thread);
+
+            if (session == null) {
+                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
+            }
+
+            session.beginTransaction();
+            List<Review> reviews = session.createQuery("FROM Review WHERE v_id = :gameId", Review.class)
+                    .setParameter("gameId", gameId)
+                    .list();
+            review.addAll(reviews);
+            session.getTransaction().commit();
+
+        } catch (OurException e) {
+            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+                thread.getSession().getTransaction().rollback();
+            }
+            throw e;
+        } catch (Exception e) {
+            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+                thread.getSession().getTransaction().rollback();
+            }
+            throw new OurException(ErrorMessages.DATABASE);
+        } finally {
+            thread.releaseSession();
+        }
+
+        return review;
+    }
+
+    /**
+     *
+     * @return @throws OurException
+     */
+    @Override
     public ArrayList<Review> getAllReviews() throws OurException {
         ArrayList<Review> reviews = new ArrayList<>();
         SessionThread thread = startSessionThread();
@@ -957,7 +997,6 @@ public class HibernateImplementation implements ClassDAO {
             Review existing = session.get(Review.class, pk);
 
             if (existing != null) {
-                // UPDATE
                 existing.setScore(review.getScore());
                 existing.setDescription(review.getDescription());
                 existing.setPlatform(review.getPlatform());
@@ -979,6 +1018,38 @@ public class HibernateImplementation implements ClassDAO {
         }
     }
 
+    @Override
+    public void deleteReview(Review review) throws OurException {
+        SessionThread thread = startSessionThread();
+        try {
+            Session session = waitForSession(thread);
+
+            if (session == null) {
+                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
+            }
+
+            session.beginTransaction();
+            session.createQuery("DELETE FROM Review r WHERE r.profile.username = :username AND r.videogame.v_id = :gameId")
+                    .setParameter("username", review.getProfile().getUsername())
+                    .setParameter("gameId", review.getVideogame().getV_id())
+                    .executeUpdate();
+
+            session.getTransaction().commit();
+        } catch (OurException e) {
+            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+                thread.getSession().getTransaction().rollback();
+            }
+            throw e;
+        } catch (Exception e) {
+            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+                thread.getSession().getTransaction().rollback();
+            }
+            throw new OurException(ErrorMessages.DATABASE);
+        } finally {
+            thread.releaseSession();
+        }
+    }
+    
     //[OTHER]
     @Override
     public void initializeDefault() throws OurException {
@@ -1171,7 +1242,7 @@ public class HibernateImplementation implements ClassDAO {
                     .uniqueResult();
 
             if (existingReview == null) {
-                Review newReview = new Review(profile, game, 7, "Descripción de la review", LocalDate.now(), Platform.XBOX);
+                Review newReview = new Review(profile, game, 7, "Descripción de la review", LocalDate.now(), Platform.NINTENDO);
                 session.save(newReview);
             }
 
@@ -1184,7 +1255,7 @@ public class HibernateImplementation implements ClassDAO {
                     .uniqueResult();
 
             if (existingReview == null) {
-                Review newReview = new Review(profile, game, 7, "Descripción de la review", LocalDate.now(), Platform.XBOX);
+                Review newReview = new Review(profile, game, 7, "Descripción de la review", LocalDate.now(), Platform.NINTENDO);
                 session.save(newReview);
             }
 
