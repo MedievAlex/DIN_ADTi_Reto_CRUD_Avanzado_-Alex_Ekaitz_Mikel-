@@ -74,11 +74,11 @@
                   
             <TableView fx:id="tableReview" VBox.vgrow="ALWAYS">
                 <columns>
-                    <TableColumn fx:id="tcGame" minWidth="100" text="GAME" />
-                    <TableColumn fx:id="tcRelease" minWidth="80" text="RELEASE" />
-                    <TableColumn fx:id="tcPlatform" minWidth="80" text="PLATFORM" />
-                    <TableColumn fx:id="tcRate" minWidth="60" text="SCORE" />
-                    <TableColumn fx:id="tcReview" minWidth="150" text="REVIEW" />
+                    <TableColumn fx:id="tcGame" minWidth="100" prefWidth="125.59997403621674" text="GAME" />
+                    <TableColumn fx:id="tcRelease" minWidth="80" prefWidth="94.40003204345703" text="RELEASE" />
+                    <TableColumn fx:id="tcPlatform" minWidth="76.79998779296875" prefWidth="92.79998779296875" text="PLATFORM" />
+                    <TableColumn fx:id="tcRate" minWidth="60" prefWidth="60.79998779296875" text="SCORE" />
+                    <TableColumn fx:id="tcReview" minWidth="150" prefWidth="367.1999206542969" text="REVIEW" />
                 </columns>
             </TableView>
                   
