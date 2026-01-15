@@ -26,6 +26,15 @@ public class Main extends Application
     @Override
     public void start(Stage stage) throws Exception
     {
+        Thread.currentThread().setUncaughtExceptionHandler((thread, throwable) -> {
+            if (throwable instanceof NullPointerException) {
+            } else {
+                throwable.printStackTrace();
+            }
+        });
+        
+        try
+        {
         dao = new HibernateImplementation();
         
         dao.initializeDefault();
@@ -41,6 +50,12 @@ public class Main extends Application
         stage.setTitle("LOG IN");
         stage.setScene(new Scene(root));
         stage.show();
+        }
+        catch (Exception e)
+        {
+            System.err.print("Error initializing the app");
+            e.printStackTrace();
+        }
     }
 
     /**
