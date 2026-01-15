@@ -12,7 +12,6 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
@@ -68,8 +67,7 @@
         </StackPane>
         <VBox spacing="10" style="-fx-padding: 10;">
             <HBox alignment="CENTER_LEFT" spacing="10">
-                <TextField fx:id="searchBar" prefHeight="26.0" HBox.hgrow="ALWAYS" />
-                <Button fx:id="btnSearch" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" text="Search" />
+                <TextField fx:id="searchBar" prefHeight="26.0" prefWidth="566.0" HBox.hgrow="ALWAYS" />
                 <Region HBox.hgrow="ALWAYS" />
                 <ComboBox fx:id="combLists" prefWidth="150.0" promptText="-- My Lists --" />
             </HBox>
@@ -91,4 +89,3 @@
         </VBox>
     </children>
 </VBox>
-    

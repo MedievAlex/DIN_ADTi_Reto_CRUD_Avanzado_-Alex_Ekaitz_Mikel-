@@ -147,39 +147,6 @@ public class ListWindowController implements Initializable {
         MenuItem renameList = new MenuItem("Rename List");
         renameList.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
-                /*
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("RENAME " + buttonName + " LIST");
-                alert.setHeaderText(buttonName + " list's new name:");
-
-                TextField listNewName = new TextField();
-                listNewName.setPromptText("New name");
-
-                GridPane grid = new GridPane();
-                grid.setHgap(10);
-                grid.setVgap(10);
-                grid.add(listNewName, 1, 0);
-
-                alert.getDialogPane().setContent(grid);
-                alert.getButtonTypes().setAll(ButtonType.OK, ButtonType.CANCEL);
-
-                Optional<ButtonType> accept = alert.showAndWait();
-                if (accept.get() == ButtonType.OK) {
-
-                    String newName = listNewName.getText();
-                    try {
-                        if (cont.verifyListName(profile.getUsername(), listNewName.getText())) {
-                            alert.setHeaderText(" List named " + newName + " already exists.");
-                        } else {
-                            cont.renameList(profile.getUsername(), buttonName, newName);
-                            alert.setHeaderText(listName + " updated to " + newName + ".");
-                        }
-                    } catch (OurException ex) {
-                        Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-                 */
-
                 try {
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/RenameListWindow.fxml"));
                     Parent root = fxmlLoader.load();
@@ -281,7 +248,7 @@ public class ListWindowController implements Initializable {
             {
                 boolean isInSelectedList = selectedGames.stream().anyMatch(g -> g.getV_id() == game.getV_id());
 
-                if ("DEFAULT_GAME".equals(game.getV_name()) && isInSelectedList)
+                if (!"DEFAULT_GAME".equals(game.getV_name()) && isInSelectedList)
                 {
                     SelectableVideoGame selectable = new SelectableVideoGame(game, false);
                     selectableGames.add(selectable);

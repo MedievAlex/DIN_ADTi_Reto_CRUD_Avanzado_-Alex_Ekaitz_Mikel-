@@ -25,6 +25,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
@@ -59,8 +61,6 @@ public class ReviewsWindowController implements Initializable {
     @FXML
     private TextField searchBar;
     @FXML
-    private Button btnSearch;
-    @FXML
     private ComboBox<String> combLists;
     @FXML
     private TableColumn<Review, String> tcGame;
@@ -80,6 +80,16 @@ public class ReviewsWindowController implements Initializable {
     private Profile profile;
     private Controller cont;
     private ObservableList<Review> reviews;
+    @FXML
+    private MenuBar menuBar;
+    @FXML
+    private Menu menuActions;
+    @FXML
+    private MenuItem menuItemReport;
+    @FXML
+    private Menu menuHelp;
+    @FXML
+    private MenuItem menuItemHelp;
 
     public void setUsuario(Profile profile) {
         this.profile = profile;

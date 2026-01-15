@@ -89,7 +89,6 @@ public class NewReviewWindowController implements Initializable {
         this.reviewsObservableList = reviewsObservableList;
     }
 
-    @FXML
     private void cargardatosReview() {
         try {
             String name = comboBoxGame.getValue();
@@ -217,7 +216,6 @@ public class NewReviewWindowController implements Initializable {
         });
     }
 
-    @FXML
     private void confirmReview(ActionEvent event) {
         if (!validateFields()) {
             return;
