@@ -5,7 +5,7 @@ package exception;
  *
  * All messages are defined as public static final constants to facilitate easy maintenance and internationalization of error texts.
  *
- * @author Kevin, Alex, Victor, Ekaitz
+ * @author ema
  */
 public class ErrorMessages
 {
@@ -56,5 +56,5 @@ public class ErrorMessages
     public static final String PROFILE_NOT_FOUND = "Profile not found.";
     public static final String GAME_NOT_FOUND = "Game not found.";
     public static final String SAVE_REVIEW_ERROR = "Error Saving the review.";
-    
+    public static final String USER_NOT_FOUND = "The specified user does not exist.";
 }

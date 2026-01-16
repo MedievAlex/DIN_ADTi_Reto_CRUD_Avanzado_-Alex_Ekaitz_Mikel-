@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller;
 
 import exception.OurException;
@@ -52,15 +47,14 @@ public class NewReviewWindowController implements Initializable {
 
     private Profile profile;
     private Controller cont;
-    private ArrayList<VideoGame> availableGames;
     private ObservableList<Review> reviewsObservableList;
-    private Stage parentStage;
     private ReviewsWindowController parentController;
 
     public void setUsuario(Profile profile) {
         this.profile = profile;
     }
-     public void setParentController(ReviewsWindowController parentController) {
+
+    public void setParentController(ReviewsWindowController parentController) {
         this.parentController = parentController;
     }
 
@@ -89,6 +83,7 @@ public class NewReviewWindowController implements Initializable {
         this.reviewsObservableList = reviewsObservableList;
     }
 
+    @FXML
     private void cargardatosReview() {
         try {
             String name = comboBoxGame.getValue();
@@ -141,7 +136,6 @@ public class NewReviewWindowController implements Initializable {
     private void resetReviewForm() {
         spinnerRating.getValueFactory().setValue(5);
         textAreaReview.clear();
-        comboBoxPlatForm.setValue(null);
     }
 
     private void populatePlatformComboBox() {
@@ -180,10 +174,12 @@ public class NewReviewWindowController implements Initializable {
         } else {
             for (VideoGame game : games) {
                 if (game.getV_platform().equals(platform)) {
-                    gameNames.add(game.getV_name());
+                    if (game.getV_name().equals("")) {
+                    } else {
+                        gameNames.add(game.getV_name());
+                    }
                 }
             }
-
             if (!gameNames.isEmpty()) {
                 comboBoxGame.setItems(gameNames);
                 comboBoxGame.setPromptText("-- Choose Game --");
@@ -216,6 +212,7 @@ public class NewReviewWindowController implements Initializable {
         });
     }
 
+    @FXML
     private void confirmReview(ActionEvent event) {
         if (!validateFields()) {
             return;
@@ -275,14 +272,8 @@ public class NewReviewWindowController implements Initializable {
     private void saveReview(Review review) throws OurException {
         try {
             if (cont.saveOrUpdateReview(review)) {
-                System.out.println(review.toString());
-                /*if (reviewsObservableList != null) {
-                    reviewsObservableList.add(review);
-                }*/
                 showSuccessAlert("Review created/updated", "The review has been successfully created/updated.");
                 parentController.loadReview();
-                //ArrayList<Review> allreviews = cont.getAllReviews();
-                //reviewsObservableList = FXCollections.observableArrayList(allreviews);
             } else {
                 showAlert("Error", "Error creating/updating the review", "");
             }
@@ -316,11 +307,26 @@ public class NewReviewWindowController implements Initializable {
 
     /**
      * Initializes the controller class.
+     *
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         populatePlatformComboBox();
         configureRatingSpinner();
+        comboBoxGame.setOnAction((event) -> {
+            cargardatosReview();
+        });
+        spinnerRating.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                try {
+                    int value = Integer.parseInt(spinnerRating.getEditor().getText());
+                    spinnerRating.getValueFactory().setValue(value);
+                } catch (NumberFormatException e) {
+                    spinnerRating.getEditor().setText(spinnerRating.getValue().toString());
+                }
+            }
+        });
     }
-
 }

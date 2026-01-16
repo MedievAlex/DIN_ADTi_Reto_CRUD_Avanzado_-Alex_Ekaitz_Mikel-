@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller;
 
 import exception.OurException;
@@ -25,8 +20,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
@@ -35,11 +28,18 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import model.Pegi;
 import model.Platform;
 import model.Profile;
 import model.Review;
 import model.VideoGame;
+import javafx.scene.control.ContextMenu;
+import javafx.event.EventHandler;
+import javafx.scene.control.TableRow;
+import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.WindowEvent;
+import javafx.util.Callback;
 
 /**
  * FXML Controller class
@@ -61,6 +61,8 @@ public class ReviewsWindowController implements Initializable {
     @FXML
     private TextField searchBar;
     @FXML
+    private Button btnSearch;
+    @FXML
     private ComboBox<String> combLists;
     @FXML
     private TableColumn<Review, String> tcGame;
@@ -80,23 +82,11 @@ public class ReviewsWindowController implements Initializable {
     private Profile profile;
     private Controller cont;
     private ObservableList<Review> reviews;
-    @FXML
-    private MenuBar menuBar;
-    @FXML
-    private Menu menuActions;
-    @FXML
-    private MenuItem menuItemReport;
-    @FXML
-    private Menu menuHelp;
-    @FXML
-    private MenuItem menuItemHelp;
+    private ContextMenu currentContextMenu;
 
     public void setUsuario(Profile profile) {
         this.profile = profile;
         menu.setText(profile.getUsername());
-        if (this.cont != null) {
-            //loadReview();
-        }
     }
 
     public void setCont(Controller cont) {
@@ -117,7 +107,9 @@ public class ReviewsWindowController implements Initializable {
             tcPlatform.setCellValueFactory(new PropertyValueFactory<>("platform"));
             tcRate.setCellValueFactory(new PropertyValueFactory<>("scoreFormatted"));
             tcReview.setCellValueFactory(new PropertyValueFactory<>("description"));
-
+            if (profile.getUsername().equals("asanchez") || profile.getUsername().equals("rluna")) {
+                setupTableContextMenu();
+            }
             tableReview.setItems(reviews);
         } catch (OurException ex) {
             ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
@@ -172,24 +164,6 @@ public class ReviewsWindowController implements Initializable {
         tableReview.setItems(filtered);
     }
 
-    public void loadLists() {
-        ArrayList<VideoGame> games = new ArrayList<VideoGame>();
-        games.add(new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
-        games.add(new VideoGame(3, "Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
-        //profile.newList("Nintendo Switch", games);
-
-        games = new ArrayList<VideoGame>();
-        games.add(new VideoGame(4, "Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
-        games.add(new VideoGame(2, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
-        //profile.newList("PlayStation", games);
-
-        profile.addGame("My Games", new VideoGame(1, "Owlboy", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
-        profile.addGame("My Games", new VideoGame(2, "ASTROBOT", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
-        profile.addGame("My Games", new VideoGame(3, "Animal Crossing New Horizons", LocalDate.now(), Platform.NINTENDO, Pegi.PEGI3));
-        profile.addGame("My Games", new VideoGame(4, "Detroit: Become Human", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI18));
-        profile.addGame("My Games", new VideoGame(1, "Call of Duty: Black Ops II", LocalDate.now(), Platform.PLAYSTATION, Pegi.PEGI3));
-    }
-
     public void setComboBox() {
         ArrayList<String> listsNames = new ArrayList();
         try {
@@ -202,25 +176,143 @@ public class ReviewsWindowController implements Initializable {
         combLists.getItems().addAll(listsNames);
     }
 
-    public void showReviewsByList(String listName) throws OurException {
-        if ("All Reviews".equals(listName)) {
+    private ContextMenu contextualMenu(Review review) {
+        if (currentContextMenu != null && currentContextMenu.isShowing()) {
+            currentContextMenu.hide();
+        }
+        ContextMenu contextualMenu = new ContextMenu();
+        currentContextMenu = contextualMenu;
+        MenuItem deleteReview = new MenuItem("Delete Review");
+        deleteReview.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e) {
+                try {
+                    if (review != null) {
+                        cont.deleteReview(review);
+                        if (reviews != null && tableReview != null) {
+                            reviews.remove(review);
+                            tableReview.refresh();
+                        }
+                        ShowAlert.showAlert("Success", "Review deleted successfully",
+                                Alert.AlertType.INFORMATION);
+                        if (contextualMenu.isShowing()) {
+                            contextualMenu.hide();
+                        }
+                    } else {
+                        ShowAlert.showAlert("Error", "No review selected",
+                                Alert.AlertType.ERROR);
+                    }
+                } catch (OurException ex) {
+                    Logger.getLogger(ReviewsWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                    ShowAlert.showAlert("Error", "Error deleting review: " + ex.getMessage(),
+                            Alert.AlertType.ERROR);
+                }
+            }
+        });
+        contextualMenu.getItems().addAll(deleteReview);
+
+        contextualMenu.setOnHidden(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent e) {
+                if (currentContextMenu == contextualMenu) {
+                    currentContextMenu = null;
+                }
+            }
+        });
+        return contextualMenu;
+    }
+
+    private void setupTableContextMenu() {
+        tableReview.setRowFactory(new Callback<TableView<Review>, TableRow<Review>>() {
+            public TableRow<Review> call(TableView<Review> tableView) {
+                final TableRow<Review> row = new TableRow<Review>();
+                row.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    public void handle(MouseEvent event) {
+                        if (event.getButton() == MouseButton.PRIMARY && currentContextMenu != null && currentContextMenu.isShowing()) {
+                            currentContextMenu.hide();
+                            currentContextMenu = null;
+                        }
+                        if (event.getButton() == MouseButton.SECONDARY && !row.isEmpty()) {
+                            if (currentContextMenu != null && currentContextMenu.isShowing()) {
+                                currentContextMenu.hide();
+                            }
+                            Review review = row.getItem();
+                            if (review != null) {
+                                ContextMenu contextMenu = contextualMenu(review);
+                                contextMenu.show(row, event.getScreenX(), event.getScreenY());
+                            }
+                        }
+                    }
+                });
+                return row;
+            }
+        });
+
+        tableReview.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
+            public void handle(ContextMenuEvent event) {
+                if (currentContextMenu != null && currentContextMenu.isShowing()) {
+                    currentContextMenu.hide();
+                }
+                Review review = tableReview.getSelectionModel().getSelectedItem();
+                if (review != null) {
+                    ContextMenu contextMenu = contextualMenu(review);
+                    contextMenu.show(tableReview, event.getScreenX(), event.getScreenY());
+                }
+            }
+        });
+        tableReview.setOnMouseClicked(event -> {
+            if (event.getButton() == MouseButton.PRIMARY && currentContextMenu != null && currentContextMenu.isShowing()) {
+                currentContextMenu.hide();
+                currentContextMenu = null;
+            }
+        });
+    }
+
+    @FXML
+    public void showReviewsByList() throws OurException {
+        String selectedList = combLists.getValue();
+        if ("All Reviews".equals(selectedList)) {
             loadReview();
             return;
         }
+        if ("My Games".equals(selectedList)) {
 
-        /*ArrayList<VideoGame> gameList = profile.getLists().get(listName);
-        if (gameList != null) {
-            ObservableList<Review> filteredReviews = FXCollections.observableArrayList();
-            for (Review review : reviews) {
-                for (VideoGame game : gameList) {
-                    if (review.getGame().equals(game.getV_name())) {
-                        filteredReviews.add(review);
-                        break;
+            try {
+                ArrayList<VideoGame> myGames = cont.getGamesFromList(profile.getUsername(), "My Games");
+                ArrayList<Review> allreviewsbygame = new ArrayList<>();
+                for (VideoGame game : myGames) {
+                    if (!"DEFAULT_GAME".equals(game.getV_name())) {
+                        ArrayList<Review> reviewsbygame = cont.findReviews(game.getV_id());
+                        if (!reviewsbygame.isEmpty()) {
+                            allreviewsbygame.addAll(reviewsbygame);
+                        }
+                    }
+                }
+                reviews = FXCollections.observableArrayList(allreviewsbygame);
+                tableReview.setItems(reviews);
+            } catch (OurException ex) {
+                ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
+            }
+            return;
+        }
+
+        try {
+            ArrayList<VideoGame> selectedGames = cont.getGamesFromList(profile.getUsername(), selectedList);
+
+            ArrayList<Review> allreviewsbygame = new ArrayList<>();
+
+            for (VideoGame game : selectedGames) {
+                if (!"DEFAULT_GAME".equals(game.getV_name())) {
+                    ArrayList<Review> reviewsbygame = cont.findReviews(game.getV_id());
+                    if (!reviewsbygame.isEmpty()) {
+                        allreviewsbygame.addAll(reviewsbygame);
                     }
                 }
             }
-            loadReviews(filteredReviews);
-        }*/
+            reviews = FXCollections.observableArrayList(allreviewsbygame);
+            tableReview.setItems(reviews);
+        } catch (OurException ex) {
+            ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 
     private void setMenuOptions() {
@@ -294,20 +386,15 @@ public class ReviewsWindowController implements Initializable {
 
     /**
      * Initializes the controller class.
+     *
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
         setMenuOptions();
-
-        //loadReviews();
-
-        /* combLists.setOnAction((event) -> {
-            String selectedList = combLists.getValue();
-            if (selectedList != null && !selectedList.isEmpty()) {
-                showReviewsByList(selectedList);
-            }
-        });*/
+        searchBar.textProperty().addListener((observable, oldValue, newValue) -> searchByName());
     }
 
     @FXML

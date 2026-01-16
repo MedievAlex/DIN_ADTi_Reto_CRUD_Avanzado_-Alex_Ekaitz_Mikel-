@@ -21,10 +21,10 @@ public interface ClassDAO {
 
     public boolean dropOutAdmin(String usernameToDelete, String adminUsername, String adminPassword) throws OurException;
 
-    public boolean modificarUser(String password, String email, String name, String telephone, String surname, String username, String gender) throws OurException;
+    public boolean modifyUser(String password, String email, String name, String telephone, String surname, String username, String gender) throws OurException;
 
     public ArrayList<String> comboBoxInsert() throws OurException;
-    
+
     public Profile findProfileByUsername(String username) throws OurException;
 
     //[VIDEOGAMES]
@@ -41,7 +41,7 @@ public interface ClassDAO {
     public void removeGameFromList(String username, String listName, int gameId) throws OurException;
 
     public void removeGamesFromList(String username, String listName, ArrayList<VideoGame> games) throws OurException;
-    
+
     public VideoGame findVideoGameByName(String gameName) throws OurException;
 
     //[LISTS]
@@ -58,9 +58,13 @@ public interface ClassDAO {
     //[REVIEWS]
     public Review findReview(String username, int gameId) throws OurException;
 
+    public ArrayList<Review> findReviews(int gameId) throws OurException;
+
     public ArrayList<Review> getAllReviews() throws OurException;
 
     public boolean saveOrUpdateReview(Review review) throws OurException;
+
+    public void deleteReview(Review review) throws OurException;
 
     //[OTHER]
     public void initializeDefault() throws OurException;
