@@ -266,7 +266,7 @@ public class ReviewsWindowController implements Initializable {
             }
         });
     }
-    
+
     @FXML
     public void showReviewsByList() throws OurException {
         String selectedList = combLists.getValue();
@@ -294,7 +294,7 @@ public class ReviewsWindowController implements Initializable {
             }
             return;
         }
-        
+
         try {
             ArrayList<VideoGame> selectedGames = cont.getGamesFromList(profile.getUsername(), selectedList);
 

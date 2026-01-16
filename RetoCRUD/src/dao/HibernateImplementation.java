@@ -38,8 +38,7 @@ public class HibernateImplementation implements ClassDAO {
         for (SessionThread t : activeThreads) {
             try {
                 t.join();
-            }
-            catch (InterruptedException e) {
+            } catch (InterruptedException e) {
             }
         }
         activeThreads.clear();
@@ -69,8 +68,7 @@ public class HibernateImplementation implements ClassDAO {
                     .uniqueResult();
 
             return admin;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new OurException(ErrorMessages.LOGIN);
         } finally {
             if (session != null && session.isOpen()) {
@@ -98,16 +96,14 @@ public class HibernateImplementation implements ClassDAO {
 
             session.getTransaction().commit();
             return true;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
             }
 
             if (e instanceof OurException) {
                 throw (OurException) e;
-            }
-            else {
+            } else {
                 throw new OurException(ErrorMessages.REGISTER_USER);
             }
         } finally {
@@ -135,20 +131,17 @@ public class HibernateImplementation implements ClassDAO {
             session.getTransaction().commit();
 
             return true;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 try {
                     thread.getSession().getTransaction().rollback();
-                }
-                catch (HibernateException he) {
+                } catch (HibernateException he) {
                 }
             }
 
             if (e instanceof OurException) {
                 throw (OurException) e;
-            }
-            else {
+            } else {
                 throw new OurException(ErrorMessages.DELETE_USER);
             }
         } finally {
@@ -175,33 +168,28 @@ public class HibernateImplementation implements ClassDAO {
             User userToDelete = session.get(User.class, usernameToDelete);
             if (userToDelete != null) {
                 session.delete(userToDelete);
-            }
-            else {
+            } else {
                 Admin adminToDelete = session.get(Admin.class, usernameToDelete);
                 if (adminToDelete != null) {
                     session.delete(adminToDelete);
-                }
-                else {
+                } else {
                     throw new OurException(ErrorMessages.USER_NOT_FOUND);
                 }
             }
 
             session.getTransaction().commit();
             return true;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 try {
                     thread.getSession().getTransaction().rollback();
-                }
-                catch (HibernateException he) {
+                } catch (HibernateException he) {
                 }
             }
 
             if (e instanceof OurException) {
                 throw (OurException) e;
-            }
-            else {
+            } else {
                 throw new OurException(ErrorMessages.DELETE_USER);
             }
         } finally {
@@ -237,19 +225,16 @@ public class HibernateImplementation implements ClassDAO {
             session.update(profile);
             session.getTransaction().commit();
             return true;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 try {
                     thread.getSession().getTransaction().rollback();
-                }
-                catch (HibernateException he) {
+                } catch (HibernateException he) {
                 }
             }
             if (e instanceof OurException) {
                 throw (OurException) e;
-            }
-            else {
+            } else {
                 throw new OurException(ErrorMessages.UPDATE_USER);
             }
         } finally {
@@ -268,8 +253,7 @@ public class HibernateImplementation implements ClassDAO {
             ).list();
 
             return new ArrayList<>(usernames);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new OurException(ErrorMessages.GET_USERS);
         } finally {
             if (session != null && session.isOpen()) {
@@ -292,19 +276,16 @@ public class HibernateImplementation implements ClassDAO {
 
             session.getTransaction().commit();
             return profile;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 try {
                     thread.getSession().getTransaction().rollback();
-                }
-                catch (HibernateException he) {
+                } catch (HibernateException he) {
                 }
             }
             if (e instanceof OurException) {
                 throw (OurException) e;
-            }
-            else {
+            } else {
                 throw new OurException(ErrorMessages.DATABASE);
             }
         } finally {
@@ -329,19 +310,16 @@ public class HibernateImplementation implements ClassDAO {
 
             session.getTransaction().commit();
             return gamesList;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 try {
                     thread.getSession().getTransaction().rollback();
-                }
-                catch (HibernateException he) {
+                } catch (HibernateException he) {
                 }
             }
             if (e instanceof OurException) {
                 throw (OurException) e;
-            }
-            else {
+            } else {
                 throw new OurException(ErrorMessages.DATABASE);
             }
         } finally {
@@ -380,16 +358,14 @@ public class HibernateImplementation implements ClassDAO {
             session.getTransaction().commit();
 
             return games;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
             }
 
             if (e instanceof OurException) {
                 throw (OurException) e;
-            }
-            else {
+            } else {
                 throw new OurException(ErrorMessages.REGISTER_USER);
             }
         } finally {
@@ -431,16 +407,14 @@ public class HibernateImplementation implements ClassDAO {
             session.getTransaction().commit();
 
             return listed;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
             }
 
             if (e instanceof OurException) {
                 throw (OurException) e;
-            }
-            else {
+            } else {
                 throw new OurException(ErrorMessages.REGISTER_USER);
             }
         } finally {
@@ -470,16 +444,14 @@ public class HibernateImplementation implements ClassDAO {
             }
 
             session.getTransaction().commit();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
             }
 
             if (e instanceof OurException) {
                 throw (OurException) e;
-            }
-            else {
+            } else {
                 throw new OurException(ErrorMessages.REGISTER_USER);
             }
         } finally {
@@ -511,16 +483,14 @@ public class HibernateImplementation implements ClassDAO {
             }
 
             session.getTransaction().commit();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
             }
 
             if (e instanceof OurException) {
                 throw (OurException) e;
-            }
-            else {
+            } else {
                 throw new OurException(ErrorMessages.REGISTER_USER);
             }
         } finally {
@@ -546,8 +516,7 @@ public class HibernateImplementation implements ClassDAO {
                         .setParameter("username", username)
                         .setParameter("gameId", gameId)
                         .executeUpdate();
-            }
-            else {
+            } else {
                 session.createQuery("DELETE FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId")
                         .setParameter("username", username)
                         .setParameter("listName", listName)
@@ -556,16 +525,14 @@ public class HibernateImplementation implements ClassDAO {
             }
 
             session.getTransaction().commit();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
             }
 
             if (e instanceof OurException) {
                 throw (OurException) e;
-            }
-            else {
+            } else {
                 throw new OurException(ErrorMessages.REGISTER_USER);
             }
         } finally {
@@ -595,16 +562,14 @@ public class HibernateImplementation implements ClassDAO {
                 }
 
                 session.getTransaction().commit();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                     thread.getSession().getTransaction().rollback();
                 }
 
                 if (e instanceof OurException) {
                     throw (OurException) e;
-                }
-                else {
+                } else {
                     throw new OurException(ErrorMessages.REGISTER_USER);
                 }
             } finally {
@@ -630,19 +595,16 @@ public class HibernateImplementation implements ClassDAO {
 
             session.getTransaction().commit();
             return videoGame;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 try {
                     thread.getSession().getTransaction().rollback();
-                }
-                catch (HibernateException he) {
+                } catch (HibernateException he) {
                 }
             }
             if (e instanceof OurException) {
                 throw (OurException) e;
-            }
-            else {
+            } else {
                 throw new OurException(ErrorMessages.DATABASE);
             }
         } finally {
@@ -681,16 +643,14 @@ public class HibernateImplementation implements ClassDAO {
             session.getTransaction().commit();
 
             return lists;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
             }
 
             if (e instanceof OurException) {
                 throw (OurException) e;
-            }
-            else {
+            } else {
                 throw new OurException(ErrorMessages.REGISTER_USER);
             }
         } finally {
@@ -716,16 +676,14 @@ public class HibernateImplementation implements ClassDAO {
             session.save(listed);
 
             session.getTransaction().commit();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
             }
 
             if (e instanceof OurException) {
                 throw (OurException) e;
-            }
-            else {
+            } else {
                 throw new OurException(ErrorMessages.REGISTER_USER);
             }
         } finally {
@@ -752,16 +710,14 @@ public class HibernateImplementation implements ClassDAO {
                     .executeUpdate();
 
             session.getTransaction().commit();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
             }
 
             if (e instanceof OurException) {
                 throw (OurException) e;
-            }
-            else {
+            } else {
                 throw new OurException(ErrorMessages.REGISTER_USER);
             }
         } finally {
@@ -800,16 +756,14 @@ public class HibernateImplementation implements ClassDAO {
             }
 
             return nameExist;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
             }
 
             if (e instanceof OurException) {
                 throw (OurException) e;
-            }
-            else {
+            } else {
                 throw new OurException(ErrorMessages.REGISTER_USER);
             }
         } finally {
@@ -838,19 +792,16 @@ public class HibernateImplementation implements ClassDAO {
             }
 
             session.getTransaction().commit();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 try {
                     thread.getSession().getTransaction().rollback();
-                }
-                catch (HibernateException he) {
+                } catch (HibernateException he) {
                 }
             }
             if (e instanceof OurException) {
                 throw (OurException) e;
-            }
-            else {
+            } else {
                 throw new OurException(ErrorMessages.DATABASE);
             }
         } finally {
@@ -880,16 +831,14 @@ public class HibernateImplementation implements ClassDAO {
             session.getTransaction().commit();
 
             return review;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
             }
 
             if (e instanceof OurException) {
                 throw (OurException) e;
-            }
-            else {
+            } else {
                 throw new OurException(ErrorMessages.REGISTER_USER);
             }
         } finally {
@@ -914,19 +863,16 @@ public class HibernateImplementation implements ClassDAO {
 
             session.getTransaction().commit();
             return new ArrayList<>(reviews);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 try {
                     thread.getSession().getTransaction().rollback();
-                }
-                catch (HibernateException he) {
+                } catch (HibernateException he) {
                 }
             }
             if (e instanceof OurException) {
                 throw (OurException) e;
-            }
-            else {
+            } else {
                 throw new OurException(ErrorMessages.DATABASE);
             }
         } finally {
@@ -956,16 +902,14 @@ public class HibernateImplementation implements ClassDAO {
             session.getTransaction().commit();
 
             return reviews;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
             }
 
             if (e instanceof OurException) {
                 throw (OurException) e;
-            }
-            else {
+            } else {
                 throw new OurException(ErrorMessages.REGISTER_USER);
             }
         } finally {
@@ -1009,16 +953,14 @@ public class HibernateImplementation implements ClassDAO {
                 existing.setDescription(review.getDescription());
                 existing.setPlatform(review.getPlatform());
                 existing.setReviewDate(review.getReviewDate());
-            }
-            else {
+            } else {
                 session.persist(review);
             }
 
             session.getTransaction().commit();
             return true;
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
             }
@@ -1045,16 +987,14 @@ public class HibernateImplementation implements ClassDAO {
                     .executeUpdate();
 
             session.getTransaction().commit();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
             }
 
             if (e instanceof OurException) {
                 throw (OurException) e;
-            }
-            else {
+            } else {
                 throw new OurException(ErrorMessages.REGISTER_USER);
             }
         } finally {
@@ -1272,8 +1212,7 @@ public class HibernateImplementation implements ClassDAO {
             }
 
             session.getTransaction().commit();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (session != null && session.getTransaction().isActive()) {
                 session.getTransaction().rollback();
             }

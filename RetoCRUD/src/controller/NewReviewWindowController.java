@@ -319,15 +319,11 @@ public class NewReviewWindowController implements Initializable {
             cargardatosReview();
         });
         spinnerRating.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue)
-            {
-                try
-                {
+            if (!newValue) {
+                try {
                     int value = Integer.parseInt(spinnerRating.getEditor().getText());
                     spinnerRating.getValueFactory().setValue(value);
-                }
-                catch (NumberFormatException e)
-                {
+                } catch (NumberFormatException e) {
                     spinnerRating.getEditor().setText(spinnerRating.getValue().toString());
                 }
             }
