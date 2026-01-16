@@ -231,25 +231,21 @@ public class ListWindowController implements Initializable {
     }
 
     //[LISTS]
-    private void showList(Button button)
-    {
+    private void showList(Button button) {
         selectedList = button.getText();
         listName.setText(selectedList);
         selectedButton(button);
 
-        try
-        {
+        try {
             ArrayList<VideoGame> myGames = cont.getGamesFromList(profile.getUsername(), "My Games");
             ArrayList<VideoGame> selectedGames = cont.getGamesFromList(profile.getUsername(), selectedList);
 
             ArrayList<SelectableVideoGame> selectableGames = new ArrayList<>();
 
-            for (VideoGame game : myGames)
-            {
+            for (VideoGame game : myGames) {
                 boolean isInSelectedList = selectedGames.stream().anyMatch(g -> g.getV_id() == game.getV_id());
 
-                if (!"DEFAULT_GAME".equals(game.getV_name()) && isInSelectedList)
-                {
+                if (!"DEFAULT_GAME".equals(game.getV_name()) && isInSelectedList) {
                     SelectableVideoGame selectable = new SelectableVideoGame(game, false);
                     selectableGames.add(selectable);
                 }
@@ -257,9 +253,7 @@ public class ListWindowController implements Initializable {
 
             videoGames = FXCollections.observableArrayList(selectableGames);
             tableLists.setItems(videoGames);
-        }
-        catch (OurException ex)
-        {
+        } catch (OurException ex) {
             ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
@@ -326,65 +320,59 @@ public class ListWindowController implements Initializable {
     private void addToList() {
         if (combLists.getValue() == null) {
             ShowAlert.showAlert("Error", "[No list selected]", Alert.AlertType.ERROR);
-        }
+        } else if (combLists.getValue() != null) {
+            String targetList = combLists.getValue();
 
-        if(combLists.getValue() != null){
-        String targetList = combLists.getValue();
+            try {
+                boolean anyAdded = false;
+                boolean anyAlreadyExists = false;
+                StringBuilder alreadyExistsGames = new StringBuilder();
 
-        try {
-            boolean anyAdded = false;
-            boolean anyAlreadyExists = false;
-            StringBuilder alreadyExistsGames = new StringBuilder();
+                for (SelectableVideoGame selectable : videoGames) {
+                    if (selectable.isSelected()) {
+                        VideoGame game = selectable.getVideoGame();
 
-            for (SelectableVideoGame selectable : videoGames) {
-                if (selectable.isSelected()) {
-                    VideoGame game = selectable.getVideoGame();
+                        boolean alreadyInList = cont.verifyGameInList(profile.getUsername(), targetList, game.getV_id());
 
-                    boolean alreadyInList = cont.verifyGameInList(profile.getUsername(), targetList, game.getV_id());
-
-                    if (!alreadyInList) {
-                        cont.addGameToList(profile.getUsername(), targetList, game.getV_id());
-                        profile.addGame(targetList, game);
-                        anyAdded = true;
-                        selectable.setSelected(false);
-                    } else {
-                        anyAlreadyExists = true;
-                        alreadyExistsGames.append("- ").append(game.getV_name()).append("\n");
+                        if (!alreadyInList) {
+                            cont.addGameToList(profile.getUsername(), targetList, game.getV_id());
+                            profile.addGame(targetList, game);
+                            anyAdded = true;
+                            selectable.setSelected(false);
+                        } else {
+                            anyAlreadyExists = true;
+                            alreadyExistsGames.append("- ").append(game.getV_name()).append("\n");
+                        }
                     }
                 }
-            }
 
-            if (anyAdded && anyAlreadyExists) {
-                ShowAlert.showAlert("Partial Success", 
-                    "Some games were added to " + targetList + ", but others already existed:\n" + alreadyExistsGames.toString(), 
-                    Alert.AlertType.WARNING);
-            } else if (anyAdded) {
-                ShowAlert.showAlert("Success", "Games added to " + targetList + " successfully.", Alert.AlertType.INFORMATION);
-            } else if (anyAlreadyExists) {
-                ShowAlert.showAlert("Warning", 
-                    "The selected games already exist in " + targetList + ":\n" + alreadyExistsGames.toString(), 
-                    Alert.AlertType.WARNING);
-            } else {
-                ShowAlert.showAlert("Info", "No games selected. Please select games using the checkboxes.", Alert.AlertType.INFORMATION);
-            }
+                if (anyAdded && anyAlreadyExists) {
+                    ShowAlert.showAlert("Partial Success",
+                            "Some games were added to " + targetList + ", but others already existed:\n" + alreadyExistsGames.toString(),
+                            Alert.AlertType.WARNING);
+                } else if (anyAdded) {
+                    ShowAlert.showAlert("Success", "Games added to " + targetList + " successfully.", Alert.AlertType.INFORMATION);
+                } else if (anyAlreadyExists) {
+                    ShowAlert.showAlert("Warning",
+                            "The selected games already exist in " + targetList + ":\n" + alreadyExistsGames.toString(),
+                            Alert.AlertType.WARNING);
+                } else {
+                    ShowAlert.showAlert("Info", "No games selected. Please select games using the checkboxes.", Alert.AlertType.INFORMATION);
+                }
 
-        } catch (OurException ex) {
-            ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
-        }
+            } catch (OurException ex) {
+                ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
+            }
         }
     }
 
-    private void removeFromList()
-    {
-        try
-        {
+    private void removeFromList() {
+        try {
             boolean anyRemoved = false;
             ArrayList<SelectableVideoGame> toRemoveFromUI = new ArrayList<>();
 
-            for (SelectableVideoGame selectable : videoGames)
-            {
-                if (selectable.isSelected())
-                {
+            for (SelectableVideoGame selectable : videoGames) {
+                if (selectable.isSelected()) {
                     VideoGame game = selectable.getVideoGame();
 
                     cont.removeGameFromList(profile.getUsername(), selectedList, game.getV_id());
@@ -410,17 +398,15 @@ public class ListWindowController implements Initializable {
             if (anyRemoved) {
                 videoGames.removeAll(toRemoveFromUI);
 
-                String message = "My Games".equals(selectedList) 
-                    ? "Games removed from all lists successfully." 
-                    : "Games removed from " + selectedList + " successfully.";
+                String message = "My Games".equals(selectedList)
+                        ? "Games removed from all lists successfully."
+                        : "Games removed from " + selectedList + " successfully.";
 
                 ShowAlert.showAlert("Success", message, Alert.AlertType.INFORMATION);
             } else {
                 ShowAlert.showAlert("Info", "No games selected. Please select games using the checkboxes.", Alert.AlertType.INFORMATION);
             }
-        }
-        catch (OurException ex)
-        {
+        } catch (OurException ex) {
             ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
