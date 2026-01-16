@@ -61,23 +61,14 @@ public class ModifyWindowController implements Initializable {
     @FXML
     private void save(ActionEvent event) throws passwordequalspassword
     {
-        // Read all input values
         String name = TextField_Name.getText();
         String surname = TextField_Surname.getText();
         String telephone = TextField_Telephone.getText();
         String newPass = TextField_NewPass.getText();
         String cNewPass = TextField_CNewPass.getText();
-        String gender = "";
-        String username;
-        String email;
 
-        if (profile instanceof User)
-        {
-            gender = ((User) profile).getGender();
-        }
-
-        username = profile.getUsername();
-        email = profile.getEmail();
+        String username = profile.getUsername();
+        String email = profile.getEmail();
 
         if (name == null || name.isEmpty() || name.equals("Insert your new name"))
         {
@@ -94,127 +85,70 @@ public class ModifyWindowController implements Initializable {
             telephone = profile.getTelephone();
         }
 
-        if (newPass == null || newPass.isEmpty() || cNewPass == null || cNewPass.isEmpty()
-                || newPass.equals("New Password") || cNewPass.equals("Confirm New Password"))
+        String password = profile.getPassword();
+        boolean changingPassword = false;
+
+        if (newPass != null && !newPass.isEmpty() && !newPass.equals("New Password") &&
+            cNewPass != null && !cNewPass.isEmpty() && !cNewPass.equals("Confirm New Password"))
         {
-            try {
-                newPass = profile.getPassword();
-                
-                Boolean success = cont.modificarUser(newPass, email, name, telephone, surname, username, gender);
-                if (success)
-                {
-                    profile.setName(name);
-                    profile.setSurname(surname);
-                    profile.setTelephone(telephone);
-                    profile.setPassword(newPass);
-                    
-                    javafx.scene.control.Alert successAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-                    successAlert.setTitle("Success");
-                    successAlert.setHeaderText(null);
-                    successAlert.setContentText("User data has been successfully updated.");
-                    successAlert.showAndWait();
-                    
-                    try
-                    {
-                        javafx.fxml.FXMLLoader fxmlLoader = new javafx.fxml.FXMLLoader(getClass().getResource("/view/MenuWindow.fxml"));
-                        javafx.scene.Parent root = fxmlLoader.load();
-                        
-                        controller.MenuWindowController controllerWindow = fxmlLoader.getController();
-                        controllerWindow.setUsuario(profile);
-                        controllerWindow.setCont(this.cont);
-                        javafx.stage.Stage stage = new javafx.stage.Stage();
-                        stage.setScene(new javafx.scene.Scene(root));
-                        stage.setTitle("PROFILE MENU");
-                        stage.setResizable(false);
-                        stage.show();
-                        
-                        Stage currentStage = (Stage) Button_Cancel.getScene().getWindow();
-                        currentStage.close();
-                        
-                    }
-                    catch (IOException ex)
-                    {
-                        Logger.getLogger(MenuWindowController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-                else
-                {
-                    javafx.scene.control.Alert error = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-                    error.setTitle("Error");
-                    error.setHeaderText("Update failed");
-                    error.setContentText("Could not update user data.");
-                    error.showAndWait();
-                }
-            }
-            catch (OurException ex) {
-                ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
-                Logger.getLogger(ModifyWindowController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        else
-        {
-            // If passwords are not equal, throw exception
             if (!newPass.equals(cNewPass))
             {
-                throw new passwordequalspassword("Las contraseñas no coinciden");
+                throw new passwordequalspassword("The passwords do not match");
             }
-            else
+            password = newPass;
+            changingPassword = true;
+        }
+
+        String gender = "";
+        if (profile instanceof User)
+        {
+            gender = ((User) profile).getGender();
+        }
+
+        try
+        {
+            Boolean success = cont.modifyUser(password, email, name, telephone, surname, username, gender);
+
+            if (success)
             {
+                profile.setName(name);
+                profile.setSurname(surname);
+                profile.setTelephone(telephone);
+
+                if (changingPassword)
+                {
+                    profile.setPassword(password);
+                }
+
+                ShowAlert.showAlert("Success", "User data has been successfully updated.", Alert.AlertType.INFORMATION);
+
                 try
                 {
-                    Boolean success = cont.modificarUser(newPass, email, name, telephone, surname, username, gender);
-                    if (success)
-                    {
-                        // actualizar el objeto profile con los nuevos valores
-                        profile.setName(name);
-                        profile.setSurname(surname);
-                        profile.setTelephone(telephone);
-                        profile.setPassword(newPass);
-                        
-                        javafx.scene.control.Alert successAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-                        successAlert.setTitle("Success");
-                        successAlert.setHeaderText(null);
-                        successAlert.setContentText("User data has been successfully updated.");
-                        successAlert.showAndWait();
-                        
-                        try
-                        {
-                            javafx.fxml.FXMLLoader fxmlLoader = new javafx.fxml.FXMLLoader(getClass().getResource("/view/MenuWindow.fxml"));
-                            javafx.scene.Parent root = fxmlLoader.load();
-                            
-                            controller.MenuWindowController controllerWindow = fxmlLoader.getController();
-                            controllerWindow.setUsuario(profile);
-                            controllerWindow.setCont(this.cont);
-                            
-                            Stage stage = new Stage();
-                            stage.setScene(new javafx.scene.Scene(root));
-                            stage.setTitle("PROFILE MENU");
-                            stage.setResizable(false);
-                            stage.show();
-                            
-                            Stage currentStage = (Stage) Button_Cancel.getScene().getWindow();
-                            currentStage.close();
-                        }
-                        catch (IOException ex)
-                        {
-                            Logger.getLogger(MenuWindowController.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                    else
-                    {
-                        javafx.scene.control.Alert error = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-                        error.setTitle("Error");
-                        error.setHeaderText("Update failed");
-                        error.setContentText("Could not update user data.");
-                        error.showAndWait();
-                    }
+                    javafx.fxml.FXMLLoader fxmlLoader = new javafx.fxml.FXMLLoader(getClass().getResource("/view/MenuWindow.fxml"));
+                    javafx.scene.Parent root = fxmlLoader.load();
+
+                    controller.MenuWindowController controllerWindow = fxmlLoader.getController();
+                    controllerWindow.setCont(this.cont);
+                    controllerWindow.setUsuario(profile);
+
+                    Stage stage = new Stage();
+                    stage.setScene(new javafx.scene.Scene(root));
+                    stage.setTitle("PROFILE MENU");
+                    stage.setResizable(false);
+                    stage.show();
+
+                    Stage currentStage = (Stage) Button_Cancel.getScene().getWindow();
+                    currentStage.close();
                 }
-                catch (OurException ex)
+                catch (IOException ex)
                 {
-                    ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
-                    Logger.getLogger(ModifyWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(MenuWindowController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+        }
+        catch (OurException ex)
+        {
+            ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
