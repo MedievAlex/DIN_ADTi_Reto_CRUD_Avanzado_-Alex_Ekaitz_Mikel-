@@ -20,7 +20,6 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import model.Profile;
 

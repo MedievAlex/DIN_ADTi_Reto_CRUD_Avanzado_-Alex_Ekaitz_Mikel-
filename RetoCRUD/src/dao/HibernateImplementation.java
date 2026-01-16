@@ -263,8 +263,8 @@ public class HibernateImplementation implements ClassDAO {
         try {
             session = HibernateUtil.getSession();
 
-            List<String> usernames = session.createNativeQuery(
-                    "SELECT username FROM user_", String.class
+            List<String> usernames = session.createQuery(
+                    "SELECT u.username FROM User u", String.class
             ).list();
 
             return new ArrayList<>(usernames);
