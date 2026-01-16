@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -71,7 +70,10 @@ public class RenameListWindowController implements Initializable {
             } else {
                 cont.renameList(profile.getUsername(), listName, newName);
                 txtMessage.setText(listName + " updated to " + newName + ".");
+                Button newNameButton = new Button(newName);
+                
                 parentController.loadListButtons();
+                parentController.showList(newNameButton);
                 parentController.setComboBox();
                 close();
             }

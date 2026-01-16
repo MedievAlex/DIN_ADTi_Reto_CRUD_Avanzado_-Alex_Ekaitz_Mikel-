@@ -138,12 +138,6 @@ public class ListWindowController implements Initializable {
     private ContextMenu contextualMenu(String buttonName) {
         ContextMenu contextualMenu = new ContextMenu();
 
-        contextualMenu.setOnShowing(new EventHandler<WindowEvent>() {
-            public void handle(WindowEvent e) {
-                System.out.println("List: " + buttonName);
-            }
-        });
-
         MenuItem renameList = new MenuItem("Rename List");
         renameList.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
@@ -208,17 +202,31 @@ public class ListWindowController implements Initializable {
         try {
             listsNames = cont.getUserLists(profile.getUsername());
 
-            for (String name : listsNames) {
-                Button button = new Button(name);
-                buttonStyle(button);
-                button.setOnAction(e
-                        -> {
-                    showList(button);
-                });
+            for (String name : listsNames) { // The first button always My Games
+                if ("My Games".equals(name)) { 
+                    Button button = new Button(name);
+                    buttonStyle(button);
+                    button.setOnAction(e
+                            -> {
+                        showList(button);
+                    });
 
-                vbLists.getChildren().add(button);
-                litsButtons.add(button);
-                if (!"My Games".equals(button.getText())) {
+                    vbLists.getChildren().add(button);
+                    litsButtons.add(button);
+                }
+            }
+
+            for (String name : listsNames) { // The rest buttons ordered
+                if (!"My Games".equals(name)) {
+                    Button button = new Button(name);
+                    buttonStyle(button);
+                    button.setOnAction(e
+                            -> {
+                        showList(button);
+                    });
+
+                    vbLists.getChildren().add(button);
+                    litsButtons.add(button);
                     button.setContextMenu(contextualMenu(button.getText()));
                 }
             }
@@ -231,7 +239,7 @@ public class ListWindowController implements Initializable {
     }
 
     //[LISTS]
-    private void showList(Button button) {
+    public void showList(Button button) {
         selectedList = button.getText();
         listName.setText(selectedList);
         selectedButton(button);
