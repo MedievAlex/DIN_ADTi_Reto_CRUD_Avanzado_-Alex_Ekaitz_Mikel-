@@ -87,8 +87,8 @@ public class Controller {
      * @return
      * @throws exception.OurException
      */
-    public boolean modificarUser(String password, String email, String name, String telephone, String surname, String username, String gender) throws OurException {
-        return DAO.modificarUser(password, email, name, telephone, surname, username, gender);
+    public boolean modifyUser(String password, String email, String name, String telephone, String surname, String username, String gender) throws OurException {
+        return DAO.modifyUser(password, email, name, telephone, surname, username, gender);
     }
 
     /**

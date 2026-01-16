@@ -318,6 +318,19 @@ public class NewReviewWindowController implements Initializable {
         comboBoxGame.setOnAction((event) -> {
             cargardatosReview();
         });
-
+        spinnerRating.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue)
+            {
+                try
+                {
+                    int value = Integer.parseInt(spinnerRating.getEditor().getText());
+                    spinnerRating.getValueFactory().setValue(value);
+                }
+                catch (NumberFormatException e)
+                {
+                    spinnerRating.getEditor().setText(spinnerRating.getValue().toString());
+                }
+            }
+        });
     }
 }

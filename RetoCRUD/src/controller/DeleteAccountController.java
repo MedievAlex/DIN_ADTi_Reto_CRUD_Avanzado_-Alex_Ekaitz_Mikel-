@@ -106,15 +106,12 @@ public class DeleteAccountController implements Initializable
             error.setHeaderText("Password required");
             error.setContentText("Please enter your password to delete the account.");
             error.showAndWait();
-
             return;
         }
-
         Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
         alert.setTitle("Delete account");
         alert.setHeaderText("Are you sure you want to delete your account?");
-        alert.setContentText("This action cannot be undone..");
-
+        alert.setContentText("This action cannot be undone.");
         java.util.Optional<javafx.scene.control.ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == javafx.scene.control.ButtonType.OK)
         {
@@ -124,7 +121,6 @@ public class DeleteAccountController implements Initializable
                 user = LabelUsername.getText();
                 password = TextFieldPassword.getText();
                 Boolean success = cont.dropOutUser(user, password);
-
                 if (success)
                 {
                     Alert successAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
@@ -132,11 +128,13 @@ public class DeleteAccountController implements Initializable
                     successAlert.setHeaderText(null);
                     successAlert.setContentText("Your account has been successfully deleted.");
                     successAlert.showAndWait();
-                    
+
+                    profile = null;
+
                     if (parentStage != null) {
                         parentStage.close();
                     }
-                    
+
                     Stage currentStage = (Stage) Button_Delete.getScene().getWindow();
                     currentStage.close();
 
@@ -146,9 +144,11 @@ public class DeleteAccountController implements Initializable
                         javafx.scene.Parent root = fxmlLoader.load();
 
                         controller.LogInWindowController controllerWindow = fxmlLoader.getController();
+                        controllerWindow.setController(cont);
+
                         javafx.stage.Stage stage = new javafx.stage.Stage();
                         stage.setScene(new javafx.scene.Scene(root));
-                        stage.setTitle("PROFILE MENU");
+                        stage.setTitle("LOG IN");
                         stage.setResizable(false);
                         stage.show();
                     }

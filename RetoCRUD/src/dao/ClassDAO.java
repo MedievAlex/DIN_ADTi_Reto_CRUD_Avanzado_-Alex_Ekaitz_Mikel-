@@ -21,7 +21,7 @@ public interface ClassDAO {
 
     public boolean dropOutAdmin(String usernameToDelete, String adminUsername, String adminPassword) throws OurException;
 
-    public boolean modificarUser(String password, String email, String name, String telephone, String surname, String username, String gender) throws OurException;
+    public boolean modifyUser(String password, String email, String name, String telephone, String surname, String username, String gender) throws OurException;
 
     public ArrayList<String> comboBoxInsert() throws OurException;
     
