@@ -326,9 +326,9 @@ public class ListWindowController implements Initializable {
     private void addToList() {
         if (combLists.getValue() == null) {
             ShowAlert.showAlert("Error", "[No list selected]", Alert.AlertType.ERROR);
-            return;
         }
 
+        if(combLists.getValue() != null){
         String targetList = combLists.getValue();
 
         try {
@@ -370,6 +370,7 @@ public class ListWindowController implements Initializable {
 
         } catch (OurException ex) {
             ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
+        }
         }
     }
 
