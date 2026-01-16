@@ -11,25 +11,25 @@
 <AnchorPane id="AnchorPane" prefHeight="360.0" prefWidth="270.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DeleteAccountController">
    
     <children>
-      <Label layoutX="71.0" layoutY="94.0" prefHeight="17.0" prefWidth="56.0" text="Username" />
       <Label layoutX="54.0" layoutY="25.0" text="DELETE ACCOUNT">
          <font>
             <Font size="20.0" />
          </font></Label>
-      <Label layoutX="68.0" layoutY="152.0" text="Password" />
-      <TextField fx:id="TextFieldPassword" layoutX="133.0" layoutY="148.0" prefHeight="25.0" prefWidth="97.0" />
-      <Button fx:id="Button_Delete" layoutX="85.0" layoutY="225.0" mnemonicParsing="false" onAction="#delete" style="-fx-background-color: A7C4E5; -fx-border-color: #000000;" text="Delete Account" />
-      <Button fx:id="Button_Cancel" layoutX="87.0" layoutY="282.0" mnemonicParsing="false" onAction="#cancel" prefHeight="25.0" prefWidth="97.0" style="-fx-background-color: A7C4E5; -fx-border-color: #000000;" text="Cancel" />
       <ImageView fitHeight="25.0" fitWidth="23.0" layoutX="41.0" layoutY="91.0" opacity="0.79">
          <image>
             <Image url="@../images/mail_34dp_5084C1_FILL0_wght400_GRAD0_opsz40.png" />
          </image>
       </ImageView>
+      <Label layoutX="71.0" layoutY="94.0" prefHeight="17.0" prefWidth="56.0" text="Username" />
+      <Label fx:id="LabelUsername" layoutX="145.0" layoutY="94.0" prefHeight="17.0" prefWidth="79.0" text="Label" />
+      <Button fx:id="Button_Cancel" layoutX="87.0" layoutY="282.0" mnemonicParsing="false" onAction="#cancel" prefHeight="25.0" prefWidth="97.0" style="-fx-background-color: A7C4E5; -fx-border-color: #000000;" text="Cancel" />
+      <Label layoutX="68.0" layoutY="152.0" text="Password" />
+      <TextField fx:id="TextFieldPassword" layoutX="133.0" layoutY="148.0" prefHeight="25.0" prefWidth="97.0" />
+      <Button fx:id="Button_Delete" layoutX="85.0" layoutY="225.0" mnemonicParsing="false" onAction="#delete" style="-fx-background-color: A7C4E5; -fx-border-color: #000000;" text="Delete Account" />
       <ImageView fitHeight="25.0" fitWidth="23.0" layoutX="41.0" layoutY="148.0">
          <image>
             <Image url="@../images/verified_user_32dp_789DE5_FILL0_wght400_GRAD0_opsz40.png" />
          </image>
       </ImageView>
-      <Label fx:id="LabelUsername" layoutX="145.0" layoutY="94.0" prefHeight="17.0" prefWidth="79.0" text="Label" />
    </children>
 </AnchorPane>

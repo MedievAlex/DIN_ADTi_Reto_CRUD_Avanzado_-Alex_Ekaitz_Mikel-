@@ -1,7 +1,10 @@
 package controller;
 
 import javafx.scene.control.ToggleGroup;
+import exception.OurException;
+import exception.ShowAlert;
 import exception.passwordequalspassword;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
@@ -56,9 +59,9 @@ public class SignUpWindowController implements Initializable
             
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
-                stage.setTitle("LOGIN");
-                stage.setResizable(false);
-                stage.show();
+            stage.setTitle("LOGIN");
+            stage.setResizable(false);
+            stage.show();
                 
             Stage currentStage = (Stage) buttonLogIn.getScene().getWindow();
             currentStage.close();
@@ -89,33 +92,39 @@ public class SignUpWindowController implements Initializable
         else if (rButtonW.isSelected()) gender = "Woman";
         else if (rButtonO.isSelected()) gender = "Other";
 
-        if (!pass.equals(passC)) throw new passwordequalspassword("No son iguales las contraseñas");
+        if (!pass.equals(passC)) throw new passwordequalspassword("The passwords not matches");
 
-        if (cont.signUp(gender, cardN, username, pass, email, name, telephone, surname))
+        try
         {
-            Profile profile = cont.logIn(username, pass);
-            try
+            if (cont.signUp(gender, cardN, username, pass, email, name, telephone, surname))
             {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MainMenuWindow.fxml"));
-                Parent root = fxmlLoader.load();
-                
-                controller.MainMenuWindowController controllerWindow = fxmlLoader.getController();
-                controllerWindow.setUsuario(profile);
-                controllerWindow.setCont(this.cont);
-                
-                Stage stage = new Stage();
-                stage.setScene(new Scene(root));
-                stage.setTitle("MAIN MENU");
-                stage.setResizable(false);
-                stage.show();
-                
-                Stage currentStage = (Stage) buttonSignUp.getScene().getWindow();
-                currentStage.close();
+                Profile profile = cont.logIn(username, pass);
+                try
+                {
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MainMenuWindow.fxml"));
+                    Parent root = fxmlLoader.load();
+                    
+                    controller.MainMenuWindowController controllerWindow = fxmlLoader.getController();
+                    controllerWindow.setCont(this.cont);
+                    controllerWindow.setUsuario(profile);
+                    
+                    Stage stage = new Stage();
+                    stage.setScene(new Scene(root));
+                    stage.setTitle("MAIN MENU");
+                    stage.show();
+                    
+                    Stage currentStage = (Stage) buttonSignUp.getScene().getWindow();
+                    currentStage.close();
+                }
+                catch (IOException ex)
+                {
+                    Logger.getLogger(SignUpWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
-            catch (IOException ex)
-            {
-                Logger.getLogger(SignUpWindowController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        }
+        catch (OurException ex)
+        {
+            ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
 

@@ -1,34 +1,53 @@
 package model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.*;
 
 /**
- * Abstract base class representing a user profile in the system. This class
- * defines the common attributes and behavior shared by all types of user
- * profiles, including both regular users and administrators.
  *
- * Profile serves as the foundation for user identity management and provides
- * the core personal information storage and retrieval functionality for the
- * application.
- *
- * @author Kevin, Alex, Victor, Ekaitz
+ * @author ema
  */
-public class VideoGame {
+@Entity
+@Table(name = "videogame")
+public class VideoGame implements Serializable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "v_id")
     private int v_id;
+
+    @Column(name = "v_name", nullable = false, length = 100)
     private String v_name;
+
+    @Column(name = "v_release")
     private LocalDate v_release;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "v_platform")
     private Platform v_platform;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "v_pegi")
     private Pegi v_pegi;
-    private boolean checked;
+
+    @OneToMany(mappedBy = "videogame", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Listed> listedInProfiles = new HashSet<>();
 
     public VideoGame() {
-        this.v_id = 0;
         this.v_name = "";
         this.v_release = LocalDate.now();
         this.v_platform = Platform.DEFAULT;
         this.v_pegi = Pegi.DEFAULT;
-        this.checked = false;
+    }
+    
+    public VideoGame(String v_name, LocalDate v_release, Platform v_platform, Pegi v_pegi) {
+        this.v_name = v_name;
+        this.v_release = v_release;
+        this.v_platform = v_platform;
+        this.v_pegi = v_pegi;
     }
 
     public VideoGame(int v_id, String v_name, LocalDate v_release, Platform v_platform, Pegi v_pegi) {
@@ -37,7 +56,6 @@ public class VideoGame {
         this.v_release = v_release;
         this.v_platform = v_platform;
         this.v_pegi = v_pegi;
-        this.checked = false;
     }
 
     public int getV_id() {
@@ -80,16 +98,22 @@ public class VideoGame {
         this.v_pegi = v_pegi;
     }
 
-    public boolean isChecked() {
-        return checked;
+    public Set<Listed> getListedInProfiles() {
+        return listedInProfiles;
     }
 
-    public void setChecked(boolean checked) {
-        this.checked = checked;
+    public void setListedInProfiles(Set<Listed> listedInProfiles) {
+        this.listedInProfiles = listedInProfiles;
     }
 
     @Override
     public String toString() {
-        return "VideoGame{" + "v_id=" + v_id + ", v_name=" + v_name + ", v_release=" + v_release + ", v_platform=" + v_platform + ", v_pegi=" + v_pegi + '}';
-    } 
+        return "VideoGame{"
+                + "v_id=" + v_id
+                + ", v_name='" + v_name + '\''
+                + ", v_release=" + v_release
+                + ", v_platform=" + v_platform
+                + ", v_pegi=" + v_pegi
+                + "}";
+    }
 }

@@ -1,21 +1,29 @@
 package model;
 
+import java.io.Serializable;
+import javax.persistence.*;
+
 /**
- * Represents an admin profile in the system.
- * Extends Profile and adds the currentAccount attribute.
+ *
+ * @author ema
  */
-public class Admin extends Profile
+
+@Entity
+@Table(name = "admin_")
+public class Admin extends Profile implements Serializable
 {
+    @Column(name = "current_account", length = 40)
     private String currentAccount;
 
-    public Admin(String currentAccount, String username, String password, String email, int userCode, String name, String telephone, String surname)
+    public Admin(String currentAccount, String username, String password, String email, String name, String telephone, String surname)
     {
-        super(username, password, email, userCode, name, telephone, surname);
+        super(username, password, email, name, telephone, surname);
         this.currentAccount = currentAccount;
     }
 
     public Admin()
     {
+        super();
         this.currentAccount = "";
     }
 
@@ -23,14 +31,14 @@ public class Admin extends Profile
     public void setCurrentAccount(String currentAccount) { this.currentAccount = currentAccount; }
 
     @Override
-    public void logIn()
+    public String show()
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return "Admin{" + "currentAccount=" + currentAccount + "}";
     }
-
+    
     @Override
     public String toString()
     {
-        return "Admin{" + "currentAccount=" + currentAccount + '}';
+        return show();
     }
 }

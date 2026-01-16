@@ -1,13 +1,22 @@
 package main;
+
+import controller.Controller;
+import controller.LogInWindowController;
+
+
+
+import dao.HibernateImplementation;
 import javafx.application.Application;
-import static javafx.application.Application.launch;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import dao.HibernateUtil;
 
 public class Main extends Application
 {
+    private HibernateImplementation dao;
+
     /**
      * Starts the JavaFX application by loading the login window.
      *
@@ -17,11 +26,36 @@ public class Main extends Application
     @Override
     public void start(Stage stage) throws Exception
     {
-        Parent root = FXMLLoader.load(getClass().getResource("/view/LogInWindow.fxml"));
-        Scene scene = new Scene(root);
-        stage.setTitle("LOGIN");
-        stage.setScene(scene);
+        Thread.currentThread().setUncaughtExceptionHandler((thread, throwable) -> {
+            if (throwable instanceof NullPointerException) {
+            } else {
+                throwable.printStackTrace();
+            }
+        });
+        
+        try
+        {
+        dao = new HibernateImplementation();
+        
+        dao.initializeDefault();
+        
+        Controller controller = new Controller(dao);
+        
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/LogInWindow.fxml"));
+        Parent root = fxmlLoader.load();
+        
+        LogInWindowController loginController = fxmlLoader.getController();
+        loginController.setController(controller);
+        
+        stage.setTitle("LOG IN");
+        stage.setScene(new Scene(root));
         stage.show();
+        }
+        catch (Exception e)
+        {
+            System.err.print("Error initializing the app");
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -32,5 +66,12 @@ public class Main extends Application
     public static void main(String[] args)
     {
         launch(args);
+    }
+    
+    @Override
+    public void stop()
+    {
+        dao.cleanupThreads();
+        HibernateUtil.close();
     }
 }
