@@ -1092,7 +1092,7 @@ public class HibernateImplementation implements ClassDAO {
                     .uniqueResult();
 
             if (existingList == null) {
-                session.save(new Listed(session.get(User.class, "asanchez"), session.get(VideoGame.class, 1), "My Games"));
+                session.save(new Listed(session.get(User.class, "jlopez"), session.get(VideoGame.class, 1), "My Games"));
             }
             
             profile = session.get(User.class, "mramirez");
@@ -1104,7 +1104,7 @@ public class HibernateImplementation implements ClassDAO {
                     .uniqueResult();
 
             if (existingList == null) {
-                session.save(new Listed(session.get(User.class, "asanchez"), session.get(VideoGame.class, 1), "My Games"));
+                session.save(new Listed(session.get(User.class, "mramirez"), session.get(VideoGame.class, 1), "My Games"));
             }
             
             profile = session.get(User.class, "cperez");
@@ -1116,7 +1116,7 @@ public class HibernateImplementation implements ClassDAO {
                     .uniqueResult();
 
             if (existingList == null) {
-                session.save(new Listed(session.get(User.class, "asanchez"), session.get(VideoGame.class, 1), "My Games"));
+                session.save(new Listed(session.get(User.class, "cperez"), session.get(VideoGame.class, 1), "My Games"));
             }
             
             profile = session.get(Admin.class, "asanchez");
@@ -1140,7 +1140,7 @@ public class HibernateImplementation implements ClassDAO {
                     .uniqueResult();
 
             if (existingList == null) {
-                session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 1), "My Games"));
+                session.save(new Listed(session.get(Admin.class, "rluna"), session.get(VideoGame.class, 1), "My Games"));
             }
 
             // OTHER LISTS
