@@ -1082,7 +1082,7 @@ public class HibernateImplementation implements ClassDAO {
              */
             
             // MY GAMES
-            profile = session.get(Admin.class, "jlopez");
+            profile = session.get(User.class, "jlopez");
             game = session.get(VideoGame.class, 1);
 
             existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
@@ -1092,10 +1092,10 @@ public class HibernateImplementation implements ClassDAO {
                     .uniqueResult();
 
             if (existingList == null) {
-                session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 1), "My Games"));
+                session.save(new Listed(session.get(User.class, "asanchez"), session.get(VideoGame.class, 1), "My Games"));
             }
             
-            profile = session.get(Admin.class, "mramirez");
+            profile = session.get(User.class, "mramirez");
 
             existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
                     .setParameter("username", profile.getUsername())
@@ -1104,10 +1104,10 @@ public class HibernateImplementation implements ClassDAO {
                     .uniqueResult();
 
             if (existingList == null) {
-                session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 1), "My Games"));
+                session.save(new Listed(session.get(User.class, "asanchez"), session.get(VideoGame.class, 1), "My Games"));
             }
             
-            profile = session.get(Admin.class, "cperez");
+            profile = session.get(User.class, "cperez");
 
             existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
                     .setParameter("username", profile.getUsername())
@@ -1116,7 +1116,7 @@ public class HibernateImplementation implements ClassDAO {
                     .uniqueResult();
 
             if (existingList == null) {
-                session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 1), "My Games"));
+                session.save(new Listed(session.get(User.class, "asanchez"), session.get(VideoGame.class, 1), "My Games"));
             }
             
             profile = session.get(Admin.class, "asanchez");
