@@ -1062,7 +1062,7 @@ public class HibernateImplementation implements ClassDAO {
             allGames.add(new VideoGame("Detroit: Become Human", LocalDate.of(2018, 5, 25), Platform.PLAYSTATION, Pegi.PEGI16));
             allGames.add(new VideoGame("ASTROBOT", LocalDate.of(2024, 9, 6), Platform.PLAYSTATION, Pegi.PEGI3));
             allGames.add(new VideoGame("Call of Duty: Black Ops II", LocalDate.of(2012, 11, 13), Platform.PLAYSTATION, Pegi.PEGI18));
-            allGames.add(new VideoGame("Halo Infinite", LocalDate.of(2021, 12, 8), Platform.XBOX, Pegi.PEGI16));
+            allGames.add(new VideoGame("Halo Infinite", LocalDate.of(2021, 12, 8), Platform.PC, Pegi.PEGI16));
             allGames.add(new VideoGame("Balatro", LocalDate.of(2024, 2, 20), Platform.PC, Pegi.PEGI12));
 
             for (VideoGame allGameGames : allGames) {
@@ -1080,7 +1080,9 @@ public class HibernateImplementation implements ClassDAO {
             /**
              * ******************************************************LISTS*******************************************************
              */
-            profile = session.get(Admin.class, "asanchez");
+            
+            // MY GAMES
+            profile = session.get(Admin.class, "jlopez");
             game = session.get(VideoGame.class, 1);
 
             existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
@@ -1092,7 +1094,56 @@ public class HibernateImplementation implements ClassDAO {
             if (existingList == null) {
                 session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 1), "My Games"));
             }
+            
+            profile = session.get(Admin.class, "mramirez");
 
+            existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
+                    .setParameter("username", profile.getUsername())
+                    .setParameter("listName", "My Games")
+                    .setParameter("gameId", game.getV_id())
+                    .uniqueResult();
+
+            if (existingList == null) {
+                session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 1), "My Games"));
+            }
+            
+            profile = session.get(Admin.class, "cperez");
+
+            existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
+                    .setParameter("username", profile.getUsername())
+                    .setParameter("listName", "My Games")
+                    .setParameter("gameId", game.getV_id())
+                    .uniqueResult();
+
+            if (existingList == null) {
+                session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 1), "My Games"));
+            }
+            
+            profile = session.get(Admin.class, "asanchez");
+
+            existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
+                    .setParameter("username", profile.getUsername())
+                    .setParameter("listName", "My Games")
+                    .setParameter("gameId", game.getV_id())
+                    .uniqueResult();
+
+            if (existingList == null) {
+                session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 1), "My Games"));
+            }
+            
+            profile = session.get(Admin.class, "rluna");
+
+            existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
+                    .setParameter("username", profile.getUsername())
+                    .setParameter("listName", "My Games")
+                    .setParameter("gameId", game.getV_id())
+                    .uniqueResult();
+
+            if (existingList == null) {
+                session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 1), "My Games"));
+            }
+
+            // OTHER LISTS
             game = session.get(VideoGame.class, 2);
             existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
                     .setParameter("username", profile.getUsername())
