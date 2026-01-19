@@ -33,9 +33,9 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import model.Pegi;
 import model.Platform;
 import model.Profile;
@@ -519,8 +519,21 @@ public class ListWindowController implements Initializable {
         tcCheckBox.setCellFactory(CheckBoxTableCell.forTableColumn(tcCheckBox));
     }
 
-    @FXML
-    private void handleHelpAction(ActionEvent event) {
+    public void handleVideoAction() {
+        WebView webview = new WebView();
+        webview.getEngine().load(
+                "https://youtu.be/dQw4w9WgXcQ?list=RDdQw4w9WgXcQ"
+        );
+        webview.setPrefSize(640, 390);
+
+        Stage stage = new Stage();
+        stage.setScene(new Scene(webview));
+        stage.setFullScreen(true);
+        stage.show();
     }
 
+    @FXML
+    public void handleHelpAction() {
+        System.out.println("Help");
+    }
 }

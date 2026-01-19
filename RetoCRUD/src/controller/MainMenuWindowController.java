@@ -34,6 +34,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
+import javafx.scene.web.WebView;
 import model.Pegi;
 import model.Platform;
 import model.Profile;
@@ -404,7 +405,21 @@ public class MainMenuWindowController implements Initializable
         toDate.valueProperty().addListener(dateListener);
     }
 
+    public void handleVideoAction() {
+        WebView webview = new WebView();
+        webview.getEngine().load(
+                "https://youtu.be/dQw4w9WgXcQ?list=RDdQw4w9WgXcQ"
+        );
+        webview.setPrefSize(640, 390);
+
+        Stage stage = new Stage();
+        stage.setScene(new Scene(webview));
+        stage.setFullScreen(true);
+        stage.show();
+    }
+
     @FXML
-    private void handleHelpAction(ActionEvent event) {
+    public void handleHelpAction() {
+        System.out.println("Help");
     }
 }
