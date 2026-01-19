@@ -1062,7 +1062,7 @@ public class HibernateImplementation implements ClassDAO {
             allGames.add(new VideoGame("Detroit: Become Human", LocalDate.of(2018, 5, 25), Platform.PLAYSTATION, Pegi.PEGI16));
             allGames.add(new VideoGame("ASTROBOT", LocalDate.of(2024, 9, 6), Platform.PLAYSTATION, Pegi.PEGI3));
             allGames.add(new VideoGame("Call of Duty: Black Ops II", LocalDate.of(2012, 11, 13), Platform.PLAYSTATION, Pegi.PEGI18));
-            allGames.add(new VideoGame("Halo Infinite", LocalDate.of(2021, 12, 8), Platform.XBOX, Pegi.PEGI16));
+            allGames.add(new VideoGame("Halo Infinite", LocalDate.of(2021, 12, 8), Platform.PC, Pegi.PEGI16));
             allGames.add(new VideoGame("Balatro", LocalDate.of(2024, 2, 20), Platform.PC, Pegi.PEGI12));
 
             for (VideoGame allGameGames : allGames) {
@@ -1080,18 +1080,62 @@ public class HibernateImplementation implements ClassDAO {
             /**
              * ******************************************************LISTS*******************************************************
              */
+            
+            // My games
+            game = session.get(VideoGame.class, 1);
+            profile = session.get(User.class, "jlopez");
+            
+            existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
+                    .setParameter("username", profile.getUsername())
+                    .setParameter("listName", "My Games")
+                    .setParameter("gameId", game.getV_id())
+                    .uniqueResult();
+            if (existingList == null) {
+                session.save(new Listed(profile, game, "My Games"));
+            }
+
+            profile = session.get(User.class, "mramirez");
+            existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
+                    .setParameter("username", profile.getUsername())
+                    .setParameter("listName", "My Games")
+                    .setParameter("gameId", game.getV_id())
+                    .uniqueResult();
+            if (existingList == null) {
+                session.save(new Listed(profile, game, "My Games"));
+            }
+
+            profile = session.get(User.class, "cperez");
+            existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
+                    .setParameter("username", profile.getUsername())
+                    .setParameter("listName", "My Games")
+                    .setParameter("gameId", game.getV_id())
+                    .uniqueResult();
+            if (existingList == null) {
+                session.save(new Listed(profile, game, "My Games"));
+            }
+
             profile = session.get(Admin.class, "asanchez");
-            game = session.get(VideoGame.class, 1);
-
             existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
                     .setParameter("username", profile.getUsername())
                     .setParameter("listName", "My Games")
                     .setParameter("gameId", game.getV_id())
                     .uniqueResult();
-
             if (existingList == null) {
-                session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 1), "My Games"));
+                session.save(new Listed(profile, game, "My Games"));
             }
+
+            profile = session.get(Admin.class, "rluna");
+            existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
+                    .setParameter("username", profile.getUsername())
+                    .setParameter("listName", "My Games")
+                    .setParameter("gameId", game.getV_id())
+                    .uniqueResult();
+            if (existingList == null) {
+                session.save(new Listed(profile, game, "My Games"));
+            }
+
+            // Oher lists
+            profile = session.get(Admin.class, "asanchez");
 
             game = session.get(VideoGame.class, 2);
             existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
@@ -1099,9 +1143,8 @@ public class HibernateImplementation implements ClassDAO {
                     .setParameter("listName", "My Games")
                     .setParameter("gameId", game.getV_id())
                     .uniqueResult();
-
             if (existingList == null) {
-                session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 2), "My Games"));
+                session.save(new Listed(profile, game, "My Games"));
             }
 
             game = session.get(VideoGame.class, 3);
@@ -1110,9 +1153,8 @@ public class HibernateImplementation implements ClassDAO {
                     .setParameter("listName", "My Games")
                     .setParameter("gameId", game.getV_id())
                     .uniqueResult();
-
             if (existingList == null) {
-                session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 3), "My Games"));
+                session.save(new Listed(profile, game, "My Games"));
             }
 
             game = session.get(VideoGame.class, 5);
@@ -1121,9 +1163,8 @@ public class HibernateImplementation implements ClassDAO {
                     .setParameter("listName", "My Games")
                     .setParameter("gameId", game.getV_id())
                     .uniqueResult();
-
             if (existingList == null) {
-                session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 5), "My Games"));
+                session.save(new Listed(profile, game, "My Games"));
             }
 
             game = session.get(VideoGame.class, 1);
@@ -1132,9 +1173,8 @@ public class HibernateImplementation implements ClassDAO {
                     .setParameter("listName", "NINTENDO")
                     .setParameter("gameId", game.getV_id())
                     .uniqueResult();
-
             if (existingList == null) {
-                session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 1), "NINTENDO"));
+                session.save(new Listed(profile, game, "NINTENDO"));
             }
 
             game = session.get(VideoGame.class, 2);
@@ -1143,9 +1183,8 @@ public class HibernateImplementation implements ClassDAO {
                     .setParameter("listName", "NINTENDO")
                     .setParameter("gameId", game.getV_id())
                     .uniqueResult();
-
             if (existingList == null) {
-                session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 2), "NINTENDO"));
+                session.save(new Listed(profile, game, "NINTENDO"));
             }
 
             game = session.get(VideoGame.class, 3);
@@ -1154,9 +1193,8 @@ public class HibernateImplementation implements ClassDAO {
                     .setParameter("listName", "NINTENDO")
                     .setParameter("gameId", game.getV_id())
                     .uniqueResult();
-
             if (existingList == null) {
-                session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 3), "NINTENDO"));
+                session.save(new Listed(profile, game, "NINTENDO"));
             }
 
             game = session.get(VideoGame.class, 1);
@@ -1165,9 +1203,8 @@ public class HibernateImplementation implements ClassDAO {
                     .setParameter("listName", "PLAYSTATION")
                     .setParameter("gameId", game.getV_id())
                     .uniqueResult();
-
             if (existingList == null) {
-                session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 1), "PLAYSTATION"));
+                session.save(new Listed(profile, game, "PLAYSTATION"));
             }
 
             game = session.get(VideoGame.class, 5);
@@ -1176,9 +1213,8 @@ public class HibernateImplementation implements ClassDAO {
                     .setParameter("listName", "PLAYSTATION")
                     .setParameter("gameId", game.getV_id())
                     .uniqueResult();
-
             if (existingList == null) {
-                session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 5), "PLAYSTATION"));
+                session.save(new Listed(profile, game, "PLAYSTATION"));
             }
 
             /**
