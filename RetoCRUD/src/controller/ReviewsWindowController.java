@@ -362,14 +362,25 @@ public class ReviewsWindowController implements Initializable {
         });
         miMainMenu.setOnAction((event) -> {
             try {
+                Stage stage = (Stage) menu.getScene().getWindow();
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MainMenuWindow.fxml"));
                 Parent root = fxmlLoader.load();
 
                 controller.MainMenuWindowController controllerWindow = fxmlLoader.getController();
                 controllerWindow.setCont(cont);
                 controllerWindow.setUsuario(profile);
+                
+                MenuItem fullScreen = new MenuItem("Full screen");
+                        
+                ContextMenu contextMenu = new ContextMenu();
+                contextMenu.getItems().addAll(fullScreen);
 
-                Stage stage = (Stage) menu.getScene().getWindow();
+                fullScreen.setOnAction(events -> stage.setFullScreen(true));
+
+                root.setOnContextMenuRequested(events -> {
+                    contextMenu.show(root, events.getScreenX(), events.getScreenY());
+                });
+                
                 stage.setScene(new Scene(root));
                 stage.setTitle("MAIN MENU");
             } catch (IOException ex) {
