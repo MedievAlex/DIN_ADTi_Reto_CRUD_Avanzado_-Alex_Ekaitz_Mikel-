@@ -2,7 +2,6 @@ package controller;
 
 import exception.OurException;
 import exception.ShowAlert;
-import java.awt.Desktop;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -132,8 +131,11 @@ public class LogInWindowController implements Initializable {
         }
     }
 
-    public void handleVideoAction() {
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+    }
 
+    public void handleVideoAction() {
         WebView webview = new WebView();
         webview.getEngine().load(
                 "https://youtu.be/dQw4w9WgXcQ?list=RDdQw4w9WgXcQ"
@@ -149,9 +151,5 @@ public class LogInWindowController implements Initializable {
     @FXML
     public void handleHelpAction() {
         System.out.println("Help");
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
     }
 }
