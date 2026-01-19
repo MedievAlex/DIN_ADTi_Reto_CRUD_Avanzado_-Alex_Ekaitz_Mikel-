@@ -19,7 +19,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox prefHeight="650.0" prefWidth="760.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ReviewsWindowController">
+<VBox prefHeight="650.0" prefWidth="760.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ReviewsWindowController">
     <children>
         <MenuBar fx:id="menuBar" prefHeight="29.0" prefWidth="200.0">
             <menus>
@@ -74,11 +74,12 @@
                   
             <TableView fx:id="tableReview" VBox.vgrow="ALWAYS">
                 <columns>
-                    <TableColumn fx:id="tcGame" minWidth="100" prefWidth="125.59997403621674" text="GAME" />
-                    <TableColumn fx:id="tcRelease" minWidth="80" prefWidth="94.40003204345703" text="RELEASE" />
-                    <TableColumn fx:id="tcPlatform" minWidth="76.79998779296875" prefWidth="92.79998779296875" text="PLATFORM" />
-                    <TableColumn fx:id="tcRate" minWidth="60" prefWidth="60.79998779296875" text="SCORE" />
-                    <TableColumn fx:id="tcReview" minWidth="150.0" prefWidth="355.2000427246094" text="REVIEW" />
+                    <TableColumn fx:id="tcGame" minWidth="75.3333101272583" prefWidth="102.66665363311768" text="GAME" />
+               <TableColumn fx:id="tcAutor" prefWidth="112.00003814697266" text="AUTOR" />
+                    <TableColumn fx:id="tcRelease" minWidth="26.666656494140625" prefWidth="89.99998474121094" text="RELEASE" />
+                    <TableColumn fx:id="tcPlatform" minWidth="74.6666259765625" prefWidth="78.66668701171875" text="PLATFORM" />
+                    <TableColumn fx:id="tcRate" minWidth="0.0" prefWidth="82.6666259765625" text="SCORE" />
+                    <TableColumn fx:id="tcReview" minWidth="150.0" prefWidth="344.0" text="REVIEW" />
                 </columns>
             </TableView>
                   

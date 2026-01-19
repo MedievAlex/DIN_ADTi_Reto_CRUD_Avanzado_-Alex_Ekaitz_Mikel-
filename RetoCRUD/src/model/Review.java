@@ -112,6 +112,9 @@ public class Review implements Serializable {
     public String getGameName() {
         return this.videogame.getV_name();
     }
+    public String getProfileUsername() {
+        return this.profile.getUsername();
+    }
     public String getScoreFormatted() {
         return this.score + "/10";
     }
