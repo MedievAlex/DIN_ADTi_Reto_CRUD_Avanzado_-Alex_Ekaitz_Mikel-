@@ -2,6 +2,8 @@ package controller;
 
 import exception.OurException;
 import exception.ShowAlert;
+import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -545,6 +547,13 @@ public class ListWindowController implements Initializable {
 
     @FXML
     public void handleHelpAction() {
-        System.out.println("Help");
+        try
+        {
+            File path = new File("user manual/UserManual.pdf");
+            Desktop.getDesktop().open(path);
+        } catch (IOException ex)
+        {
+            Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

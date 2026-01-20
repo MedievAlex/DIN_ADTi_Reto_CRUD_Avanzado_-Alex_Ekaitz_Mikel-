@@ -2,6 +2,8 @@ package controller;
 
 import exception.OurException;
 import exception.ShowAlert;
+import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -30,11 +32,6 @@ import model.*;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.web.WebView;
-import model.Pegi;
-import model.Platform;
-import model.Profile;
-import model.SelectableVideoGame;
-import model.VideoGame;
 
 public class MainMenuWindowController implements Initializable
 {
@@ -448,6 +445,13 @@ public class MainMenuWindowController implements Initializable
 
     @FXML
     public void handleHelpAction() {
-        System.out.println("Help");
+        try
+        {
+            File path = new File("user manual/UserManual.pdf");
+            Desktop.getDesktop().open(path);
+        } catch (IOException ex)
+        {
+            Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
