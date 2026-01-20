@@ -297,7 +297,7 @@ public class ReviewsWindowController implements Initializable {
             ArrayList<Review> allReviewsByGame = new ArrayList<>();
             for (VideoGame game : gamesList) {
                 if (!"DEFAULT_GAME".equals(game.getV_name())) {
-                    ArrayList<Review> reviewsByGame = cont.findReviews(game.getV_id()); // PROBLEMA AQUÍ: cont.findReviews(game.getV_id())
+                    ArrayList<Review> reviewsByGame = cont.findReviews(game.getV_id());
                     if (reviewsByGame != null && !reviewsByGame.isEmpty()) {
                         allReviewsByGame.addAll(reviewsByGame);
                     }

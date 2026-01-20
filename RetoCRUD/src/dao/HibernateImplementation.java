@@ -894,9 +894,9 @@ public class HibernateImplementation implements ClassDAO {
     }
 
     @Override
-    public ArrayList<Review> findReviews(int gameId) throws OurException { // PROBLEMA AQUÍ
+    public ArrayList<Review> findReviews(int gameId) throws OurException {
         SessionThread thread = startSessionThread();
-        ArrayList<Review> review = null;
+        ArrayList<Review> review = new ArrayList<Review>();
 
         try {
             Session session = waitForSession(thread);
@@ -906,7 +906,7 @@ public class HibernateImplementation implements ClassDAO {
             }
 
             session.beginTransaction();
-            List<Review> reviews = session.createQuery("FROM Review WHERE v_id = :gameId", Review.class)
+            List<Review> reviews = session.createQuery("FROM Review r WHERE r.videogame.v_id = :gameId", Review.class)
                     .setParameter("gameId", gameId)
                     .list();
             
