@@ -75,11 +75,12 @@
                   
             <TableView fx:id="tableReview" VBox.vgrow="ALWAYS">
                 <columns>
-                    <TableColumn fx:id="tcGame" minWidth="100" prefWidth="125.59997403621674" text="GAME" />
-                    <TableColumn fx:id="tcRelease" minWidth="80" prefWidth="94.40003204345703" text="RELEASE" />
-                    <TableColumn fx:id="tcPlatform" minWidth="76.79998779296875" prefWidth="92.79998779296875" text="PLATFORM" />
-                    <TableColumn fx:id="tcRate" minWidth="60" prefWidth="60.79998779296875" text="SCORE" />
-                    <TableColumn fx:id="tcReview" minWidth="150.0" prefWidth="355.2000427246094" text="REVIEW" />
+                    <TableColumn fx:id="tcGame" minWidth="75.3333101272583" prefWidth="144.7999633550644" text="GAME" />
+               <TableColumn fx:id="tcAutor" prefWidth="71.20004272460938" text="AUTOR" />
+                    <TableColumn fx:id="tcRelease" minWidth="26.666656494140625" prefWidth="98.4000244140625" text="RELEASE" />
+                    <TableColumn fx:id="tcPlatform" minWidth="74.6666259765625" prefWidth="98.39996337890625" text="PLATFORM" />
+                    <TableColumn fx:id="tcRate" minWidth="0.0" prefWidth="57.59991455078125" text="SCORE" />
+                    <TableColumn fx:id="tcReview" minWidth="150.0" prefWidth="264.7998962402344" text="REVIEW" />
                 </columns>
             </TableView>
                   
