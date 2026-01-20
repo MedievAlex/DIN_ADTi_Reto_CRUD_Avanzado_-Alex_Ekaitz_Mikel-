@@ -1255,9 +1255,49 @@ public class HibernateImplementation implements ClassDAO {
                     .uniqueResult();
 
             if (existingReview == null) {
-                Review newReview = new Review(profile, game, 7, "Descripción de la review", LocalDate.now(), Platform.NINTENDO);
+                Review newReview = new Review(profile, game, 2, "Muy mala experiencia", LocalDate.now(), Platform.NINTENDO);
                 session.save(newReview);
             }
+            profile = session.get(User.class, "cperez");
+            game = session.get(VideoGame.class, 4);
+            existingReview = session.createQuery(
+                    "FROM Review r WHERE r.profile.username = :username AND r.videogame.v_id = :gameId",
+                    Review.class)
+                    .setParameter("username", profile.getUsername())
+                    .setParameter("gameId", game.getV_id())
+                    .uniqueResult();
+
+            if (existingReview == null) {
+                Review newReview = new Review(profile, game, 5, "Regular pero bueno para el dia a dia", LocalDate.now(), Platform.PLAYSTATION);
+                session.save(newReview);
+            }
+            game = session.get(VideoGame.class, 5);
+            existingReview = session.createQuery(
+                    "FROM Review r WHERE r.profile.username = :username AND r.videogame.v_id = :gameId",
+                    Review.class)
+                    .setParameter("username", profile.getUsername())
+                    .setParameter("gameId", game.getV_id())
+                    .uniqueResult();
+
+            if (existingReview == null) {
+                Review newReview = new Review(profile, game, 10, "Juego de los dioses", LocalDate.now(), Platform.PLAYSTATION);
+                session.save(newReview);
+            }
+            profile = session.get(User.class, "jlopez");
+            game = session.get(VideoGame.class, 6);
+            existingReview = session.createQuery(
+                    "FROM Review r WHERE r.profile.username = :username AND r.videogame.v_id = :gameId",
+                    Review.class)
+                    .setParameter("username", profile.getUsername())
+                    .setParameter("gameId", game.getV_id())
+                    .uniqueResult();
+
+            if (existingReview == null) {
+                Review newReview = new Review(profile, game, 6, "hola mundo", LocalDate.now(), Platform.PLAYSTATION);
+                session.save(newReview);
+            }
+
+
 
             session.getTransaction().commit();
         } catch (Exception e) {
