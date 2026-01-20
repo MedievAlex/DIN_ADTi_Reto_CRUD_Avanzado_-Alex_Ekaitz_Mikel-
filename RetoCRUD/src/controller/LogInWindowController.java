@@ -15,11 +15,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
+import javafx.scene.layout.StackPane;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import model.Profile;
@@ -103,16 +105,29 @@ public class LogInWindowController implements Initializable {
         } else {
             try {
                 Profile profile = CONT.logIn(username, password);
-                if (profile != null) {
-                    try {
+                if (profile != null)
+                {
+                    try
+                    {
+                        Stage stage = new Stage();
                         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MainMenuWindow.fxml"));
                         Parent root = fxmlLoader.load();
 
                         controller.MainMenuWindowController controllerWindow = fxmlLoader.getController();
                         controllerWindow.setCont(CONT);
                         controllerWindow.setUsuario(profile);
+                        
+                        MenuItem fullScreen = new MenuItem("Full screen");
+                        
+                        ContextMenu contextMenu = new ContextMenu();
+                        contextMenu.getItems().addAll(fullScreen);
+                        
+                        fullScreen.setOnAction(event -> stage.setFullScreen(true));
+                        
+                        root.setOnContextMenuRequested(event -> {
+                            contextMenu.show(root, event.getScreenX(), event.getScreenY());
+                        });
 
-                        Stage stage = new Stage();
                         stage.setScene(new Scene(root));
                         stage.setTitle("MAIN MENU");
                         stage.show();
