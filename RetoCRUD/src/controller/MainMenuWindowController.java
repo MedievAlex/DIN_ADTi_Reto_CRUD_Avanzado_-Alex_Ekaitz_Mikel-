@@ -2,6 +2,8 @@ package controller;
 
 import exception.OurException;
 import exception.ShowAlert;
+import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -16,15 +18,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
@@ -32,13 +26,12 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.layout.StackPane;
+import model.*;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
-import model.Pegi;
-import model.Platform;
-import model.Profile;
-import model.SelectableVideoGame;
-import model.VideoGame;
+import javafx.scene.web.WebView;
 
 public class MainMenuWindowController implements Initializable
 {
@@ -92,11 +85,6 @@ public class MainMenuWindowController implements Initializable
     private TableColumn<SelectableVideoGame, Pegi> tcPegi;
     @FXML
     private TableColumn<SelectableVideoGame, Boolean> tcCheckBox;
-
-    private Profile profile;
-    private Controller cont;
-    private ObservableList<SelectableVideoGame> videoGames;
-    private boolean filtersVisible = false;
     @FXML
     private MenuBar menuBar;
     @FXML
@@ -107,6 +95,13 @@ public class MainMenuWindowController implements Initializable
     private Menu menuHelp;
     @FXML
     private MenuItem menuItemHelp;
+    @FXML
+    private StackPane rootPane;
+    
+    private Profile profile;
+    private Controller cont;
+    private ObservableList<SelectableVideoGame> videoGames;
+    private boolean filtersVisible = false;
 
     public void setUsuario(Profile profile)
     {
@@ -302,6 +297,36 @@ public class MainMenuWindowController implements Initializable
         tableGames.setItems(filtered);
     }
     
+    private ContextMenu contextualMenu()
+    {
+        ContextMenu contextualMenu = new ContextMenu();
+        
+        MenuItem helpManual = new MenuItem("Help manual");
+        
+        helpManual.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e) {
+                try {
+                    
+                } catch (Exception ex) {
+                    Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        
+        MenuItem generateReport = new MenuItem("Generate report");
+        generateReport.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e) {
+                try {
+                    
+                } catch (Exception ex) {
+                    Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        
+        return contextualMenu;
+    }
+    
     private void loadVideoGames()
     {
         try
@@ -402,9 +427,31 @@ public class MainMenuWindowController implements Initializable
         ChangeListener<LocalDate> dateListener = (obs, oldVal, newVal) -> filterGames();
         fromDate.valueProperty().addListener(dateListener);
         toDate.valueProperty().addListener(dateListener);
+        // rootPane.setContextMenu(contextualMenu());
+    }
+
+    public void handleVideoAction() {
+        WebView webview = new WebView();
+        webview.getEngine().load(
+                "https://youtu.be/dQw4w9WgXcQ?list=RDdQw4w9WgXcQ"
+        );
+        webview.setPrefSize(640, 390);
+
+        Stage stage = new Stage();
+        stage.setScene(new Scene(webview));
+        stage.setFullScreen(true);
+        stage.show();
     }
 
     @FXML
-    private void handleHelpAction(ActionEvent event) {
+    public void handleHelpAction() {
+        try
+        {
+            File path = new File("user manual/UserManual.pdf");
+            Desktop.getDesktop().open(path);
+        } catch (IOException ex)
+        {
+            Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

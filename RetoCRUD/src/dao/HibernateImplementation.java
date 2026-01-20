@@ -14,16 +14,15 @@ import model.Review;
 import model.ReviewId;
 import model.User;
 import model.VideoGame;
-import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 import threads.SessionThread;
 
 public class HibernateImplementation implements ClassDAO {
 
     private final List<SessionThread> activeThreads = new ArrayList<>();
 
+    // Help methods to manage session with threads
     private SessionThread startSessionThread() {
         SessionThread thread = new SessionThread();
         activeThreads.add(thread);
@@ -49,22 +48,24 @@ public class HibernateImplementation implements ClassDAO {
     @Override
     public Profile logIn(String username, String password) throws OurException {
         Session session = null;
-
         try {
             session = HibernateUtil.getSession();
 
-            Criteria criteria = session.createCriteria(User.class);
-            criteria.add(Restrictions.eq("username", username));
-            criteria.add(Restrictions.eq("password", password));
-            User user = (User) criteria.uniqueResult();
+            String hql = "FROM User WHERE username = :username AND password = :password";
+            User user = session.createQuery(hql, User.class)
+                    .setParameter("username", username)
+                    .setParameter("password", password)
+                    .uniqueResult();
+
             if (user != null) {
                 return user;
             }
 
-            criteria = session.createCriteria(Admin.class);
-            criteria.add(Restrictions.eq("username", username));
-            criteria.add(Restrictions.eq("password", password));
-            Admin admin = (Admin) criteria.uniqueResult();
+            hql = "FROM Admin WHERE username = :username AND password = :password";
+            Admin admin = session.createQuery(hql, Admin.class)
+                    .setParameter("username", username)
+                    .setParameter("password", password)
+                    .uniqueResult();
 
             return admin;
         } catch (Exception e) {
@@ -79,10 +80,8 @@ public class HibernateImplementation implements ClassDAO {
     @Override
     public boolean signUp(String gender, String cardNumber, String username, String password, String email, String name, String telephone, String surname) throws OurException {
         SessionThread thread = startSessionThread();
-
         try {
             Session session = waitForSession(thread);
-
             if (session == null) {
                 throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
             }
@@ -90,25 +89,23 @@ public class HibernateImplementation implements ClassDAO {
             session.beginTransaction();
 
             User user = new User(gender, cardNumber, username, password, email, name, telephone, surname);
-
             session.save(user);
 
             ArrayList<VideoGame> allGames = getAllVideoGames();
-            session.save(new Listed(session.get(User.class, username), allGames.get(0), "My Games"));
+            session.save(new Listed(user, allGames.get(0), "My Games"));
 
             session.getTransaction().commit();
-
             return true;
-        } catch (OurException e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
-            }
-            throw e;
         } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
             }
-            throw new OurException(ErrorMessages.REGISTER_USER);
+
+            if (e instanceof OurException) {
+                throw (OurException) e;
+            } else {
+                throw new OurException(ErrorMessages.REGISTER_USER);
+            }
         } finally {
             thread.releaseSession();
         }
@@ -116,12 +113,9 @@ public class HibernateImplementation implements ClassDAO {
 
     @Override
     public boolean dropOutUser(String username, String password) throws OurException {
-        boolean success = false;
         SessionThread thread = startSessionThread();
-
         try {
             Session session = waitForSession(thread);
-
             if (session == null) {
                 throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
             }
@@ -129,51 +123,37 @@ public class HibernateImplementation implements ClassDAO {
             session.beginTransaction();
 
             User user = session.get(User.class, username);
-
-            if (user == null) {
-                throw new OurException(ErrorMessages.LOGIN);
-            }
-
-            if (!user.getPassword().equals(password)) {
+            if (user == null || !user.getPassword().equals(password)) {
                 throw new OurException(ErrorMessages.LOGIN);
             }
 
             session.delete(user);
-
             session.getTransaction().commit();
 
-            success = true;
-        } catch (OurException e) {
-            try {
-                if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                    thread.getSession().getTransaction().rollback();
-                }
-            } catch (HibernateException he) {
-            }
-            throw e;
+            return true;
         } catch (Exception e) {
-            try {
-                if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+                try {
                     thread.getSession().getTransaction().rollback();
+                } catch (HibernateException he) {
                 }
-            } catch (HibernateException he) {
             }
-            throw new OurException(ErrorMessages.DELETE_USER);
+
+            if (e instanceof OurException) {
+                throw (OurException) e;
+            } else {
+                throw new OurException(ErrorMessages.DELETE_USER);
+            }
         } finally {
             thread.releaseSession();
         }
-
-        return success;
     }
 
     @Override
     public boolean dropOutAdmin(String usernameToDelete, String adminUsername, String adminPassword) throws OurException {
-        boolean success = false;
         SessionThread thread = startSessionThread();
-
         try {
             Session session = waitForSession(thread);
-
             if (session == null) {
                 throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
             }
@@ -181,109 +161,98 @@ public class HibernateImplementation implements ClassDAO {
             session.beginTransaction();
 
             Admin admin = session.get(Admin.class, adminUsername);
-            if (admin == null) {
-                throw new OurException(ErrorMessages.INVALID_ADMIN_CREDENTIALS);
-            }
-            if (!admin.getPassword().equals(adminPassword)) {
+            if (admin == null || !admin.getPassword().equals(adminPassword)) {
                 throw new OurException(ErrorMessages.INVALID_ADMIN_CREDENTIALS);
             }
 
             User userToDelete = session.get(User.class, usernameToDelete);
             if (userToDelete != null) {
                 session.delete(userToDelete);
-            }
-
-            Admin adminToDelete = session.get(Admin.class, usernameToDelete);
-            if (adminToDelete != null) {
-                session.delete(adminToDelete);
-            }
-
-            Profile profileToDelete = session.get(Profile.class, usernameToDelete);
-            if (profileToDelete != null) {
-                session.delete(profileToDelete);
+            } else {
+                Admin adminToDelete = session.get(Admin.class, usernameToDelete);
+                if (adminToDelete != null) {
+                    session.delete(adminToDelete);
+                } else {
+                    throw new OurException(ErrorMessages.USER_NOT_FOUND);
+                }
             }
 
             session.getTransaction().commit();
-
-            success = true;
-        } catch (OurException e) {
-            try {
-                if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                    thread.getSession().getTransaction().rollback();
-                }
-            } catch (HibernateException he) {
-            }
-            throw e;
+            return true;
         } catch (Exception e) {
-            try {
-                if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+                try {
                     thread.getSession().getTransaction().rollback();
+                } catch (HibernateException he) {
                 }
-            } catch (HibernateException he) {
             }
-            throw new OurException(ErrorMessages.DELETE_USER);
+
+            if (e instanceof OurException) {
+                throw (OurException) e;
+            } else {
+                throw new OurException(ErrorMessages.DELETE_USER);
+            }
         } finally {
             thread.releaseSession();
         }
-
-        return success;
     }
 
     @Override
-    public boolean modificarUser(String password, String email, String name, String telephone, String surname, String username, String gender) throws OurException {
-        boolean success = false;
+    public boolean modifyUser(String password, String email, String name, String telephone, String surname, String username, String gender) throws OurException {
         SessionThread thread = startSessionThread();
-
         try {
             Session session = waitForSession(thread);
-
             if (session == null) {
                 throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
             }
-
             session.beginTransaction();
 
-            User user = session.get(User.class, username);
-            if (user != null) {
-                user.setPassword(password);
-                user.setEmail(email);
-                user.setName(name);
-                user.setTelephone(telephone);
-                user.setSurname(surname);
-                user.setGender(gender);
+            Profile profile = session.get(Profile.class, username);
+            if (profile == null) {
+                throw new OurException(ErrorMessages.USER_NOT_FOUND);
+            }
 
-                session.update(user);
+            profile.setPassword(password);
+            profile.setEmail(email);
+            profile.setName(name);
+            profile.setTelephone(telephone);
+            profile.setSurname(surname);
 
-                session.getTransaction().commit();
-                success = true;
+            if (profile instanceof User) {
+                ((User) profile).setGender(gender);
+            }
+
+            session.update(profile);
+            session.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+                try {
+                    thread.getSession().getTransaction().rollback();
+                } catch (HibernateException he) {
+                }
+            }
+            if (e instanceof OurException) {
+                throw (OurException) e;
             } else {
-                session.getTransaction().rollback();
                 throw new OurException(ErrorMessages.UPDATE_USER);
             }
-        } catch (OurException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new OurException(ErrorMessages.UPDATE_USER);
         } finally {
             thread.releaseSession();
         }
-
-        return success;
     }
 
     @Override
     public ArrayList<String> comboBoxInsert() throws OurException {
-        ArrayList<String> listaUsuarios = new ArrayList<>();
         Session session = null;
-
         try {
             session = HibernateUtil.getSession();
 
-            List<User> users = session.createCriteria(User.class).list();
+            List<String> usernames = session.createQuery(
+                    "SELECT u.username FROM User u", String.class
+            ).list();
 
-            for (User u : users) {
-                listaUsuarios.add(u.getUsername());
-            }
+            return new ArrayList<>(usernames);
         } catch (Exception e) {
             throw new OurException(ErrorMessages.GET_USERS);
         } finally {
@@ -291,78 +260,71 @@ public class HibernateImplementation implements ClassDAO {
                 session.close();
             }
         }
-
-        return listaUsuarios;
     }
 
     @Override
     public Profile findProfileByUsername(String username) throws OurException {
         SessionThread thread = startSessionThread();
-        Profile profile = null;
-
         try {
             Session session = waitForSession(thread);
-
             if (session == null) {
                 throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
             }
-
             session.beginTransaction();
 
-            // Query para buscar el perfil por username
-            List<Profile> profiles = session.createQuery(
-                    "FROM Profile p WHERE p.username = :username", Profile.class)
-                    .setParameter("username", username)
-                    .list();
-
-            if (!profiles.isEmpty()) {
-                profile = profiles.get(0);
-            }
+            Profile profile = session.get(Profile.class, username);
 
             session.getTransaction().commit();
-
-        } catch (OurException e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
-            }
-            throw e;
+            return profile;
         } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
+                try {
+                    thread.getSession().getTransaction().rollback();
+                } catch (HibernateException he) {
+                }
             }
-            throw new OurException(ErrorMessages.DATABASE);
+            if (e instanceof OurException) {
+                throw (OurException) e;
+            } else {
+                throw new OurException(ErrorMessages.DATABASE);
+            }
         } finally {
             thread.releaseSession();
         }
-
-        return profile;
     }
 
     //[VIDEOGAMES]
     @Override
     public ArrayList<VideoGame> getAllVideoGames() throws OurException {
-        Session session = null;
-        ArrayList<VideoGame> gamesList = new ArrayList<>();
-
+        SessionThread thread = startSessionThread();
         try {
-            session = HibernateUtil.getSession();
+            Session session = waitForSession(thread);
+            if (session == null) {
+                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
+            }
             session.beginTransaction();
 
-            gamesList = new ArrayList<>(session.createQuery("FROM VideoGame v", VideoGame.class).list());
+            ArrayList<VideoGame> gamesList = new ArrayList<>(
+                    session.createNativeQuery("SELECT * FROM videogame", VideoGame.class).getResultList()
+            );
 
             session.getTransaction().commit();
+            return gamesList;
         } catch (Exception e) {
-            if (session != null && session.getTransaction().isActive()) {
-                session.getTransaction().rollback();
+            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+                try {
+                    thread.getSession().getTransaction().rollback();
+                } catch (HibernateException he) {
+                }
             }
-            throw new OurException(ErrorMessages.DATABASE);
+            if (e instanceof OurException) {
+                throw (OurException) e;
+            } else {
+                throw new OurException(ErrorMessages.DATABASE);
+            }
         } finally {
-            if (session != null && session.isOpen()) {
-                session.close();
-            }
+            thread.releaseSession();
         }
-
-        return gamesList;
     }
 
     @Override
@@ -394,21 +356,21 @@ public class HibernateImplementation implements ClassDAO {
             }
 
             session.getTransaction().commit();
-        } catch (OurException e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
-            }
-            throw e;
+
+            return games;
         } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
             }
-            throw new OurException(ErrorMessages.DATABASE);
+
+            if (e instanceof OurException) {
+                throw (OurException) e;
+            } else {
+                throw new OurException(ErrorMessages.REGISTER_USER);
+            }
         } finally {
             thread.releaseSession();
         }
-
-        return games;
     }
 
     @Override
@@ -443,20 +405,21 @@ public class HibernateImplementation implements ClassDAO {
             }
 
             session.getTransaction().commit();
-        } catch (OurException e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
-            }
-            throw e;
+
+            return listed;
         } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
             }
-            throw new OurException(ErrorMessages.DATABASE);
+
+            if (e instanceof OurException) {
+                throw (OurException) e;
+            } else {
+                throw new OurException(ErrorMessages.REGISTER_USER);
+            }
         } finally {
             thread.releaseSession();
         }
-        return listed;
     }
 
     @Override
@@ -481,16 +444,16 @@ public class HibernateImplementation implements ClassDAO {
             }
 
             session.getTransaction().commit();
-        } catch (OurException e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
-            }
-            throw e;
         } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
             }
-            throw new OurException(ErrorMessages.DATABASE);
+
+            if (e instanceof OurException) {
+                throw (OurException) e;
+            } else {
+                throw new OurException(ErrorMessages.REGISTER_USER);
+            }
         } finally {
             thread.releaseSession();
         }
@@ -518,18 +481,18 @@ public class HibernateImplementation implements ClassDAO {
                     session.save(listed);
                 }
             }
-            
+
             session.getTransaction().commit();
-        } catch (OurException e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
-            }
-            throw e;
         } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
             }
-            throw new OurException(ErrorMessages.DATABASE);
+
+            if (e instanceof OurException) {
+                throw (OurException) e;
+            } else {
+                throw new OurException(ErrorMessages.REGISTER_USER);
+            }
         } finally {
             thread.releaseSession();
         }
@@ -562,16 +525,16 @@ public class HibernateImplementation implements ClassDAO {
             }
 
             session.getTransaction().commit();
-        } catch (OurException e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
-            }
-            throw e;
         } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
             }
-            throw new OurException(ErrorMessages.DATABASE);
+
+            if (e instanceof OurException) {
+                throw (OurException) e;
+            } else {
+                throw new OurException(ErrorMessages.REGISTER_USER);
+            }
         } finally {
             thread.releaseSession();
         }
@@ -597,18 +560,18 @@ public class HibernateImplementation implements ClassDAO {
                             .setParameter("gameId", game.getV_id())
                             .executeUpdate();
                 }
-                
+
                 session.getTransaction().commit();
-            } catch (OurException e) {
-                if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                    thread.getSession().getTransaction().rollback();
-                }
-                throw e;
             } catch (Exception e) {
                 if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                     thread.getSession().getTransaction().rollback();
                 }
-                throw new OurException(ErrorMessages.DATABASE);
+
+                if (e instanceof OurException) {
+                    throw (OurException) e;
+                } else {
+                    throw new OurException(ErrorMessages.REGISTER_USER);
+                }
             } finally {
                 thread.releaseSession();
             }
@@ -616,43 +579,37 @@ public class HibernateImplementation implements ClassDAO {
     }
 
     @Override
-    public VideoGame findVideoGameByName(String gameName) throws OurException {
+    public VideoGame findVideoGameByName(String name) throws OurException {
         SessionThread thread = startSessionThread();
-        VideoGame videoGame = null;
-
         try {
             Session session = waitForSession(thread);
-
             if (session == null) {
                 throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
             }
             session.beginTransaction();
-            List<VideoGame> games = session.createQuery(
-                    "FROM VideoGame v WHERE v.v_name = :gameName", VideoGame.class)
-                    .setParameter("gameName", gameName)
-                    .list();
 
-            if (!games.isEmpty()) {
-                videoGame = games.get(0);
-            }
+            VideoGame videoGame = (VideoGame) session.createNativeQuery(
+                    "SELECT * FROM videogame WHERE v_name = :name", VideoGame.class)
+                    .setParameter("name", name)
+                    .uniqueResult();
 
             session.getTransaction().commit();
-
-        } catch (OurException e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
-            }
-            throw e;
+            return videoGame;
         } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
+                try {
+                    thread.getSession().getTransaction().rollback();
+                } catch (HibernateException he) {
+                }
             }
-            throw new OurException(ErrorMessages.DATABASE);
+            if (e instanceof OurException) {
+                throw (OurException) e;
+            } else {
+                throw new OurException(ErrorMessages.DATABASE);
+            }
         } finally {
             thread.releaseSession();
         }
-
-        return videoGame;
     }
 
     //[LISTS]
@@ -674,31 +631,31 @@ public class HibernateImplementation implements ClassDAO {
 
             if (profile != null) {
                 List<String> listNames = session.createQuery(
-                        "SELECT DISTINCT l.listName FROM Listed l WHERE l.profile.username = :username", 
+                        "SELECT DISTINCT l.listName FROM Listed l WHERE l.profile.username = :username",
                         String.class
                 )
-                .setParameter("username", username)
-                .list();
+                        .setParameter("username", username)
+                        .list();
 
                 lists.addAll(listNames);
             }
 
             session.getTransaction().commit();
-        } catch (OurException e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
-            }
-            throw e;
+
+            return lists;
         } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
             }
-            throw new OurException(ErrorMessages.DATABASE);
+
+            if (e instanceof OurException) {
+                throw (OurException) e;
+            } else {
+                throw new OurException(ErrorMessages.REGISTER_USER);
+            }
         } finally {
             thread.releaseSession();
         }
-
-        return lists;
     }
 
     @Override
@@ -719,16 +676,16 @@ public class HibernateImplementation implements ClassDAO {
             session.save(listed);
 
             session.getTransaction().commit();
-        } catch (OurException e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
-            }
-            throw e;
         } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
             }
-            throw new OurException(ErrorMessages.DATABASE);
+
+            if (e instanceof OurException) {
+                throw (OurException) e;
+            } else {
+                throw new OurException(ErrorMessages.REGISTER_USER);
+            }
         } finally {
             thread.releaseSession();
         }
@@ -753,16 +710,16 @@ public class HibernateImplementation implements ClassDAO {
                     .executeUpdate();
 
             session.getTransaction().commit();
-        } catch (OurException e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
-            }
-            throw e;
         } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
             }
-            throw new OurException(ErrorMessages.DATABASE);
+
+            if (e instanceof OurException) {
+                throw (OurException) e;
+            } else {
+                throw new OurException(ErrorMessages.REGISTER_USER);
+            }
         } finally {
             thread.releaseSession();
         }
@@ -786,10 +743,10 @@ public class HibernateImplementation implements ClassDAO {
 
             if (profile != null) {
                 List<Listed> list = session.createQuery(
-                    "FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName", Listed.class)
-                    .setParameter("username", username)
-                    .setParameter("listName", listName)
-                    .list();
+                        "FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName", Listed.class)
+                        .setParameter("username", username)
+                        .setParameter("listName", listName)
+                        .list();
 
                 if (list.isEmpty()) {
                     nameExist = false;
@@ -797,59 +754,56 @@ public class HibernateImplementation implements ClassDAO {
 
                 session.getTransaction().commit();
             }
-        } catch (OurException e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
-            }
-            throw e;
+
+            return nameExist;
         } catch (Exception e) {
-            e.printStackTrace();
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
             }
-            throw new OurException(ErrorMessages.DATABASE);
+
+            if (e instanceof OurException) {
+                throw (OurException) e;
+            } else {
+                throw new OurException(ErrorMessages.REGISTER_USER);
+            }
         } finally {
             thread.releaseSession();
         }
-        return nameExist;
     }
 
     @Override
     public void renameList(String username, String listName, String listNewName) throws OurException {
         SessionThread thread = startSessionThread();
-
         try {
             Session session = waitForSession(thread);
-
             if (session == null) {
                 throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
             }
-
             session.beginTransaction();
 
             Profile profile = session.get(Profile.class, username);
             if (profile != null) {
-
                 session.createQuery(
-                        "UPDATE Listed SET listName = :listNewName WHERE username = :username AND list_name = :listName")
+                        "UPDATE Listed l SET l.listName = :listNewName WHERE l.profile.username = :username AND l.listName = :listName")
                         .setParameter("listName", listName)
                         .setParameter("listNewName", listNewName)
                         .setParameter("username", username)
                         .executeUpdate();
+            }
 
-                session.getTransaction().commit();
-            }
-        } catch (OurException e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
-            }
-            throw e;
+            session.getTransaction().commit();
         } catch (Exception e) {
-            e.printStackTrace(); //test
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
+                try {
+                    thread.getSession().getTransaction().rollback();
+                } catch (HibernateException he) {
+                }
             }
-            throw new OurException(ErrorMessages.DATABASE);
+            if (e instanceof OurException) {
+                throw (OurException) e;
+            } else {
+                throw new OurException(ErrorMessages.DATABASE);
+            }
         } finally {
             thread.releaseSession();
         }
@@ -876,21 +830,20 @@ public class HibernateImplementation implements ClassDAO {
 
             session.getTransaction().commit();
 
-        } catch (OurException e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
-            }
-            throw e;
+            return review;
         } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
             }
-            throw new OurException(ErrorMessages.DATABASE);
+
+            if (e instanceof OurException) {
+                throw (OurException) e;
+            } else {
+                throw new OurException(ErrorMessages.REGISTER_USER);
+            }
         } finally {
             thread.releaseSession();
         }
-
-        return review;
     }
 
     @Override
@@ -900,11 +853,9 @@ public class HibernateImplementation implements ClassDAO {
 
         try {
             Session session = waitForSession(thread);
-
             if (session == null) {
                 throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
             }
-
             session.beginTransaction();
             List<Review> reviews = session.createQuery("FROM Review r WHERE r.videogame.v_id = :gameId", Review.class)
                     .setParameter("gameId", gameId)
@@ -913,21 +864,23 @@ public class HibernateImplementation implements ClassDAO {
             review.addAll(reviews);
             session.getTransaction().commit();
 
-        } catch (OurException e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
-            }
-            throw e;
+            session.getTransaction().commit();
+            return new ArrayList<>(reviews);
         } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
+                try {
+                    thread.getSession().getTransaction().rollback();
+                } catch (HibernateException he) {
+                }
             }
-            throw new OurException(ErrorMessages.DATABASE);
+            if (e instanceof OurException) {
+                throw (OurException) e;
+            } else {
+                throw new OurException(ErrorMessages.DATABASE);
+            }
         } finally {
             thread.releaseSession();
         }
-
-        return review;
     }
 
     /**
@@ -950,20 +903,21 @@ public class HibernateImplementation implements ClassDAO {
             reviews = new ArrayList<>(reviewList);
 
             session.getTransaction().commit();
-        } catch (OurException e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
-            }
-            throw e;
+
+            return reviews;
         } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
             }
-            throw new OurException(ErrorMessages.DATABASE);
+
+            if (e instanceof OurException) {
+                throw (OurException) e;
+            } else {
+                throw new OurException(ErrorMessages.REGISTER_USER);
+            }
         } finally {
             thread.releaseSession();
         }
-        return reviews;
     }
 
     @Override
@@ -1036,21 +990,21 @@ public class HibernateImplementation implements ClassDAO {
                     .executeUpdate();
 
             session.getTransaction().commit();
-        } catch (OurException e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
-            }
-            throw e;
         } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 thread.getSession().getTransaction().rollback();
             }
-            throw new OurException(ErrorMessages.DATABASE);
+
+            if (e instanceof OurException) {
+                throw (OurException) e;
+            } else {
+                throw new OurException(ErrorMessages.REGISTER_USER);
+            }
         } finally {
             thread.releaseSession();
         }
     }
-    
+
     //[OTHER]
     @Override
     public void initializeDefault() throws OurException {
@@ -1111,7 +1065,7 @@ public class HibernateImplementation implements ClassDAO {
             allGames.add(new VideoGame("Detroit: Become Human", LocalDate.of(2018, 5, 25), Platform.PLAYSTATION, Pegi.PEGI16));
             allGames.add(new VideoGame("ASTROBOT", LocalDate.of(2024, 9, 6), Platform.PLAYSTATION, Pegi.PEGI3));
             allGames.add(new VideoGame("Call of Duty: Black Ops II", LocalDate.of(2012, 11, 13), Platform.PLAYSTATION, Pegi.PEGI18));
-            allGames.add(new VideoGame("Halo Infinite", LocalDate.of(2021, 12, 8), Platform.XBOX, Pegi.PEGI16));
+            allGames.add(new VideoGame("Halo Infinite", LocalDate.of(2021, 12, 8), Platform.PC, Pegi.PEGI16));
             allGames.add(new VideoGame("Balatro", LocalDate.of(2024, 2, 20), Platform.PC, Pegi.PEGI12));
 
             for (VideoGame allGameGames : allGames) {
@@ -1129,18 +1083,62 @@ public class HibernateImplementation implements ClassDAO {
             /**
              * ******************************************************LISTS*******************************************************
              */
+            
+            // My games
+            game = session.get(VideoGame.class, 1);
+            profile = session.get(User.class, "jlopez");
+            
+            existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
+                    .setParameter("username", profile.getUsername())
+                    .setParameter("listName", "My Games")
+                    .setParameter("gameId", game.getV_id())
+                    .uniqueResult();
+            if (existingList == null) {
+                session.save(new Listed(profile, game, "My Games"));
+            }
+
+            profile = session.get(User.class, "mramirez");
+            existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
+                    .setParameter("username", profile.getUsername())
+                    .setParameter("listName", "My Games")
+                    .setParameter("gameId", game.getV_id())
+                    .uniqueResult();
+            if (existingList == null) {
+                session.save(new Listed(profile, game, "My Games"));
+            }
+
+            profile = session.get(User.class, "cperez");
+            existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
+                    .setParameter("username", profile.getUsername())
+                    .setParameter("listName", "My Games")
+                    .setParameter("gameId", game.getV_id())
+                    .uniqueResult();
+            if (existingList == null) {
+                session.save(new Listed(profile, game, "My Games"));
+            }
+
             profile = session.get(Admin.class, "asanchez");
-            game = session.get(VideoGame.class, 1);
-
             existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
                     .setParameter("username", profile.getUsername())
                     .setParameter("listName", "My Games")
                     .setParameter("gameId", game.getV_id())
                     .uniqueResult();
-
             if (existingList == null) {
-                session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 1), "My Games"));
+                session.save(new Listed(profile, game, "My Games"));
             }
+
+            profile = session.get(Admin.class, "rluna");
+            existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
+                    .setParameter("username", profile.getUsername())
+                    .setParameter("listName", "My Games")
+                    .setParameter("gameId", game.getV_id())
+                    .uniqueResult();
+            if (existingList == null) {
+                session.save(new Listed(profile, game, "My Games"));
+            }
+
+            // Oher lists
+            profile = session.get(Admin.class, "asanchez");
 
             game = session.get(VideoGame.class, 2);
             existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
@@ -1148,9 +1146,8 @@ public class HibernateImplementation implements ClassDAO {
                     .setParameter("listName", "My Games")
                     .setParameter("gameId", game.getV_id())
                     .uniqueResult();
-
             if (existingList == null) {
-                session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 2), "My Games"));
+                session.save(new Listed(profile, game, "My Games"));
             }
 
             game = session.get(VideoGame.class, 3);
@@ -1159,9 +1156,8 @@ public class HibernateImplementation implements ClassDAO {
                     .setParameter("listName", "My Games")
                     .setParameter("gameId", game.getV_id())
                     .uniqueResult();
-
             if (existingList == null) {
-                session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 3), "My Games"));
+                session.save(new Listed(profile, game, "My Games"));
             }
 
             game = session.get(VideoGame.class, 5);
@@ -1170,9 +1166,8 @@ public class HibernateImplementation implements ClassDAO {
                     .setParameter("listName", "My Games")
                     .setParameter("gameId", game.getV_id())
                     .uniqueResult();
-
             if (existingList == null) {
-                session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 5), "My Games"));
+                session.save(new Listed(profile, game, "My Games"));
             }
 
             game = session.get(VideoGame.class, 1);
@@ -1181,9 +1176,8 @@ public class HibernateImplementation implements ClassDAO {
                     .setParameter("listName", "NINTENDO")
                     .setParameter("gameId", game.getV_id())
                     .uniqueResult();
-
             if (existingList == null) {
-                session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 1), "NINTENDO"));
+                session.save(new Listed(profile, game, "NINTENDO"));
             }
 
             game = session.get(VideoGame.class, 2);
@@ -1192,9 +1186,8 @@ public class HibernateImplementation implements ClassDAO {
                     .setParameter("listName", "NINTENDO")
                     .setParameter("gameId", game.getV_id())
                     .uniqueResult();
-
             if (existingList == null) {
-                session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 2), "NINTENDO"));
+                session.save(new Listed(profile, game, "NINTENDO"));
             }
 
             game = session.get(VideoGame.class, 3);
@@ -1203,9 +1196,8 @@ public class HibernateImplementation implements ClassDAO {
                     .setParameter("listName", "NINTENDO")
                     .setParameter("gameId", game.getV_id())
                     .uniqueResult();
-
             if (existingList == null) {
-                session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 3), "NINTENDO"));
+                session.save(new Listed(profile, game, "NINTENDO"));
             }
 
             game = session.get(VideoGame.class, 1);
@@ -1214,9 +1206,8 @@ public class HibernateImplementation implements ClassDAO {
                     .setParameter("listName", "PLAYSTATION")
                     .setParameter("gameId", game.getV_id())
                     .uniqueResult();
-
             if (existingList == null) {
-                session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 1), "PLAYSTATION"));
+                session.save(new Listed(profile, game, "PLAYSTATION"));
             }
 
             game = session.get(VideoGame.class, 5);
@@ -1225,9 +1216,8 @@ public class HibernateImplementation implements ClassDAO {
                     .setParameter("listName", "PLAYSTATION")
                     .setParameter("gameId", game.getV_id())
                     .uniqueResult();
-
             if (existingList == null) {
-                session.save(new Listed(session.get(Admin.class, "asanchez"), session.get(VideoGame.class, 5), "PLAYSTATION"));
+                session.save(new Listed(profile, game, "PLAYSTATION"));
             }
 
             /**

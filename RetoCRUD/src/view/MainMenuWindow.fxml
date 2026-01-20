@@ -30,6 +30,7 @@
                 <Menu fx:id="menuActions" mnemonicParsing="false" text="Actions">
                     <items>
                         <MenuItem fx:id="menuItemReport" mnemonicParsing="false" text="Report" />
+                  <MenuItem fx:id="menuItemCaution" mnemonicParsing="false" onAction="#handleVideoAction" text="Caution" />
                     </items>
                 </Menu>
                 <Menu fx:id="menuHelp" mnemonicParsing="false" text="Help">

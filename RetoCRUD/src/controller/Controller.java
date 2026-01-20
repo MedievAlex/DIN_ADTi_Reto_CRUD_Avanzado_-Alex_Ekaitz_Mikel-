@@ -87,8 +87,8 @@ public class Controller {
      * @return
      * @throws exception.OurException
      */
-    public boolean modificarUser(String password, String email, String name, String telephone, String surname, String username, String gender) throws OurException {
-        return DAO.modificarUser(password, email, name, telephone, surname, username, gender);
+    public boolean modifyUser(String password, String email, String name, String telephone, String surname, String username, String gender) throws OurException {
+        return DAO.modifyUser(password, email, name, telephone, surname, username, gender);
     }
 
     /**
@@ -105,7 +105,7 @@ public class Controller {
     public Profile findProfileByUsername(String username) throws OurException {
         return DAO.findProfileByUsername(username);
     }
-    
+
     //[VIDEOGAMES]
     public ArrayList<VideoGame> getAllVideoGames() throws OurException {
         return DAO.getAllVideoGames();
@@ -134,7 +134,7 @@ public class Controller {
     public void removeGamesFromList(String username, String listName, ArrayList<VideoGame> games) throws OurException {
         DAO.removeGamesFromList(username, listName, games);
     }
-    
+
     public VideoGame findVideoGameByName(String gameName) throws OurException {
         return DAO.findVideoGameByName(gameName);
     }
@@ -166,20 +166,20 @@ public class Controller {
     public Review findReview(String username, int gameId) throws OurException {
         return DAO.findReview(username, gameId);
     }
-    
-    public ArrayList<Review> findReviews(int gameId) throws OurException{
+
+    public ArrayList<Review> findReviews(int gameId) throws OurException {
         return DAO.findReviews(gameId);
     }
 
     public ArrayList<Review> getAllReviews() throws OurException {
         return DAO.getAllReviews();
     }
-    
+
     public boolean saveOrUpdateReview(Review review) throws OurException {
         return DAO.saveOrUpdateReview(review);
     }
-    
-    public void deleteReview(Review review) throws OurException{
+
+    public void deleteReview(Review review) throws OurException {
         DAO.deleteReview(review);
     }
 

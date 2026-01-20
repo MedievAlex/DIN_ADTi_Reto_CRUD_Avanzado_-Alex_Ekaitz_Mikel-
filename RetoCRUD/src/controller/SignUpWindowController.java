@@ -4,6 +4,8 @@ import javafx.scene.control.ToggleGroup;
 import exception.OurException;
 import exception.ShowAlert;
 import exception.passwordequalspassword;
+import java.awt.Desktop;
+import java.io.File;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
@@ -18,6 +20,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import model.Profile;
 
@@ -101,6 +106,7 @@ public class SignUpWindowController implements Initializable
                 Profile profile = cont.logIn(username, pass);
                 try
                 {
+                    Stage stage = new Stage();
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MainMenuWindow.fxml"));
                     Parent root = fxmlLoader.load();
                     
@@ -108,7 +114,17 @@ public class SignUpWindowController implements Initializable
                     controllerWindow.setCont(this.cont);
                     controllerWindow.setUsuario(profile);
                     
-                    Stage stage = new Stage();
+                    MenuItem fullScreen = new MenuItem("Full screen");
+                        
+                    ContextMenu contextMenu = new ContextMenu();
+                    contextMenu.getItems().addAll(fullScreen);
+
+                    fullScreen.setOnAction(event -> stage.setFullScreen(true));
+
+                    root.setOnContextMenuRequested(event -> {
+                        contextMenu.show(root, event.getScreenX(), event.getScreenY());
+                    });
+                    
                     stage.setScene(new Scene(root));
                     stage.setTitle("MAIN MENU");
                     stage.show();
@@ -127,7 +143,7 @@ public class SignUpWindowController implements Initializable
             ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
-
+    
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
@@ -135,5 +151,30 @@ public class SignUpWindowController implements Initializable
         rButtonM.setToggleGroup(grupOp);
         rButtonW.setToggleGroup(grupOp);
         rButtonO.setToggleGroup(grupOp);
+    }
+    
+    public void handleVideoAction() {
+        WebView webview = new WebView();
+        webview.getEngine().load(
+                "https://youtu.be/dQw4w9WgXcQ?list=RDdQw4w9WgXcQ"
+        );
+        webview.setPrefSize(640, 390);
+
+        Stage stage = new Stage();
+        stage.setScene(new Scene(webview));
+        stage.setFullScreen(true);
+        stage.show();
+    }
+
+    @FXML
+    public void handleHelpAction() {
+        try
+        {
+            File path = new File("user manual/UserManual.pdf");
+            Desktop.getDesktop().open(path);
+        } catch (IOException ex)
+        {
+            Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
