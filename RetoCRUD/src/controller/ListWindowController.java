@@ -172,6 +172,7 @@ public class ListWindowController implements Initializable {
                 try {
                     cont.deleteList(profile.getUsername(), buttonName);
                     loadListButtons();
+                    setComboBox();
                 } catch (OurException ex) {
                     Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
                 }
