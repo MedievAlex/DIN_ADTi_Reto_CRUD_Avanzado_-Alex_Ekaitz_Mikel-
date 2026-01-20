@@ -70,6 +70,8 @@ public class ReviewsWindowController implements Initializable {
     @FXML
     private TableColumn<Review, String> tcGame;
     @FXML
+    private TableColumn<Review, String> tcAutor;
+    @FXML
     private TableColumn<Review, LocalDate> tcRelease;
     @FXML
     private TableColumn<Review, Platform> tcPlatform;
@@ -106,6 +108,7 @@ public class ReviewsWindowController implements Initializable {
             reviews = FXCollections.observableArrayList(allreviews);
 
             tcGame.setCellValueFactory(new PropertyValueFactory<>("gameName"));
+            tcAutor.setCellValueFactory(new PropertyValueFactory<>("ProfileUsername"));
             tcRelease.setCellValueFactory(new PropertyValueFactory<>("reviewDate"));
             tcPlatform.setCellValueFactory(new PropertyValueFactory<>("platform"));
             tcRate.setCellValueFactory(new PropertyValueFactory<>("scoreFormatted"));
@@ -270,51 +273,56 @@ public class ReviewsWindowController implements Initializable {
         });
     }
 
-    @FXML
-    public void showReviewsByList() throws OurException {
-        String selectedList = combLists.getValue();
-        if ("All Reviews".equals(selectedList)) {
-            loadReview();
-            return;
-        }
-        if ("My Games".equals(selectedList)) {
-
-            try {
-                ArrayList<VideoGame> myGames = cont.getGamesFromList(profile.getUsername(), "My Games");
-                ArrayList<Review> allreviewsbygame = new ArrayList<>();
-                for (VideoGame game : myGames) {
-                    if (!"DEFAULT_GAME".equals(game.getV_name())) {
-                        ArrayList<Review> reviewsbygame = cont.findReviews(game.getV_id());
-                        if (!reviewsbygame.isEmpty()) {
-                            allreviewsbygame.addAll(reviewsbygame);
-                        }
-                    }
-                }
-                reviews = FXCollections.observableArrayList(allreviewsbygame);
-                tableReview.setItems(reviews);
-            } catch (OurException ex) {
-                ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
-            }
-            return;
-        }
-
+    public void showReviewsByList() {
         try {
-            ArrayList<VideoGame> selectedGames = cont.getGamesFromList(profile.getUsername(), selectedList);
+            String selectedList = combLists.getValue();
 
-            ArrayList<Review> allreviewsbygame = new ArrayList<>();
-
-            for (VideoGame game : selectedGames) {
+            if (selectedList == null) {
+                ShowAlert.showAlert("Information", "Please select a list first", Alert.AlertType.INFORMATION);
+                return;
+            }
+            if ("All Reviews".equals(selectedList)) {
+                loadReview();
+                return;
+            }
+            ArrayList<VideoGame> gamesList;
+            if ("My Games".equals(selectedList)) {
+                gamesList = cont.getGamesFromList(profile.getUsername(), "My Games");
+            } else {
+                gamesList = cont.getGamesFromList(profile.getUsername(), selectedList);
+            }
+            if (gamesList == null || gamesList.isEmpty()) {
+                reviews.clear();
+                tableReview.setItems(reviews);
+                ShowAlert.showAlert("Information", "No games found in this list", Alert.AlertType.INFORMATION);
+                return;
+            }
+            ArrayList<Review> allReviewsByGame = new ArrayList<>();
+            for (VideoGame game : gamesList) {
                 if (!"DEFAULT_GAME".equals(game.getV_name())) {
-                    ArrayList<Review> reviewsbygame = cont.findReviews(game.getV_id());
-                    if (!reviewsbygame.isEmpty()) {
-                        allreviewsbygame.addAll(reviewsbygame);
+                    ArrayList<Review> reviewsByGame = cont.findReviews(game.getV_id());
+                    if (reviewsByGame != null && !reviewsByGame.isEmpty()) {
+                        allReviewsByGame.addAll(reviewsByGame);
                     }
                 }
             }
-            reviews = FXCollections.observableArrayList(allreviewsbygame);
+            if (allReviewsByGame.isEmpty()) {
+                ShowAlert.showAlert("Information", "No reviews found for games in this list", Alert.AlertType.INFORMATION);
+            }
+            reviews = FXCollections.observableArrayList(allReviewsByGame);
             tableReview.setItems(reviews);
+
         } catch (OurException ex) {
-            ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
+            String errorMessage = ex.getMessage();
+            if (errorMessage.contains("connection") || errorMessage.contains("database")) {
+                ShowAlert.showAlert("Database Error","Cannot connect to database.",Alert.AlertType.ERROR);
+            } else {
+                ShowAlert.showAlert("Error", errorMessage, Alert.AlertType.ERROR);
+            }
+        } catch (Exception ex) {
+            ShowAlert.showAlert("Unexpected Error",
+                    "An unexpected error occurred: " + ex.getMessage(),
+                    Alert.AlertType.ERROR);
         }
     }
 
@@ -365,25 +373,14 @@ public class ReviewsWindowController implements Initializable {
         });
         miMainMenu.setOnAction((event) -> {
             try {
-                Stage stage = (Stage) menu.getScene().getWindow();
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MainMenuWindow.fxml"));
                 Parent root = fxmlLoader.load();
 
                 controller.MainMenuWindowController controllerWindow = fxmlLoader.getController();
                 controllerWindow.setCont(cont);
                 controllerWindow.setUsuario(profile);
-                
-                MenuItem fullScreen = new MenuItem("Full screen");
-                        
-                ContextMenu contextMenu = new ContextMenu();
-                contextMenu.getItems().addAll(fullScreen);
 
-                fullScreen.setOnAction(events -> stage.setFullScreen(true));
-
-                root.setOnContextMenuRequested(events -> {
-                    contextMenu.show(root, events.getScreenX(), events.getScreenY());
-                });
-                
+                Stage stage = (Stage) menu.getScene().getWindow();
                 stage.setScene(new Scene(root));
                 stage.setTitle("MAIN MENU");
             } catch (IOException ex) {
@@ -409,6 +406,9 @@ public class ReviewsWindowController implements Initializable {
 
         setMenuOptions();
         searchBar.textProperty().addListener((observable, oldValue, newValue) -> searchByName());
+        combLists.setOnAction(event -> {
+                showReviewsByList();
+        });
     }
 
     public void handleVideoAction() {

@@ -863,8 +863,6 @@ public class HibernateImplementation implements ClassDAO {
             
             review.addAll(reviews);
             session.getTransaction().commit();
-
-            session.getTransaction().commit();
             return new ArrayList<>(reviews);
         } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
