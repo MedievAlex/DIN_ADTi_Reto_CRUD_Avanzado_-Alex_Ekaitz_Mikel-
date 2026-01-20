@@ -20,6 +20,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import model.Profile;
 
@@ -140,7 +141,7 @@ public class SignUpWindowController implements Initializable
             ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
-
+    
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
@@ -148,5 +149,23 @@ public class SignUpWindowController implements Initializable
         rButtonM.setToggleGroup(grupOp);
         rButtonW.setToggleGroup(grupOp);
         rButtonO.setToggleGroup(grupOp);
+    }
+    
+    public void handleVideoAction() {
+        WebView webview = new WebView();
+        webview.getEngine().load(
+                "https://youtu.be/dQw4w9WgXcQ?list=RDdQw4w9WgXcQ"
+        );
+        webview.setPrefSize(640, 390);
+
+        Stage stage = new Stage();
+        stage.setScene(new Scene(webview));
+        stage.setFullScreen(true);
+        stage.show();
+    }
+
+    @FXML
+    public void handleHelpAction() {
+        System.out.println("Help");
     }
 }
