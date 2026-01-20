@@ -4,6 +4,8 @@ import javafx.scene.control.ToggleGroup;
 import exception.OurException;
 import exception.ShowAlert;
 import exception.passwordequalspassword;
+import java.awt.Desktop;
+import java.io.File;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
@@ -166,6 +168,13 @@ public class SignUpWindowController implements Initializable
 
     @FXML
     public void handleHelpAction() {
-        System.out.println("Help");
+        try
+        {
+            File path = new File("user manual/UserManual.pdf");
+            Desktop.getDesktop().open(path);
+        } catch (IOException ex)
+        {
+            Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
