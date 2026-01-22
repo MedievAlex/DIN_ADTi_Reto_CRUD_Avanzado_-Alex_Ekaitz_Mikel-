@@ -1,7 +1,7 @@
 package controller;
 
 import exception.OurException;
-import exception.ShowAlert;
+import static exception.ShowAlert.showAlert;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
@@ -27,10 +27,7 @@ import javafx.stage.Stage;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.layout.StackPane;
 import model.*;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
 import javafx.scene.web.WebView;
 
 public class MainMenuWindowController implements Initializable
@@ -85,18 +82,6 @@ public class MainMenuWindowController implements Initializable
     private TableColumn<SelectableVideoGame, Pegi> tcPegi;
     @FXML
     private TableColumn<SelectableVideoGame, Boolean> tcCheckBox;
-    @FXML
-    private MenuBar menuBar;
-    @FXML
-    private Menu menuActions;
-    @FXML
-    private MenuItem menuItemReport;
-    @FXML
-    private Menu menuHelp;
-    @FXML
-    private MenuItem menuItemHelp;
-    @FXML
-    private StackPane rootPane;
     
     private Profile profile;
     private Controller cont;
@@ -372,7 +357,7 @@ public class MainMenuWindowController implements Initializable
                     }
                     catch (OurException ex)
                     {
-                        ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
+                        showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
                         isUpdating[0] = true;
                         selectable.setSelected(oldVal);
                         isUpdating[0] = false;
@@ -396,7 +381,7 @@ public class MainMenuWindowController implements Initializable
         }
         catch (OurException ex)
         {
-            ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
@@ -427,31 +412,38 @@ public class MainMenuWindowController implements Initializable
         ChangeListener<LocalDate> dateListener = (obs, oldVal, newVal) -> filterGames();
         fromDate.valueProperty().addListener(dateListener);
         toDate.valueProperty().addListener(dateListener);
-        // rootPane.setContextMenu(contextualMenu());
     }
 
+    @FXML
     public void handleVideoAction() {
-        WebView webview = new WebView();
-        webview.getEngine().load(
-                "https://youtu.be/dQw4w9WgXcQ?list=RDdQw4w9WgXcQ"
-        );
-        webview.setPrefSize(640, 390);
+        try {
+            WebView webview = new WebView();
+            webview.getEngine().load("https://youtu.be/phyKDIryZWk?si=ugkWCRi_GpBrg_0z");
+            webview.setPrefSize(640, 390);
 
-        Stage stage = new Stage();
-        stage.setScene(new Scene(webview));
-        stage.setFullScreen(true);
-        stage.show();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(webview));
+            stage.setTitle("Tutorial Video");
+            stage.setFullScreen(true);
+            stage.show();
+        } catch (Exception ex) {
+            Logger.getLogger(SignUpWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            showAlert("Error", "Failed to load video", Alert.AlertType.ERROR);
+        }
     }
 
     @FXML
     public void handleHelpAction() {
-        try
-        {
+        try {
             File path = new File("user manual/UserManual.pdf");
+            if (!path.exists()) {
+                showAlert("File Not Found", "User manual not found at: " + path.getAbsolutePath(), Alert.AlertType.WARNING);
+                return;
+            }
             Desktop.getDesktop().open(path);
-        } catch (IOException ex)
-        {
-            Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(SignUpWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            showAlert("Error", "Failed to open user manual", Alert.AlertType.ERROR);
         }
     }
 }

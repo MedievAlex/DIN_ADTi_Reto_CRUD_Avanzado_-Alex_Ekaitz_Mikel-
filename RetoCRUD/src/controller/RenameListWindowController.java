@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller;
 
 import exception.OurException;
@@ -21,7 +16,7 @@ import model.Profile;
 /**
  * FXML Controller class
  *
- * @author 2dami
+ * @author ema
  */
 public class RenameListWindowController implements Initializable {
 

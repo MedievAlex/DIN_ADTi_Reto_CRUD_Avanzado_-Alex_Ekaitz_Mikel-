@@ -1,7 +1,7 @@
 package controller;
 
 import exception.OurException;
-import exception.ShowAlert;
+import static exception.ShowAlert.showAlert;
 import java.awt.Desktop;
 import java.io.File;
 import javafx.scene.control.Alert;
@@ -19,8 +19,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
 import javafx.scene.web.WebView;
@@ -30,9 +28,10 @@ import model.Profile;
 /**
  * Controller for the Login window. Handles user login and navigation to the
  * main menu or signup window.
+ * 
+ * @author ema
  */
 public class LogInWindowController implements Initializable {
-
     @FXML
     private TextField TextField_Username;
 
@@ -48,23 +47,9 @@ public class LogInWindowController implements Initializable {
     @FXML
     private Label labelIncorrecto;
 
-    @FXML
-    private Menu menuHelp;
-
-    @FXML
-    private MenuItem menuItemHelp;
-
     private Controller CONT;
-    @FXML
-    private MenuBar menuBar;
-    @FXML
-    private Menu menuActions;
-    @FXML
-    private MenuItem menuItemReport;
-    @FXML
-    private MenuItem menuItemCaution;
 
-    public void setController(Controller controller) {
+    public void setCont(Controller controller) {
         this.CONT = controller;
     }
 
@@ -78,8 +63,7 @@ public class LogInWindowController implements Initializable {
             Parent root = fxmlLoader.load();
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
-            stage.setTitle("SIGN IN");
-            stage.setResizable(false);
+            stage.setTitle("SIGN UP");
             stage.show();
 
             controller.SignUpWindowController controllerWindow = fxmlLoader.getController();
@@ -142,7 +126,7 @@ public class LogInWindowController implements Initializable {
                     labelIncorrecto.setText("The username and/or password are incorrect.");
                 }
             } catch (OurException ex) {
-                ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
+                showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
             }
         }
     }
@@ -151,28 +135,36 @@ public class LogInWindowController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
     }
 
+    @FXML
     public void handleVideoAction() {
-        WebView webview = new WebView();
-        webview.getEngine().load(
-                "https://youtu.be/dQw4w9WgXcQ?list=RDdQw4w9WgXcQ"
-        );
-        webview.setPrefSize(640, 390);
+        try {
+            WebView webview = new WebView();
+            webview.getEngine().load("https://youtu.be/phyKDIryZWk?si=ugkWCRi_GpBrg_0z");
+            webview.setPrefSize(640, 390);
 
-        Stage stage = new Stage();
-        stage.setScene(new Scene(webview));
-        stage.setFullScreen(true);
-        stage.show();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(webview));
+            stage.setTitle("Tutorial Video");
+            stage.setFullScreen(true);
+            stage.show();
+        } catch (Exception ex) {
+            Logger.getLogger(SignUpWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            showAlert("Error", "Failed to load video", Alert.AlertType.ERROR);
+        }
     }
 
     @FXML
     public void handleHelpAction() {
-        try
-        {
+        try {
             File path = new File("user manual/UserManual.pdf");
+            if (!path.exists()) {
+                showAlert("File Not Found", "User manual not found at: " + path.getAbsolutePath(), Alert.AlertType.WARNING);
+                return;
+            }
             Desktop.getDesktop().open(path);
-        } catch (IOException ex)
-        {
-            Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(SignUpWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            showAlert("Error", "Failed to open user manual", Alert.AlertType.ERROR);
         }
     }
 }

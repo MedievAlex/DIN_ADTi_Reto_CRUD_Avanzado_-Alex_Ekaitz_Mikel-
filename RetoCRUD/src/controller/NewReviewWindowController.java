@@ -28,7 +28,7 @@ import model.VideoGame;
 /**
  * FXML Controller class
  *
- * @author 2dami
+ * @author ema
  */
 public class NewReviewWindowController implements Initializable {
 

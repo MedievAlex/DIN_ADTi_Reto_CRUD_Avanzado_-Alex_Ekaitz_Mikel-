@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="SignUpRoot" prefHeight="360.0" prefWidth="633.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.NewReviewWindowController">
+<AnchorPane id="SignUpRoot" prefHeight="360.0" prefWidth="633.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.NewReviewWindowController">
     <children>
         <ToolBar layoutX="37.0" layoutY="52.0" prefHeight="40.0" prefWidth="559.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0">
             <items>

@@ -2,9 +2,6 @@ package main;
 
 import controller.Controller;
 import controller.LogInWindowController;
-
-
-
 import dao.HibernateImplementation;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -45,7 +42,7 @@ public class Main extends Application
         Parent root = fxmlLoader.load();
         
         LogInWindowController loginController = fxmlLoader.getController();
-        loginController.setController(controller);
+        loginController.setCont(controller);
         
         stage.setTitle("LOG IN");
         stage.setScene(new Scene(root));

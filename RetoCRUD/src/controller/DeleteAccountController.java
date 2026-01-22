@@ -17,6 +17,8 @@ import javafx.scene.control.Label;
 /**
  * Controller for the Delete Account window for regular Users. This controller
  * allows a user to delete their own account.
+ * 
+ * @author ema
  */
 public class DeleteAccountController implements Initializable
 {
@@ -144,7 +146,7 @@ public class DeleteAccountController implements Initializable
                         javafx.scene.Parent root = fxmlLoader.load();
 
                         controller.LogInWindowController controllerWindow = fxmlLoader.getController();
-                        controllerWindow.setController(cont);
+                        controllerWindow.setCont(cont);
 
                         javafx.stage.Stage stage = new javafx.stage.Stage();
                         stage.setScene(new javafx.scene.Scene(root));

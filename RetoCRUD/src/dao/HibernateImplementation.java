@@ -849,7 +849,7 @@ public class HibernateImplementation implements ClassDAO {
     @Override
     public ArrayList<Review> findReviews(int gameId) throws OurException {
         SessionThread thread = startSessionThread();
-        ArrayList<Review> review = new ArrayList<Review>();
+        ArrayList<Review> review = new ArrayList<>();
 
         try {
             Session session = waitForSession(thread);
@@ -863,7 +863,7 @@ public class HibernateImplementation implements ClassDAO {
             
             review.addAll(reviews);
             session.getTransaction().commit();
-            return new ArrayList<>(reviews);
+            return review;
         } catch (Exception e) {
             if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
                 try {
@@ -887,7 +887,7 @@ public class HibernateImplementation implements ClassDAO {
      */
     @Override
     public ArrayList<Review> getAllReviews() throws OurException {
-        ArrayList<Review> reviews = new ArrayList<>();
+        ArrayList<Review> reviews;
         SessionThread thread = startSessionThread();
 
         try {
@@ -1012,281 +1012,109 @@ public class HibernateImplementation implements ClassDAO {
             session = HibernateUtil.getSession();
             session.beginTransaction();
 
-            Profile profile;
-            VideoGame game;
-            Listed existingList;
-            Review existingReview;
+            //******************************************************USERS*******************************************************
+            String[][] users = {
+                {"User", "jlopez", "Masculino", "AB1234567890123456789012", "pass123", "jlopez@example.com", "Juan", "987654321", "Lopez", null},
+                {"User", "mramirez", "Femenino", "ZX9081726354891027364512", "pass456", "mramirez@example.com", "Maria", "912345678", "Ramirez", null},
+                {"User", "cperez", "Masculino", "LM0011223344556677889900", "pass789", "cperez@example.com", "Carlos", "934567890", "Perez", null},
+                {"Admin", "asanchez", "CTA-001", null, "qwerty", "asanchez@example.com", "Ana", "900112233", "Sanchez", null},
+                {"Admin", "rluna", "CTA-002", null, "zxcvbn", "rluna@example.com", "Rosa", "955667788", "Luna", null}
+            };
 
-            /**
-             * ******************************************************USERS*******************************************************
-             */
-            if (session.get(User.class,
-                    "jlopez") == null) {
-                session.save(new User("Masculino", "AB1234567890123456789012",
-                        "jlopez", "pass123", "jlopez@example.com",
-                        "Juan", "987654321", "Lopez"));
-            }
-
-            if (session.get(User.class,
-                    "mramirez") == null) {
-                session.save(new User("Femenino", "ZX9081726354891027364512",
-                        "mramirez", "pass456", "mramirez@example.com",
-                        "Maria", "912345678", "Ramirez"));
-            }
-
-            if (session.get(User.class,
-                    "cperez") == null) {
-                session.save(new User("Masculino", "LM0011223344556677889900",
-                        "cperez", "pass789", "cperez@example.com",
-                        "Carlos", "934567890", "Perez"));
-            }
-
-            if (session.get(Admin.class,
-                    "asanchez") == null) {
-                session.save(new Admin("CTA-001", "asanchez", "qwerty",
-                        "asanchez@example.com", "Ana", "900112233", "Sanchez"));
-            }
-
-            if (session.get(Admin.class,
-                    "rluna") == null) {
-                session.save(new Admin("CTA-002", "rluna", "zxcvbn",
-                        "rluna@example.com", "Rosa", "955667788", "Luna"));
-            }
-
-            /**
-             * ******************************************************GAMES*******************************************************
-             */
-            ArrayList<VideoGame> allGames = new ArrayList<>();
-            allGames.add(new VideoGame("DEFAULT_GAME", LocalDate.now(), Platform.DEFAULT, Pegi.DEFAULT));
-            allGames.add(new VideoGame("Owlboy", LocalDate.of(2016, 11, 1), Platform.NINTENDO, Pegi.PEGI3));
-            allGames.add(new VideoGame("Animal Crossing New Horizons", LocalDate.of(2020, 5, 20), Platform.NINTENDO, Pegi.PEGI6));
-            allGames.add(new VideoGame("Detroit: Become Human", LocalDate.of(2018, 5, 25), Platform.PLAYSTATION, Pegi.PEGI16));
-            allGames.add(new VideoGame("ASTROBOT", LocalDate.of(2024, 9, 6), Platform.PLAYSTATION, Pegi.PEGI3));
-            allGames.add(new VideoGame("Call of Duty: Black Ops II", LocalDate.of(2012, 11, 13), Platform.PLAYSTATION, Pegi.PEGI18));
-            allGames.add(new VideoGame("Halo Infinite", LocalDate.of(2021, 12, 8), Platform.PC, Pegi.PEGI16));
-            allGames.add(new VideoGame("Balatro", LocalDate.of(2024, 2, 20), Platform.PC, Pegi.PEGI12));
-
-            for (VideoGame allGameGames : allGames) {
-                VideoGame existing = session
-                        .createQuery("FROM VideoGame v WHERE v.v_name = :name", VideoGame.class
-                        )
-                        .setParameter("name", allGameGames.getV_name())
-                        .uniqueResult();
-
-                if (existing == null) {
-                    session.save(allGameGames);
+            for (String[] userData : users) {
+                boolean exists;
+                if (userData[0].equals("User")) {
+                    exists = session.get(User.class, userData[1]) != null;
+                    if (!exists) {
+                        session.save(new User(userData[2], userData[3], userData[1], userData[4], userData[5], userData[6], userData[7], userData[8]));
+                    }
+                } else {
+                    exists = session.get(Admin.class, userData[1]) != null;
+                    if (!exists) {
+                        session.save(new Admin(userData[2], userData[1], userData[4], userData[5], userData[6], userData[7], userData[8]));
+                    }
                 }
             }
 
-            /**
-             * ******************************************************LISTS*******************************************************
-             */
-            
-            // My games
-            game = session.get(VideoGame.class, 1);
-            profile = session.get(User.class, "jlopez");
-            
-            existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
-                    .setParameter("username", profile.getUsername())
-                    .setParameter("listName", "My Games")
-                    .setParameter("gameId", game.getV_id())
-                    .uniqueResult();
-            if (existingList == null) {
-                session.save(new Listed(profile, game, "My Games"));
+            //******************************************************GAMES*******************************************************
+            Object[][] games = {
+                {"DEFAULT_GAME", LocalDate.now(), Platform.DEFAULT, Pegi.DEFAULT},
+                {"Owlboy", LocalDate.of(2016, 11, 1), Platform.NINTENDO, Pegi.PEGI3},
+                {"Animal Crossing New Horizons", LocalDate.of(2020, 5, 20), Platform.NINTENDO, Pegi.PEGI6},
+                {"Detroit: Become Human", LocalDate.of(2018, 5, 25), Platform.PLAYSTATION, Pegi.PEGI16},
+                {"ASTROBOT", LocalDate.of(2024, 9, 6), Platform.PLAYSTATION, Pegi.PEGI3},
+                {"Call of Duty: Black Ops II", LocalDate.of(2012, 11, 13), Platform.PLAYSTATION, Pegi.PEGI18},
+                {"Halo Infinite", LocalDate.of(2021, 12, 8), Platform.PC, Pegi.PEGI16},
+                {"Balatro", LocalDate.of(2024, 2, 20), Platform.PC, Pegi.PEGI12}
+            };
+
+            for (Object[] gameData : games) {
+                VideoGame existing = session.createQuery("FROM VideoGame v WHERE v.v_name = :name", VideoGame.class)
+                        .setParameter("name", (String) gameData[0]).uniqueResult();
+                if (existing == null) {
+                    session.save(new VideoGame((String) gameData[0], (LocalDate) gameData[1], (Platform) gameData[2], (Pegi) gameData[3]));
+                }
             }
 
-            profile = session.get(User.class, "mramirez");
-            existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
-                    .setParameter("username", profile.getUsername())
-                    .setParameter("listName", "My Games")
-                    .setParameter("gameId", game.getV_id())
-                    .uniqueResult();
-            if (existingList == null) {
-                session.save(new Listed(profile, game, "My Games"));
+            //******************************************************LISTS*******************************************************
+            String[][] listEntries = {
+                {"jlopez", "User", "My Games", "1"},
+                {"mramirez", "User", "My Games", "1"},
+                {"cperez", "User", "My Games", "1"},
+                {"asanchez", "Admin", "My Games", "1"},
+                {"rluna", "Admin", "My Games", "1"},
+                {"asanchez", "Admin", "My Games", "2"},
+                {"asanchez", "Admin", "My Games", "3"},
+                {"asanchez", "Admin", "My Games", "5"},
+                // NINTENDO
+                {"asanchez", "Admin", "NINTENDO", "1"},
+                {"asanchez", "Admin", "NINTENDO", "2"},
+                {"asanchez", "Admin", "NINTENDO", "3"},
+                // PLAYSTATION
+                {"asanchez", "Admin", "PLAYSTATION", "1"},
+                {"asanchez", "Admin", "PLAYSTATION", "5"}
+            };
+
+            for (String[] entry : listEntries) {
+                Profile profile;
+                if (entry[1].equals("User")) {
+                    profile = session.get(User.class, entry[0]);
+                } else {
+                    profile = session.get(Admin.class, entry[0]);
+                }
+
+                VideoGame game = session.get(VideoGame.class, Integer.parseInt(entry[3]));
+                Listed existing = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
+                        .setParameter("username", entry[0]).setParameter("listName", entry[2]).setParameter("gameId", Integer.parseInt(entry[3])).uniqueResult();
+                if (existing == null) {
+                    session.save(new Listed(profile, game, entry[2]));
+                }
             }
 
-            profile = session.get(User.class, "cperez");
-            existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
-                    .setParameter("username", profile.getUsername())
-                    .setParameter("listName", "My Games")
-                    .setParameter("gameId", game.getV_id())
-                    .uniqueResult();
-            if (existingList == null) {
-                session.save(new Listed(profile, game, "My Games"));
+            //******************************************************REVIEWS*******************************************************
+            Object[][] reviews = {
+                {"asanchez", "Admin", "2", 7, "Review description", Platform.NINTENDO},
+                {"asanchez", "Admin", "3", 2, "Bad experience", Platform.NINTENDO},
+                {"cperez", "User", "4", 5, "Bad game", Platform.PLAYSTATION},
+                {"cperez", "User", "5", 10, "Great game", Platform.PLAYSTATION},
+                {"jlopez", "User", "6", 6, "Mid game", Platform.PLAYSTATION}
+            };
+
+            for (Object[] reviewData : reviews) {
+                Profile profile;
+                if (((String) reviewData[1]).equals("User")) {
+                    profile = session.get(User.class, (String) reviewData[0]);
+                } else {
+                    profile = session.get(Admin.class, (String) reviewData[0]);
+                }
+
+                VideoGame game = session.get(VideoGame.class, Integer.parseInt((String) reviewData[2]));
+                Review existing = session.createQuery("FROM Review r WHERE r.profile.username = :username AND r.videogame.v_id = :gameId", Review.class)
+                        .setParameter("username", (String) reviewData[0]).setParameter("gameId", Integer.parseInt((String) reviewData[2])).uniqueResult();
+                if (existing == null) {
+                    session.save(new Review(profile, game, (int) reviewData[3], (String) reviewData[4], LocalDate.now(), (Platform) reviewData[5]));
+                }
             }
-
-            profile = session.get(Admin.class, "asanchez");
-            existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
-                    .setParameter("username", profile.getUsername())
-                    .setParameter("listName", "My Games")
-                    .setParameter("gameId", game.getV_id())
-                    .uniqueResult();
-            if (existingList == null) {
-                session.save(new Listed(profile, game, "My Games"));
-            }
-
-            profile = session.get(Admin.class, "rluna");
-            existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
-                    .setParameter("username", profile.getUsername())
-                    .setParameter("listName", "My Games")
-                    .setParameter("gameId", game.getV_id())
-                    .uniqueResult();
-            if (existingList == null) {
-                session.save(new Listed(profile, game, "My Games"));
-            }
-
-            // Oher lists
-            profile = session.get(Admin.class, "asanchez");
-
-            game = session.get(VideoGame.class, 2);
-            existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
-                    .setParameter("username", profile.getUsername())
-                    .setParameter("listName", "My Games")
-                    .setParameter("gameId", game.getV_id())
-                    .uniqueResult();
-            if (existingList == null) {
-                session.save(new Listed(profile, game, "My Games"));
-            }
-
-            game = session.get(VideoGame.class, 3);
-            existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
-                    .setParameter("username", profile.getUsername())
-                    .setParameter("listName", "My Games")
-                    .setParameter("gameId", game.getV_id())
-                    .uniqueResult();
-            if (existingList == null) {
-                session.save(new Listed(profile, game, "My Games"));
-            }
-
-            game = session.get(VideoGame.class, 5);
-            existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
-                    .setParameter("username", profile.getUsername())
-                    .setParameter("listName", "My Games")
-                    .setParameter("gameId", game.getV_id())
-                    .uniqueResult();
-            if (existingList == null) {
-                session.save(new Listed(profile, game, "My Games"));
-            }
-
-            game = session.get(VideoGame.class, 1);
-            existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
-                    .setParameter("username", profile.getUsername())
-                    .setParameter("listName", "NINTENDO")
-                    .setParameter("gameId", game.getV_id())
-                    .uniqueResult();
-            if (existingList == null) {
-                session.save(new Listed(profile, game, "NINTENDO"));
-            }
-
-            game = session.get(VideoGame.class, 2);
-            existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
-                    .setParameter("username", profile.getUsername())
-                    .setParameter("listName", "NINTENDO")
-                    .setParameter("gameId", game.getV_id())
-                    .uniqueResult();
-            if (existingList == null) {
-                session.save(new Listed(profile, game, "NINTENDO"));
-            }
-
-            game = session.get(VideoGame.class, 3);
-            existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
-                    .setParameter("username", profile.getUsername())
-                    .setParameter("listName", "NINTENDO")
-                    .setParameter("gameId", game.getV_id())
-                    .uniqueResult();
-            if (existingList == null) {
-                session.save(new Listed(profile, game, "NINTENDO"));
-            }
-
-            game = session.get(VideoGame.class, 1);
-            existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
-                    .setParameter("username", profile.getUsername())
-                    .setParameter("listName", "PLAYSTATION")
-                    .setParameter("gameId", game.getV_id())
-                    .uniqueResult();
-            if (existingList == null) {
-                session.save(new Listed(profile, game, "PLAYSTATION"));
-            }
-
-            game = session.get(VideoGame.class, 5);
-            existingList = session.createQuery("FROM Listed l WHERE l.profile.username = :username AND l.listName = :listName AND l.videogame.v_id = :gameId", Listed.class)
-                    .setParameter("username", profile.getUsername())
-                    .setParameter("listName", "PLAYSTATION")
-                    .setParameter("gameId", game.getV_id())
-                    .uniqueResult();
-            if (existingList == null) {
-                session.save(new Listed(profile, game, "PLAYSTATION"));
-            }
-
-            /**
-             * ******************************************************REVIEWS*******************************************************
-             */
-            game = session.get(VideoGame.class, 2);
-            profile = session.get(Admin.class, "asanchez");
-            existingReview = session.createQuery(
-                    "FROM Review r WHERE r.profile.username = :username AND r.videogame.v_id = :gameId",
-                    Review.class)
-                    .setParameter("username", profile.getUsername())
-                    .setParameter("gameId", game.getV_id())
-                    .uniqueResult();
-
-            if (existingReview == null) {
-                Review newReview = new Review(profile, game, 7, "Descripción de la review", LocalDate.now(), Platform.NINTENDO);
-                session.save(newReview);
-            }
-
-            game = session.get(VideoGame.class, 3);
-            existingReview = session.createQuery(
-                    "FROM Review r WHERE r.profile.username = :username AND r.videogame.v_id = :gameId",
-                    Review.class)
-                    .setParameter("username", profile.getUsername())
-                    .setParameter("gameId", game.getV_id())
-                    .uniqueResult();
-
-            if (existingReview == null) {
-                Review newReview = new Review(profile, game, 2, "Muy mala experiencia", LocalDate.now(), Platform.NINTENDO);
-                session.save(newReview);
-            }
-            profile = session.get(User.class, "cperez");
-            game = session.get(VideoGame.class, 4);
-            existingReview = session.createQuery(
-                    "FROM Review r WHERE r.profile.username = :username AND r.videogame.v_id = :gameId",
-                    Review.class)
-                    .setParameter("username", profile.getUsername())
-                    .setParameter("gameId", game.getV_id())
-                    .uniqueResult();
-
-            if (existingReview == null) {
-                Review newReview = new Review(profile, game, 5, "Regular pero bueno para el dia a dia", LocalDate.now(), Platform.PLAYSTATION);
-                session.save(newReview);
-            }
-            game = session.get(VideoGame.class, 5);
-            existingReview = session.createQuery(
-                    "FROM Review r WHERE r.profile.username = :username AND r.videogame.v_id = :gameId",
-                    Review.class)
-                    .setParameter("username", profile.getUsername())
-                    .setParameter("gameId", game.getV_id())
-                    .uniqueResult();
-
-            if (existingReview == null) {
-                Review newReview = new Review(profile, game, 10, "Juego de los dioses", LocalDate.now(), Platform.PLAYSTATION);
-                session.save(newReview);
-            }
-            profile = session.get(User.class, "jlopez");
-            game = session.get(VideoGame.class, 6);
-            existingReview = session.createQuery(
-                    "FROM Review r WHERE r.profile.username = :username AND r.videogame.v_id = :gameId",
-                    Review.class)
-                    .setParameter("username", profile.getUsername())
-                    .setParameter("gameId", game.getV_id())
-                    .uniqueResult();
-
-            if (existingReview == null) {
-                Review newReview = new Review(profile, game, 6, "hola mundo", LocalDate.now(), Platform.PLAYSTATION);
-                session.save(newReview);
-            }
-
-
 
             session.getTransaction().commit();
         } catch (Exception e) {

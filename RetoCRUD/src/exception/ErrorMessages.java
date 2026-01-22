@@ -57,4 +57,5 @@ public class ErrorMessages
     public static final String GAME_NOT_FOUND = "Game not found.";
     public static final String SAVE_REVIEW_ERROR = "Error Saving the review.";
     public static final String USER_NOT_FOUND = "The specified user does not exist.";
+    public static final String PASSWORDS_DO_NOT_MATCH = "The passwords do not match";
 }

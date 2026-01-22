@@ -1,7 +1,7 @@
 package controller;
 
 import exception.OurException;
-import exception.ShowAlert;
+import static exception.ShowAlert.showAlert;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
@@ -24,8 +24,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
@@ -85,16 +83,6 @@ public class ListWindowController implements Initializable {
     private Button bttnRemove;
     @FXML
     private Button bttnAdd;
-    @FXML
-    private MenuBar menuBar;
-    @FXML
-    private Menu menuActions;
-    @FXML
-    private MenuItem menuItemReport;
-    @FXML
-    private Menu menuHelp;
-    @FXML
-    private MenuItem menuItemHelp;
 
     private Profile profile;
     private Controller cont;
@@ -264,7 +252,7 @@ public class ListWindowController implements Initializable {
             videoGames = FXCollections.observableArrayList(selectableGames);
             tableLists.setItems(videoGames);
         } catch (OurException ex) {
-            ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
@@ -329,7 +317,7 @@ public class ListWindowController implements Initializable {
 
     private void addToList() {
         if (combLists.getValue() == null) {
-            ShowAlert.showAlert("Error", "[No list selected]", Alert.AlertType.ERROR);
+            showAlert("Error", "[No list selected]", Alert.AlertType.ERROR);
         } else if (combLists.getValue() != null) {
             String targetList = combLists.getValue();
 
@@ -357,21 +345,20 @@ public class ListWindowController implements Initializable {
                 }
 
                 if (anyAdded && anyAlreadyExists) {
-                    ShowAlert.showAlert("Partial Success",
+                    showAlert("Partial Success",
                             "Some games were added to " + targetList + ", but others already existed:\n" + alreadyExistsGames.toString(),
                             Alert.AlertType.WARNING);
                 } else if (anyAdded) {
-                    ShowAlert.showAlert("Success", "Games added to " + targetList + " successfully.", Alert.AlertType.INFORMATION);
+                    showAlert("Success", "Games added to " + targetList + " successfully.", Alert.AlertType.INFORMATION);
                 } else if (anyAlreadyExists) {
-                    ShowAlert.showAlert("Warning",
+                    showAlert("Warning",
                             "The selected games already exist in " + targetList + ":\n" + alreadyExistsGames.toString(),
                             Alert.AlertType.WARNING);
                 } else {
-                    ShowAlert.showAlert("Info", "No games selected. Please select games using the checkboxes.", Alert.AlertType.INFORMATION);
+                    showAlert("Info", "No games selected. Please select games using the checkboxes.", Alert.AlertType.INFORMATION);
                 }
-
             } catch (OurException ex) {
-                ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
+                showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
             }
         }
     }
@@ -412,12 +399,12 @@ public class ListWindowController implements Initializable {
                         ? "Games removed from all lists successfully."
                         : "Games removed from " + selectedList + " successfully.";
 
-                ShowAlert.showAlert("Success", message, Alert.AlertType.INFORMATION);
+                showAlert("Success", message, Alert.AlertType.INFORMATION);
             } else {
-                ShowAlert.showAlert("Info", "No games selected. Please select games using the checkboxes.", Alert.AlertType.INFORMATION);
+                showAlert("Info", "No games selected. Please select games using the checkboxes.", Alert.AlertType.INFORMATION);
             }
         } catch (OurException ex) {
-            ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
@@ -532,28 +519,36 @@ public class ListWindowController implements Initializable {
         tcCheckBox.setCellFactory(CheckBoxTableCell.forTableColumn(tcCheckBox));
     }
 
+    @FXML
     public void handleVideoAction() {
-        WebView webview = new WebView();
-        webview.getEngine().load(
-                "https://youtu.be/dQw4w9WgXcQ?list=RDdQw4w9WgXcQ"
-        );
-        webview.setPrefSize(640, 390);
+        try {
+            WebView webview = new WebView();
+            webview.getEngine().load("https://youtu.be/phyKDIryZWk?si=ugkWCRi_GpBrg_0z");
+            webview.setPrefSize(640, 390);
 
-        Stage stage = new Stage();
-        stage.setScene(new Scene(webview));
-        stage.setFullScreen(true);
-        stage.show();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(webview));
+            stage.setTitle("Tutorial Video");
+            stage.setFullScreen(true);
+            stage.show();
+        } catch (Exception ex) {
+            Logger.getLogger(SignUpWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            showAlert("Error", "Failed to load video", Alert.AlertType.ERROR);
+        }
     }
 
     @FXML
     public void handleHelpAction() {
-        try
-        {
+        try {
             File path = new File("user manual/UserManual.pdf");
+            if (!path.exists()) {
+                showAlert("File Not Found", "User manual not found at: " + path.getAbsolutePath(), Alert.AlertType.WARNING);
+                return;
+            }
             Desktop.getDesktop().open(path);
-        } catch (IOException ex)
-        {
-            Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(SignUpWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            showAlert("Error", "Failed to open user manual", Alert.AlertType.ERROR);
         }
     }
 }

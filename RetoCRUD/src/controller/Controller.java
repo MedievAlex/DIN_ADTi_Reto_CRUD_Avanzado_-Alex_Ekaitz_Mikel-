@@ -11,7 +11,7 @@ import model.VideoGame;
  * Controller class that handles interaction between the GUI and the database.
  * Provides login, signup, deletion, modification, and data retrieval methods.
  *
- * Author: ema
+ * @author ema
  */
 public class Controller {
 
@@ -181,10 +181,5 @@ public class Controller {
 
     public void deleteReview(Review review) throws OurException {
         DAO.deleteReview(review);
-    }
-
-    //[OTHER]
-    public void initializeDefault() throws OurException {
-        DAO.initializeDefault();
     }
 }

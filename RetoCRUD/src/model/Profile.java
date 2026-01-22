@@ -2,7 +2,6 @@ package model;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.stream.Collectors;
 import javax.persistence.*;
 import org.hibernate.annotations.Check;
 

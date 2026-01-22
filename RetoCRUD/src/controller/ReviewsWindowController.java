@@ -1,7 +1,7 @@
 package controller;
 
 import exception.OurException;
-import exception.ShowAlert;
+import static exception.ShowAlert.showAlert;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
@@ -47,10 +47,9 @@ import javafx.util.Callback;
 /**
  * FXML Controller class
  *
- * @author 2dami
+ * @author ema
  */
 public class ReviewsWindowController implements Initializable {
-
     @FXML
     private MenuButton menu;
     @FXML
@@ -63,8 +62,6 @@ public class ReviewsWindowController implements Initializable {
     private MenuItem miLogOut;
     @FXML
     private TextField searchBar;
-    @FXML
-    private Button btnSearch;
     @FXML
     private ComboBox<String> combLists;
     @FXML
@@ -118,7 +115,7 @@ public class ReviewsWindowController implements Initializable {
             }
             tableReview.setItems(reviews);
         } catch (OurException ex) {
-            ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
@@ -198,18 +195,18 @@ public class ReviewsWindowController implements Initializable {
                             reviews.remove(review);
                             tableReview.refresh();
                         }
-                        ShowAlert.showAlert("Success", "Review deleted successfully",
+                        showAlert("Success", "Review deleted successfully",
                                 Alert.AlertType.INFORMATION);
                         if (contextualMenu.isShowing()) {
                             contextualMenu.hide();
                         }
                     } else {
-                        ShowAlert.showAlert("Error", "No review selected",
+                        showAlert("Error", "No review selected",
                                 Alert.AlertType.ERROR);
                     }
                 } catch (OurException ex) {
                     Logger.getLogger(ReviewsWindowController.class.getName()).log(Level.SEVERE, null, ex);
-                    ShowAlert.showAlert("Error", "Error deleting review: " + ex.getMessage(),
+                    showAlert("Error", "Error deleting review: " + ex.getMessage(),
                             Alert.AlertType.ERROR);
                 }
             }
@@ -278,7 +275,7 @@ public class ReviewsWindowController implements Initializable {
             String selectedList = combLists.getValue();
 
             if (selectedList == null) {
-                ShowAlert.showAlert("Information", "Please select a list first", Alert.AlertType.INFORMATION);
+                showAlert("Information", "Please select a list first", Alert.AlertType.INFORMATION);
                 return;
             }
             if ("All Reviews".equals(selectedList)) {
@@ -294,7 +291,7 @@ public class ReviewsWindowController implements Initializable {
             if (gamesList == null || gamesList.isEmpty()) {
                 reviews.clear();
                 tableReview.setItems(reviews);
-                ShowAlert.showAlert("Information", "No games found in this list", Alert.AlertType.INFORMATION);
+                showAlert("Information", "No games found in this list", Alert.AlertType.INFORMATION);
                 return;
             }
             ArrayList<Review> allReviewsByGame = new ArrayList<>();
@@ -307,7 +304,7 @@ public class ReviewsWindowController implements Initializable {
                 }
             }
             if (allReviewsByGame.isEmpty()) {
-                ShowAlert.showAlert("Information", "No reviews found for games in this list", Alert.AlertType.INFORMATION);
+                showAlert("Information", "No reviews found for games in this list", Alert.AlertType.INFORMATION);
             }
             reviews = FXCollections.observableArrayList(allReviewsByGame);
             tableReview.setItems(reviews);
@@ -315,12 +312,12 @@ public class ReviewsWindowController implements Initializable {
         } catch (OurException ex) {
             String errorMessage = ex.getMessage();
             if (errorMessage.contains("connection") || errorMessage.contains("database")) {
-                ShowAlert.showAlert("Database Error","Cannot connect to database.",Alert.AlertType.ERROR);
+                showAlert("Database Error","Cannot connect to database.",Alert.AlertType.ERROR);
             } else {
-                ShowAlert.showAlert("Error", errorMessage, Alert.AlertType.ERROR);
+                showAlert("Error", errorMessage, Alert.AlertType.ERROR);
             }
         } catch (Exception ex) {
-            ShowAlert.showAlert("Unexpected Error",
+            showAlert("Unexpected Error",
                     "An unexpected error occurred: " + ex.getMessage(),
                     Alert.AlertType.ERROR);
         }
@@ -403,7 +400,6 @@ public class ReviewsWindowController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
         setMenuOptions();
         searchBar.textProperty().addListener((observable, oldValue, newValue) -> searchByName());
         combLists.setOnAction(event -> {
@@ -411,28 +407,36 @@ public class ReviewsWindowController implements Initializable {
         });
     }
 
+    @FXML
     public void handleVideoAction() {
-        WebView webview = new WebView();
-        webview.getEngine().load(
-                "https://youtu.be/dQw4w9WgXcQ?list=RDdQw4w9WgXcQ"
-        );
-        webview.setPrefSize(640, 390);
+        try {
+            WebView webview = new WebView();
+            webview.getEngine().load("https://youtu.be/phyKDIryZWk?si=ugkWCRi_GpBrg_0z");
+            webview.setPrefSize(640, 390);
 
-        Stage stage = new Stage();
-        stage.setScene(new Scene(webview));
-        stage.setFullScreen(true);
-        stage.show();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(webview));
+            stage.setTitle("Tutorial Video");
+            stage.setFullScreen(true);
+            stage.show();
+        } catch (Exception ex) {
+            Logger.getLogger(SignUpWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            showAlert("Error", "Failed to load video", Alert.AlertType.ERROR);
+        }
     }
 
     @FXML
     public void handleHelpAction() {
-        try
-        {
+        try {
             File path = new File("user manual/UserManual.pdf");
+            if (!path.exists()) {
+                showAlert("File Not Found", "User manual not found at: " + path.getAbsolutePath(), Alert.AlertType.WARNING);
+                return;
+            }
             Desktop.getDesktop().open(path);
-        } catch (IOException ex)
-        {
-            Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(SignUpWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            showAlert("Error", "Failed to open user manual", Alert.AlertType.ERROR);
         }
     }
 }

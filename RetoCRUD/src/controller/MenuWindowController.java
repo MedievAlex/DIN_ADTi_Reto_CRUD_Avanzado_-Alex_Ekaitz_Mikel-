@@ -21,6 +21,8 @@ import model.User;
 /**
  * Controller for the main Menu window. Handles navigation to modify, delete,
  * and logout actions.
+ * 
+ * @author ema
  */
 public class MenuWindowController implements Initializable {
 

@@ -1,7 +1,7 @@
 package controller;
 
 import exception.OurException;
-import exception.ShowAlert;
+import static exception.ShowAlert.showAlert;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -19,6 +19,8 @@ import javafx.scene.control.ComboBox;
 
 /**
  * FXML Controller class for deleting user accounts as an Admin.
+ * 
+ * @author ema
  */
 public class DeleteAccountAdminController implements Initializable
 {
@@ -56,7 +58,7 @@ public class DeleteAccountAdminController implements Initializable
         }
         catch (OurException ex)
         {
-            ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
@@ -93,13 +95,13 @@ public class DeleteAccountAdminController implements Initializable
     {
         if (TextFieldPassword.getText().isEmpty())
         {
-            ShowAlert.showAlert("Error", "Please enter your password to delete the account.", Alert.AlertType.ERROR);
+            showAlert("Error", "Please enter your password to delete the account.", Alert.AlertType.ERROR);
             return;
         }
 
         if (ComboBoxUser.getValue() == null || ComboBoxUser.getValue().isEmpty())
         {
-            ShowAlert.showAlert("Error", "Please select a user to delete.", Alert.AlertType.ERROR);
+            showAlert("Error", "Please select a user to delete.", Alert.AlertType.ERROR);
             return;
         }
 
@@ -121,7 +123,7 @@ public class DeleteAccountAdminController implements Initializable
 
                 if (success)
                 {
-                    ShowAlert.showAlert("Deleted account", "The account has been successfully deleted.", Alert.AlertType.INFORMATION);
+                    showAlert("Deleted account", "The account has been successfully deleted.", Alert.AlertType.INFORMATION);
 
                     try
                     {
@@ -149,7 +151,7 @@ public class DeleteAccountAdminController implements Initializable
             }
             catch (OurException ex)
             {
-                ShowAlert.showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
+                showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
             }
         }
         else
