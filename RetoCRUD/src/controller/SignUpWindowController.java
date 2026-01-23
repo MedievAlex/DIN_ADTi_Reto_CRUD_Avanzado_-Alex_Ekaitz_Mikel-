@@ -66,7 +66,6 @@ public class SignUpWindowController implements Initializable {
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("LOG IN");
-            stage.setResizable(false);
             stage.show();
                 
             Stage currentStage = (Stage) buttonLogIn.getScene().getWindow();
