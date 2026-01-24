@@ -10,7 +10,6 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
@@ -128,13 +127,9 @@
                      </font>
                   </Label>
                   <HBox alignment="CENTER" spacing="50">
-                     <RadioButton fx:id="rButtonM" text="Man">
-                        <toggleGroup>
-                           <ToggleGroup fx:id="genderGroup" />
-                        </toggleGroup>
-                     </RadioButton>
-                     <RadioButton fx:id="rButtonW" text="Woman" toggleGroup="$genderGroup" />
-                     <RadioButton fx:id="rButtonO" text="Other" toggleGroup="$genderGroup" />
+                     <RadioButton fx:id="rButtonM" text="Man" />
+                     <RadioButton fx:id="rButtonW" text="Woman" />
+                     <RadioButton fx:id="rButtonO" text="Other" />
                   </HBox>
                </VBox>
             </VBox>

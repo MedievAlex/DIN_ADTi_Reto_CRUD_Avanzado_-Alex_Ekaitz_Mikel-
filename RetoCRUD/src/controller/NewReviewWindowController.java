@@ -1,25 +1,20 @@
 package controller;
 
 import exception.OurException;
+import static exception.ShowAlert.showAlert;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
+import logger.GeneraLog;
 import model.Platform;
 import model.Profile;
 import model.Review;
@@ -89,20 +84,17 @@ public class NewReviewWindowController implements Initializable {
             String name = comboBoxGame.getValue();
 
             if (name == null || name.isEmpty()) {
-                System.out.println("No se ha seleccionado un juego");
                 resetReviewForm();
                 return;
             }
             Profile currentProfile = this.profile;
             if (currentProfile == null) {
-                System.out.println("No hay usuario logueado");
                 resetReviewForm();
                 return;
             }
             String username = currentProfile.getUsername();
             VideoGame videoGame = cont.findVideoGameByName(name);
             if (videoGame == null) {
-                System.out.println("No se encontró el juego: " + name);
                 resetReviewForm();
                 return;
             }
@@ -112,7 +104,6 @@ public class NewReviewWindowController implements Initializable {
             Review reviewEncontrada = cont.findReview(username, gameId);
 
             if (reviewEncontrada == null) {
-                System.out.println("No se encontró ninguna review para este juego y perfil");
                 resetReviewForm();
                 return;
             }
@@ -124,11 +115,8 @@ public class NewReviewWindowController implements Initializable {
             } else {
                 comboBoxPlatForm.setValue(null);
             }
-
-            System.out.println("Review cargada correctamente para el juego: " + name);
-
-        } catch (Exception e) {
-            System.out.println("Error al cargar datos de la review desde la base de datos: " + e.getMessage());
+        } catch (Exception ex) {
+            GeneraLog.getLogger().severe("Failed loading review's data from the database: " + ex.getMessage());
             resetReviewForm();
         }
     }
@@ -153,7 +141,7 @@ public class NewReviewWindowController implements Initializable {
                 try {
                     populateGameComboBox(newValue);
                 } catch (OurException ex) {
-                    Logger.getLogger(NewReviewWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                    GeneraLog.getLogger().severe("Failed getting videogames: " + ex.getMessage());
                 }
             } else {
                 comboBoxGame.setDisable(true);
@@ -218,12 +206,11 @@ public class NewReviewWindowController implements Initializable {
             return;
         }
         try {
-            // Obtener los objetos ya gestionados por Hibernate
             Profile managedProfile = cont.findProfileByUsername(profile.getUsername());
             VideoGame managedGame = cont.findVideoGameByName(comboBoxGame.getValue());
 
             if (managedProfile == null || managedGame == null) {
-                showAlert("Error", "Datos inválidos", "No se pudo encontrar el perfil o el juego en la base de datos.");
+                showAlert("Invalid data", "The game or the profile can't be found in the database.", Alert.AlertType.ERROR);
                 return;
             }
 
@@ -237,12 +224,12 @@ public class NewReviewWindowController implements Initializable {
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.close();
-        } catch (IllegalArgumentException e) {
-            showAlert("Error", "Plataforma no válida", "La plataforma seleccionada no es válida.");
-        } catch (OurException e) {
-            // Mostrar el mensaje original de Hibernate
-            showAlert("Error al guardar la reseña", e.getMessage(), "");
-            e.printStackTrace();  // <- Esto ayuda a depurar
+        } catch (IllegalArgumentException ex) {
+            showAlert("Invalid platform", "The selected platform is not valid.", Alert.AlertType.ERROR);
+            
+        } catch (OurException ex) {
+            GeneraLog.getLogger().severe("Failed saving review: " + ex.getMessage());
+            showAlert("Error", "Failed saving review", Alert.AlertType.ERROR);
         }
     }
 
@@ -250,53 +237,36 @@ public class NewReviewWindowController implements Initializable {
         ArrayList<String> errors = new ArrayList<String>();
 
         if (comboBoxGame.getValue() == null || comboBoxGame.getValue().isEmpty()) {
-            errors.add("Debes seleccionar un juego");
+            errors.add("You must choose a game");
         }
 
         if (comboBoxPlatForm.getValue() == null || comboBoxPlatForm.getValue().isEmpty()) {
-            errors.add("Debes seleccionar una plataforma");
+            errors.add("You must choose a platform");
         }
 
         if (textAreaReview.getText() == null || textAreaReview.getText().trim().isEmpty()) {
-            errors.add("Debes escribir una reseña");
+            errors.add("You must add a description");
         }
 
         if (errors.size() > 0) {
-            showAlert("Campos incompletos", "Por favor completa todos los campos:", errors.toString());
+            showAlert("Empty fields", "Please, fill all the fields:", Alert.AlertType.WARNING);
             return false;
         }
 
         return true;
     }
 
-    private void saveReview(Review review) throws OurException {
+    private void saveReview(Review review) {
         try {
             if (cont.saveOrUpdateReview(review)) {
-                showSuccessAlert("Review created/updated", "The review has been successfully created/updated.");
+                showAlert("Review created/updated", "The review has been successfully created/updated.", Alert.AlertType.INFORMATION);
                 parentController.loadReview();
             } else {
-                showAlert("Error", "Error creating/updating the review", "");
+                showAlert("Error", "Error creating/updating the review", Alert.AlertType.ERROR);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new OurException("Error saving review: " + e.getMessage());
+        } catch (Exception ex) {
+            GeneraLog.getLogger().severe("Failed to save a review: " + ex.getMessage());
         }
-    }
-
-    private void showAlert(String title, String header, String content) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(content);
-        alert.showAndWait();
-    }
-
-    private void showSuccessAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
     }
 
     @FXML

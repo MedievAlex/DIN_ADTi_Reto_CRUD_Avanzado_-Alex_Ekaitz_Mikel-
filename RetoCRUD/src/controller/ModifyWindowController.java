@@ -5,8 +5,6 @@ import static exception.ShowAlert.showAlert;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import logger.GeneraLog;
 import model.Profile;
 import model.User;
 
@@ -137,7 +136,8 @@ public class ModifyWindowController implements Initializable {
                 navigateToMenu();
             }
         } catch (OurException ex) {
-            showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
+            GeneraLog.getLogger().severe("Failed to save data: " + ex.getMessage());
+            showAlert("Error", "Failed to save data", Alert.AlertType.ERROR);
         }
     }
 
@@ -165,8 +165,8 @@ public class ModifyWindowController implements Initializable {
             Stage currentStage = (Stage) Button_Cancel.getScene().getWindow();
             currentStage.close();
         } catch (IOException ex) {
-            Logger.getLogger(MenuWindowController.class.getName()).log(Level.SEVERE, null, ex);
-            showAlert("Error", "Could not load the menu window", Alert.AlertType.ERROR);
+            GeneraLog.getLogger().severe("Failed to open menu window: " + ex.getMessage());
+            showAlert("Error", "Failed to open menu window", Alert.AlertType.ERROR);
         }
     }
 

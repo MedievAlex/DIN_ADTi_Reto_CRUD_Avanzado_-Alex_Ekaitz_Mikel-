@@ -11,11 +11,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.stage.Stage;
 import model.Profile;
 import javafx.scene.control.ComboBox;
+import logger.GeneraLog;
 
 /**
  * FXML Controller class for deleting user accounts as an Admin.
@@ -82,11 +81,11 @@ public class DeleteAccountAdminController implements Initializable
 
             Stage currentStage = (Stage) Button_Cancel.getScene().getWindow();
             currentStage.close();
-
         }
         catch (IOException ex)
         {
-            Logger.getLogger(MenuWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            GeneraLog.getLogger().severe("Failed to open menu window: " + ex.getMessage());
+            showAlert("Error", "Failed to open menu window", Alert.AlertType.ERROR);
         }
     }
 
@@ -145,18 +144,16 @@ public class DeleteAccountAdminController implements Initializable
                     }
                     catch (IOException ex)
                     {
-                        Logger.getLogger(MenuWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                        GeneraLog.getLogger().severe("Failed to open menu window: " + ex.getMessage());
+                        showAlert("Error", "Failed to open menu window", Alert.AlertType.ERROR);
                     }
                 }
             }
             catch (OurException ex)
             {
-                showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
+                GeneraLog.getLogger().severe("Failed to delete profile: " + ex.getMessage());
+            showAlert("Error", "Failed to delete profile", Alert.AlertType.ERROR);
             }
-        }
-        else
-        {
-            System.out.println("Deletion cancelled by the user.");
         }
     }
 

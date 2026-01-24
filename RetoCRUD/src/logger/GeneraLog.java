@@ -9,7 +9,7 @@ import java.util.logging.SimpleFormatter;
 
 public class GeneraLog
 {
-	// [ VARIABLES ]
+  // [ VARIABLES ]
   private static Logger logger = null;
   private static FileHandler fileHandler = null;
 
@@ -42,7 +42,7 @@ public class GeneraLog
 			}
 			catch (IOException e)
 			{
-				System.err.println("[ERROR AL CONFIGURAR EL LOGGER]: " + e.getMessage());
+				System.err.println("[ERROR IN LOGGER CONFIGURATION]: " + e.getMessage());
 			}
 		}
 	}

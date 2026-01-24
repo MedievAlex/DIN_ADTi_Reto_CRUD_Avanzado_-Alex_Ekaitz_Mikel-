@@ -71,7 +71,7 @@ public class LogInWindowController implements Initializable {
             Stage currentStage = (Stage) Button_SignUp.getScene().getWindow();
             currentStage.close();
         } catch (IOException ex) {
-            GeneraLog.getLogger().severe("[ERROR] Trying to open Sign Up: " + ex.getMessage());
+            GeneraLog.getLogger().severe("Error trying to open Sign Up: " + ex.getMessage());
             showAlert("Error", "Trying to open Sign Up", Alert.AlertType.ERROR);
         }
     }
@@ -120,16 +120,16 @@ public class LogInWindowController implements Initializable {
                         Stage currentStage = (Stage) Button_LogIn.getScene().getWindow();
                         currentStage.close();
                         
-                        GeneraLog.getLogger().info("[INFO] Logged correctly");
+                        GeneraLog.getLogger().info("Logged correctly");
                     } catch (IOException ex) {
-                        GeneraLog.getLogger().severe("[ERROR] Trying to open Main Menu: " + ex.getMessage());
+                        GeneraLog.getLogger().severe("Error trying to open Main Menu: " + ex.getMessage());
                         showAlert("Error", "Trying to open Main Menu", Alert.AlertType.ERROR);
                     }
                 } else {
                     labelIncorrecto.setText("The username and/or password are incorrect.");
                 }
             } catch (OurException ex) {
-                GeneraLog.getLogger().severe("[ERROR] Trying to login: " + ex.getMessage());
+                GeneraLog.getLogger().severe("Error trying to login: " + ex.getMessage());
                 showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
             }
         }
@@ -152,7 +152,7 @@ public class LogInWindowController implements Initializable {
             stage.setFullScreen(true);
             stage.show();
         } catch (Exception ex) {
-            GeneraLog.getLogger().severe("[ERROR] Failed to load video: " + ex.getMessage());
+            GeneraLog.getLogger().severe("Failed to load video: " + ex.getMessage());
             showAlert("Error", "Failed to load video", Alert.AlertType.ERROR);
         }
     }
@@ -162,12 +162,13 @@ public class LogInWindowController implements Initializable {
         try {
             File path = new File("user manual/UserManual.pdf");
             if (!path.exists()) {
+                GeneraLog.getLogger().warning("User manual not found at: " + path.getAbsolutePath());
                 showAlert("File Not Found", "User manual not found at: " + path.getAbsolutePath(), Alert.AlertType.WARNING);
                 return;
             }
             Desktop.getDesktop().open(path);
         } catch (IOException ex) {
-            GeneraLog.getLogger().severe("[ERROR] Failed to open user manual: " + ex.getMessage());
+            GeneraLog.getLogger().severe("Failed to open user manual: " + ex.getMessage());
             showAlert("Error", "Failed to open user manual", Alert.AlertType.ERROR);
         }
     }

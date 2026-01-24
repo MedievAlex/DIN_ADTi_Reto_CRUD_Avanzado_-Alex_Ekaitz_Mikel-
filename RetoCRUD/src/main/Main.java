@@ -9,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import dao.HibernateUtil;
+import logger.GeneraLog;
 
 public class Main extends Application
 {
@@ -24,10 +25,8 @@ public class Main extends Application
     public void start(Stage stage) throws Exception
     {
         Thread.currentThread().setUncaughtExceptionHandler((thread, throwable) -> {
-            if (throwable instanceof NullPointerException) {
-            } else {
-                throwable.printStackTrace();
-            }
+        GeneraLog.getLogger().severe("Error in: " + thread.getName() 
+            + " - " + throwable.getClass().getName() + ": " + throwable.getMessage());
         });
         
         try
@@ -44,14 +43,13 @@ public class Main extends Application
         LogInWindowController loginController = fxmlLoader.getController();
         loginController.setCont(controller);
         
-        stage.setTitle("LOG IN");
+        stage.setTitle("LOGIN");
         stage.setScene(new Scene(root));
         stage.show();
         }
         catch (Exception e)
         {
-            System.err.print("Error initializing the app");
-            e.printStackTrace();
+            GeneraLog.getLogger().severe("Error initializing the app.");
         }
     }
 

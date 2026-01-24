@@ -13,8 +13,6 @@ import javafx.scene.control.PasswordField;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -24,6 +22,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import logger.GeneraLog;
 import model.Profile;
 
 /**
@@ -65,13 +64,13 @@ public class SignUpWindowController implements Initializable {
             
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
-            stage.setTitle("LOG IN");
+            stage.setTitle("LOGIN");
             stage.show();
                 
             Stage currentStage = (Stage) buttonLogIn.getScene().getWindow();
             currentStage.close();
         } catch (IOException ex) {
-            Logger.getLogger(SignUpWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            GeneraLog.getLogger().severe("Error trying to open Login: " + ex.getMessage());
             showAlert("Error", "Failed to load Login window", Alert.AlertType.ERROR);
         }
     }
@@ -270,11 +269,12 @@ public class SignUpWindowController implements Initializable {
                     Stage currentStage = (Stage) buttonSignUp.getScene().getWindow();
                     currentStage.close();
                 } catch (IOException ex) {
-                    Logger.getLogger(SignUpWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                    GeneraLog.getLogger().severe("Error trying to open Main Menu: " + ex.getMessage());
                     showAlert("Error", "Failed to load Main Menu window", Alert.AlertType.ERROR);
                 }
             }
         } catch (OurException ex) {
+            GeneraLog.getLogger().severe("Error in Sign Up: " + ex.getMessage());
             showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
@@ -300,7 +300,7 @@ public class SignUpWindowController implements Initializable {
             stage.setFullScreen(true);
             stage.show();
         } catch (Exception ex) {
-            Logger.getLogger(SignUpWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            GeneraLog.getLogger().severe("Failed to load video: " + ex.getMessage());
             showAlert("Error", "Failed to load video", Alert.AlertType.ERROR);
         }
     }
@@ -310,12 +310,13 @@ public class SignUpWindowController implements Initializable {
         try {
             File path = new File("user manual/UserManual.pdf");
             if (!path.exists()) {
+                GeneraLog.getLogger().warning("User manual not found at: " + path.getAbsolutePath());
                 showAlert("File Not Found", "User manual not found at: " + path.getAbsolutePath(), Alert.AlertType.WARNING);
                 return;
             }
             Desktop.getDesktop().open(path);
         } catch (IOException ex) {
-            Logger.getLogger(SignUpWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            GeneraLog.getLogger().severe("Failed to open user manual: " + ex.getMessage());
             showAlert("Error", "Failed to open user manual", Alert.AlertType.ERROR);
         }
     }

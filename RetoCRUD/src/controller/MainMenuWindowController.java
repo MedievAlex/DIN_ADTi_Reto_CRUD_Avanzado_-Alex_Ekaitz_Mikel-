@@ -9,8 +9,6 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -25,10 +23,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.beans.value.ChangeListener;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import model.*;
 import javafx.scene.web.WebView;
+import logger.GeneraLog;
 
 public class MainMenuWindowController implements Initializable
 {
@@ -130,7 +127,8 @@ public class MainMenuWindowController implements Initializable
             }
             catch (IOException ex)
             {
-                Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                GeneraLog.getLogger().severe("Failed profile listener: " + ex.getMessage());
+                showAlert("Error", "Failed profile listener", Alert.AlertType.ERROR);
             }
         });
 
@@ -154,7 +152,8 @@ public class MainMenuWindowController implements Initializable
             }
             catch (IOException ex)
             {
-                Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                GeneraLog.getLogger().severe("Failed lists listener: " + ex.getMessage());
+                showAlert("Error", "Failed lists listener", Alert.AlertType.ERROR);
             }
         });
 
@@ -178,9 +177,11 @@ public class MainMenuWindowController implements Initializable
             }
             catch (IOException ex)
             {
-                Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                GeneraLog.getLogger().severe("Failed reviews listener: " + ex.getMessage());
+                showAlert("Error", "Failed reviews listener", Alert.AlertType.ERROR);
             } catch (OurException ex) {
-                Logger.getLogger(MainMenuWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                GeneraLog.getLogger().severe("Failed loading reviews: " + ex.getMessage());
+                showAlert("Error", "Failed loading reviews", Alert.AlertType.ERROR);
             }
         });
 
@@ -282,36 +283,6 @@ public class MainMenuWindowController implements Initializable
         tableGames.setItems(filtered);
     }
     
-    private ContextMenu contextualMenu()
-    {
-        ContextMenu contextualMenu = new ContextMenu();
-        
-        MenuItem helpManual = new MenuItem("Help manual");
-        
-        helpManual.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e) {
-                try {
-                    
-                } catch (Exception ex) {
-                    Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
-        
-        MenuItem generateReport = new MenuItem("Generate report");
-        generateReport.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e) {
-                try {
-                    
-                } catch (Exception ex) {
-                    Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
-        
-        return contextualMenu;
-    }
-    
     private void loadVideoGames()
     {
         try
@@ -381,6 +352,7 @@ public class MainMenuWindowController implements Initializable
         }
         catch (OurException ex)
         {
+            GeneraLog.getLogger().severe("Failed loading videogames: " + ex.getMessage());
             showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
@@ -427,7 +399,7 @@ public class MainMenuWindowController implements Initializable
             stage.setFullScreen(true);
             stage.show();
         } catch (Exception ex) {
-            Logger.getLogger(SignUpWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            GeneraLog.getLogger().severe("Failed to load video: " + ex.getMessage());
             showAlert("Error", "Failed to load video", Alert.AlertType.ERROR);
         }
     }
@@ -442,7 +414,7 @@ public class MainMenuWindowController implements Initializable
             }
             Desktop.getDesktop().open(path);
         } catch (IOException ex) {
-            Logger.getLogger(SignUpWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            GeneraLog.getLogger().severe("Failed to open user manual: " + ex.getMessage());
             showAlert("Error", "Failed to open user manual", Alert.AlertType.ERROR);
         }
     }

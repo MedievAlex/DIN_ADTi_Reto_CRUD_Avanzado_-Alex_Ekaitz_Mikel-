@@ -9,8 +9,6 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -20,15 +18,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
@@ -36,11 +26,8 @@ import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import model.Pegi;
-import model.Platform;
-import model.Profile;
-import model.SelectableVideoGame;
-import model.VideoGame;
+import logger.GeneraLog;
+import model.*;
 
 /**
  * FXML Controller class
@@ -148,7 +135,8 @@ public class ListWindowController implements Initializable {
                     stage.initModality(Modality.APPLICATION_MODAL);
                     stage.showAndWait();
                 } catch (IOException ex) {
-                    Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                    GeneraLog.getLogger().severe("Failed renaming list: " + ex.getMessage());
+                    showAlert("Error", "Failed renaming list", Alert.AlertType.ERROR);
                 }
             }
         });
@@ -161,7 +149,8 @@ public class ListWindowController implements Initializable {
                     cont.deleteList(profile.getUsername(), buttonName);
                     loadListButtons();
                 } catch (OurException ex) {
-                    Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                    GeneraLog.getLogger().severe("Failed deleting list: " + ex.getMessage());
+                    showAlert("Error", "Failed deleting list", Alert.AlertType.ERROR);
                 }
             }
         });
@@ -224,7 +213,8 @@ public class ListWindowController implements Initializable {
             Button button = new Button("My Games");
             showList(button);
         } catch (OurException ex) {
-            Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            GeneraLog.getLogger().severe("Failed loading lists: " + ex.getMessage());
+            showAlert("Error", "Failed loading lists", Alert.AlertType.ERROR);
         }
     }
 
@@ -252,7 +242,8 @@ public class ListWindowController implements Initializable {
             videoGames = FXCollections.observableArrayList(selectableGames);
             tableLists.setItems(videoGames);
         } catch (OurException ex) {
-            showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
+            GeneraLog.getLogger().severe("Failed showing lists: " + ex.getMessage());
+            showAlert("Error", "Failed showing lists", Alert.AlertType.ERROR);
         }
     }
 
@@ -272,7 +263,8 @@ public class ListWindowController implements Initializable {
                 }
             }
         } catch (OurException ex) {
-            Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            GeneraLog.getLogger().severe("Failed to get list number: " + ex.getMessage());
+            showAlert("Error", "Failed to get list number", Alert.AlertType.ERROR);
         }
         return newNumber;
     }
@@ -298,7 +290,8 @@ public class ListWindowController implements Initializable {
 
             setComboBox();
         } catch (OurException ex) {
-            Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            GeneraLog.getLogger().severe("Failed creating list: " + ex.getMessage());
+            showAlert("Error", "Failed creating list", Alert.AlertType.ERROR);
         }
     }
 
@@ -309,7 +302,8 @@ public class ListWindowController implements Initializable {
             listsNames = cont.getUserLists(profile.getUsername());
             listsNames.remove("My Games");
         } catch (OurException ex) {
-            Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            GeneraLog.getLogger().severe("Failed setting combobox: " + ex.getMessage());
+            showAlert("Error", "Failed setting combobox", Alert.AlertType.ERROR);
         }
         combLists.getItems().clear();
         combLists.getItems().addAll(listsNames);
@@ -358,7 +352,8 @@ public class ListWindowController implements Initializable {
                     showAlert("Info", "No games selected. Please select games using the checkboxes.", Alert.AlertType.INFORMATION);
                 }
             } catch (OurException ex) {
-                showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
+                GeneraLog.getLogger().severe("Failed adding game to list: " + ex.getMessage());
+                showAlert("Error", "Failed adding game to list", Alert.AlertType.ERROR);
             }
         }
     }
@@ -381,7 +376,8 @@ public class ListWindowController implements Initializable {
                                 profile.removeGame(listName, game);
                             }
                         } catch (OurException ex) {
-                            Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                            GeneraLog.getLogger().severe("Failed removing game from list: " + ex.getMessage());
+                            showAlert("Error", "Failed removing game from list", Alert.AlertType.ERROR);
                         }
                     } else {
                         profile.removeGame(selectedList, game);
@@ -404,7 +400,8 @@ public class ListWindowController implements Initializable {
                 showAlert("Info", "No games selected. Please select games using the checkboxes.", Alert.AlertType.INFORMATION);
             }
         } catch (OurException ex) {
-            showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
+            GeneraLog.getLogger().severe("Failed removing game from list: " + ex.getMessage());
+            showAlert("Error", "Failed removing game from list", Alert.AlertType.ERROR);
         }
     }
 
@@ -426,7 +423,8 @@ public class ListWindowController implements Initializable {
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.showAndWait();
             } catch (IOException ex) {
-                Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                GeneraLog.getLogger().severe("Failed profile listener: " + ex.getMessage());
+                showAlert("Error", "Failed profile listener", Alert.AlertType.ERROR);
             }
         });
 
@@ -445,9 +443,11 @@ public class ListWindowController implements Initializable {
                 stage.setScene(new Scene(root));
                 stage.setTitle("REVIEWS");
             } catch (IOException ex) {
-                Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                GeneraLog.getLogger().severe("Failed reviews listener: " + ex.getMessage());
+                showAlert("Error", "Failed reviews listener", Alert.AlertType.ERROR);
             } catch (OurException ex) {
-                Logger.getLogger(MainMenuWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                GeneraLog.getLogger().severe("Failed loading reviews: " + ex.getMessage());
+                showAlert("Error", "Failed loading reviews", Alert.AlertType.ERROR);
             }
         });
 
@@ -475,7 +475,8 @@ public class ListWindowController implements Initializable {
                 stage.setScene(new Scene(root));
                 stage.setTitle("MAIN MENU");
             } catch (IOException ex) {
-                Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                GeneraLog.getLogger().severe("Failed main menu listener: " + ex.getMessage());
+                showAlert("Error", "Failed main menu listener", Alert.AlertType.ERROR);
             }
         });
 
@@ -532,7 +533,7 @@ public class ListWindowController implements Initializable {
             stage.setFullScreen(true);
             stage.show();
         } catch (Exception ex) {
-            Logger.getLogger(SignUpWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            GeneraLog.getLogger().severe("Failed to load video: " + ex.getMessage());
             showAlert("Error", "Failed to load video", Alert.AlertType.ERROR);
         }
     }
@@ -547,7 +548,7 @@ public class ListWindowController implements Initializable {
             }
             Desktop.getDesktop().open(path);
         } catch (IOException ex) {
-            Logger.getLogger(SignUpWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            GeneraLog.getLogger().severe("Failed to open user manual: " + ex.getMessage());
             showAlert("Error", "Failed to open user manual", Alert.AlertType.ERROR);
         }
     }
