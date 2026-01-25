@@ -14,7 +14,6 @@ import model.VideoGame;
  * @author ema
  */
 public class Controller {
-
     private final ClassDAO DAO;
 
     /**

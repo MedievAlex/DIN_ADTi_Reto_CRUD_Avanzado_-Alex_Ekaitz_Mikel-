@@ -9,8 +9,6 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,14 +17,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -43,6 +34,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebView;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
+import logger.GeneraLog;
 
 /**
  * FXML Controller class
@@ -115,6 +107,7 @@ public class ReviewsWindowController implements Initializable {
             }
             tableReview.setItems(reviews);
         } catch (OurException ex) {
+            GeneraLog.getLogger().severe("Failed to load reviews: " + ex.getMessage());
             showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
@@ -139,7 +132,8 @@ public class ReviewsWindowController implements Initializable {
             stage.setResizable(false);
             stage.show();
         } catch (IOException ex) {
-            Logger.getLogger(SignUpWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            GeneraLog.getLogger().severe("Failed to create a review: " + ex.getMessage());
+            showAlert("Error", "Failed to create a review", Alert.AlertType.ERROR);
         }
     }
 
@@ -172,7 +166,8 @@ public class ReviewsWindowController implements Initializable {
         try {
             listsNames = cont.getUserLists(profile.getUsername());
         } catch (OurException ex) {
-            Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            GeneraLog.getLogger().severe("Failed to get user lists: " + ex.getMessage());
+            showAlert("Error", "Failed to get user lists", Alert.AlertType.ERROR);
         }
         combLists.getItems().clear();
         combLists.getItems().add("All Reviews");
@@ -201,13 +196,12 @@ public class ReviewsWindowController implements Initializable {
                             contextualMenu.hide();
                         }
                     } else {
-                        showAlert("Error", "No review selected",
-                                Alert.AlertType.ERROR);
+                        showAlert("Warning", "No review selected",
+                                Alert.AlertType.WARNING);
                     }
                 } catch (OurException ex) {
-                    Logger.getLogger(ReviewsWindowController.class.getName()).log(Level.SEVERE, null, ex);
-                    showAlert("Error", "Error deleting review: " + ex.getMessage(),
-                            Alert.AlertType.ERROR);
+                    GeneraLog.getLogger().severe("Failed deleting a review: " + ex.getMessage());
+                    showAlert("Error", "Failed deleting a review", Alert.AlertType.ERROR);
                 }
             }
         });
@@ -344,7 +338,8 @@ public class ReviewsWindowController implements Initializable {
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.showAndWait();
             } catch (IOException ex) {
-                Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                GeneraLog.getLogger().severe("Failed profile listener: " + ex.getMessage());
+                showAlert("Error", "Failed profile listener", Alert.AlertType.ERROR);
             }
         });
 
@@ -365,7 +360,8 @@ public class ReviewsWindowController implements Initializable {
                 stage.setScene(new Scene(root));
                 stage.setTitle("LISTS");
             } catch (IOException ex) {
-                Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                GeneraLog.getLogger().severe("Failed lists listener: " + ex.getMessage());
+                showAlert("Error", "Failed lists listener", Alert.AlertType.ERROR);
             }
         });
         miMainMenu.setOnAction((event) -> {
@@ -381,7 +377,8 @@ public class ReviewsWindowController implements Initializable {
                 stage.setScene(new Scene(root));
                 stage.setTitle("MAIN MENU");
             } catch (IOException ex) {
-                Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                GeneraLog.getLogger().severe("Failed main menu listener: " + ex.getMessage());
+                showAlert("Error", "Failed main menu listener", Alert.AlertType.ERROR);
             }
         });
 
@@ -420,7 +417,7 @@ public class ReviewsWindowController implements Initializable {
             stage.setFullScreen(true);
             stage.show();
         } catch (Exception ex) {
-            Logger.getLogger(SignUpWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            GeneraLog.getLogger().severe("Failed to load video: " + ex.getMessage());
             showAlert("Error", "Failed to load video", Alert.AlertType.ERROR);
         }
     }
@@ -435,7 +432,7 @@ public class ReviewsWindowController implements Initializable {
             }
             Desktop.getDesktop().open(path);
         } catch (IOException ex) {
-            Logger.getLogger(SignUpWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            GeneraLog.getLogger().severe("Failed to open user manual: " + ex.getMessage());
             showAlert("Error", "Failed to open user manual", Alert.AlertType.ERROR);
         }
     }

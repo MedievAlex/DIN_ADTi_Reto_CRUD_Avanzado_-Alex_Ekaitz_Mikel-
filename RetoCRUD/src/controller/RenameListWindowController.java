@@ -3,14 +3,13 @@ package controller;
 import exception.OurException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import logger.GeneraLog;
 import model.Profile;
 
 /**
@@ -73,7 +72,7 @@ public class RenameListWindowController implements Initializable {
                 close();
             }
         } catch (OurException ex) {
-            Logger.getLogger(ListWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            GeneraLog.getLogger().severe("Failed renaming list: " + ex.getMessage());
         }
     }
 

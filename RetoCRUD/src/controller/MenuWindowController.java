@@ -1,22 +1,21 @@
 package controller;
 
+import static exception.ShowAlert.showAlert;
 import java.io.IOException;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
-import model.Admin;
-import model.Profile;
-import model.User;
+import logger.GeneraLog;
+import model.*;
 
 /**
  * Controller for the main Menu window. Handles navigation to modify, delete,
@@ -82,7 +81,8 @@ public class MenuWindowController implements Initializable {
             currentStage.close();
 
         } catch (IOException ex) {
-            Logger.getLogger(MenuWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            GeneraLog.getLogger().severe("Failed to open modify window: " + ex.getMessage());
+            showAlert("Error", "Failed to open modify window", Alert.AlertType.ERROR);
         }
     }
 
@@ -129,7 +129,8 @@ public class MenuWindowController implements Initializable {
                 currentStage.close();
             }
         } catch (IOException ex) {
-            Logger.getLogger(MenuWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            GeneraLog.getLogger().severe("Failed to open delete window: " + ex.getMessage());
+            showAlert("Error", "Failed to open delete window", Alert.AlertType.ERROR);
         }
     }
 

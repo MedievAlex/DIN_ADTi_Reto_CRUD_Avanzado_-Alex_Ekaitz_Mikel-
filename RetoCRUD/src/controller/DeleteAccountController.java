@@ -150,8 +150,7 @@ public class DeleteAccountController implements Initializable
 
                         javafx.stage.Stage stage = new javafx.stage.Stage();
                         stage.setScene(new javafx.scene.Scene(root));
-                        stage.setTitle("LOG IN");
-                        stage.setResizable(false);
+                        stage.setTitle("LOGIN");
                         stage.show();
                     }
                     catch (IOException ex)
