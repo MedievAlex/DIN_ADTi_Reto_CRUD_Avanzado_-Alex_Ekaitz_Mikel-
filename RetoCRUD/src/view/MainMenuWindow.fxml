@@ -60,7 +60,7 @@
                         </items>
                     </MenuButton>
                 </HBox>
-                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="MAIN MENU" textAlignment="CENTER">
+                <Text fx:id="lblMainMenu" strokeType="OUTSIDE" strokeWidth="0.0" text="MAIN MENU" textAlignment="CENTER">
                     <font>
                         <Font name="System Bold" size="30.0" />
                     </font>

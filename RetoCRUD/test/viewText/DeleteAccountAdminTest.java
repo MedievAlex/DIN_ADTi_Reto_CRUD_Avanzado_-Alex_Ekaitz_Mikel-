@@ -1,130 +1,118 @@
 package viewText;
 
-import org.junit.After;
+import controller.Controller;
+import controller.DeleteAccountAdminController;
+import dao.MockClassDAO;
+import model.Profile;
+import model.User;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.testfx.api.FxAssert.verifyThat;
-import static org.testfx.matcher.control.LabeledMatchers.hasText;
-
-import java.util.concurrent.TimeoutException;
-
 import org.testfx.framework.junit.ApplicationTest;
-
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import main.Main;
-import org.testfx.api.FxToolkit;
+import static org.junit.Assert.*;
+import org.junit.FixMethodOrder;
+import org.junit.runners.MethodSorters;
 
-/**
- *
- * @author acer
- */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class DeleteAccountAdminTest extends ApplicationTest {
 
-    public DeleteAccountAdminTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() throws TimeoutException {
-        FxToolkit.registerPrimaryStage();
-        FxToolkit.setupApplication(Main.class);
-    }
-    
-
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
+    private DeleteAccountAdminController controller;
+    private Controller realController;
+    private MockClassDAO mockDAO;
+    private Profile adminUser;
 
     @Override
     public void start(Stage stage) throws Exception {
-        FxToolkit.showStage();
+        mockDAO = new MockClassDAO();
+        realController = new Controller(mockDAO);
+
+        adminUser = new User("MALE", "ES1234567890123456789012", "rluna", "zxcvbn",
+                "rluna@admin.com", "Admin", "111222333", "Luna");
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/DeleteAccountAdmin.fxml"));
+        Parent root = loader.load();
+        controller = loader.getController();
+        
+        controller.setCont(realController);
+        controller.setProfile(adminUser);
+
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 
-    private void performLogin(String username, String password) {
-        clickOn("#TextField_Username");
-        
-        write(username);
-        
-        clickOn("#PasswordField_Password");
-        write(password);
-        
-        clickOn("#Button_LogIn");
-        
-        try {
-            Thread.sleep(300);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    @Before
+    public void setUp() {
+        mockDAO.setShouldThrowException(false, null);
     }
 
     @Test
-    public void test_DeleteUserAsAdmin(){
-        // login como admin
-        performLogin("rluna", "zxcvbn");
-        
-        verifyThat("#label_Username", hasText("rluna"));
-        
-        // ir a ventana delete
+    public void test1_AllComponentsAreLoaded() {
+        ComboBox<String> userComboBox = lookup("#ComboBoxUser").query();
+        TextField passwordField = lookup("#TextFieldPassword").query();
+        Button deleteButton = lookup("#Button_Delete").query();
+        Button cancelButton = lookup("#Button_Cancel").query();
+
+        assertNotNull(userComboBox);
+        assertNotNull(passwordField);
+        assertNotNull(deleteButton);
+        assertNotNull(cancelButton);
+    }
+
+    @Test
+    public void test2_DeleteWithEmptyFields() {
         clickOn("#Button_Delete");
-        
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        
-        // abrir combobox
-        clickOn("#ComboBoxUser");
-        
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        
-        // seleccionar segundo usuario
-        type(javafx.scene.input.KeyCode.DOWN);
-        type(javafx.scene.input.KeyCode.ENTER);
-        
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        
-        // escribir password del admin
+        sleep(500);
+        pressEscape();
+    }
+
+    @Test
+    public void test3_DeleteWithoutUserSelected() {
         clickOn("#TextFieldPassword");
         write("zxcvbn");
         
-        // boton delete
         clickOn("#Button_Delete");
-        
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        
-        // confirmar dialogo
-        type(javafx.scene.input.KeyCode.ENTER);
-        
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        
-        // cerrar mensaje de exito
-        type(javafx.scene.input.KeyCode.ENTER);
-        
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        sleep(500);
+        pressEscape();
+    }
+
+    @Test
+    public void test4_SuccessfulDelete() {
+        interact(() -> {
+            controller.setComboBoxUser();
+        });
+        sleep(500);
+
+        ComboBox<String> usersComboBox = lookup("#ComboBoxUser").query();
+        sleep(500);
+
+        interact(() -> {
+            if (!usersComboBox.getItems().isEmpty()) {
+                usersComboBox.getSelectionModel().select(0);
+            }
+        });
+        sleep(500);
+
+        clickOn("#TextFieldPassword");
+        write("zxcvbn");
+
+        clickOn("#Button_Delete");
+        sleep(500);
+
+        clickOn("Aceptar");
+        sleep(1000);
+
+        pressEscape();
+    }
+
+    private void pressEscape() {
+        sleep(500);
+        push(javafx.scene.input.KeyCode.ESCAPE);
+        sleep(500);
     }
 }

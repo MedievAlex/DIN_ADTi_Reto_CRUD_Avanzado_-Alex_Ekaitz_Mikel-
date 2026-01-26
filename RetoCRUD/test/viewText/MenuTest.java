@@ -1,138 +1,121 @@
 package viewText;
 
-import org.junit.After;
+import controller.Controller;
+import controller.MenuWindowController;
+import dao.MockClassDAO;
+import model.Profile;
+import model.User;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.testfx.api.FxAssert.verifyThat;
-import static org.testfx.matcher.control.LabeledMatchers.hasText;
-
-import java.util.concurrent.TimeoutException;
-
 import org.testfx.framework.junit.ApplicationTest;
-
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
-import main.Main;
-import org.testfx.api.FxToolkit;
+import static org.junit.Assert.*;
 
-
-
-/**
- *
- * @author acer
- */
 public class MenuTest extends ApplicationTest {
-    
-     
-    public MenuTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() throws TimeoutException {
-        FxToolkit.registerPrimaryStage();
-        FxToolkit.setupApplication(Main.class);
-    }
-    
 
-    @Before
-    public void setUp() {
-        // El login se hace una sola vez en el primer test
-    }
-    
-    @After
-    public void tearDown() {
-    }
+    private MenuWindowController controller;
+    private Controller realController;
+    private MockClassDAO mockDAO;
+    private Profile testUser;
 
     @Override
     public void start(Stage stage) throws Exception {
-        FxToolkit.showStage();
+        mockDAO = new MockClassDAO();
+        realController = new Controller(mockDAO);
+
+        testUser = new User("MALE", "ES1234567890123456789012", "rluna", "zxcvbn",
+                "rluna@example.com", "Rosa", "111222333", "Luna");
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MenuWindow.fxml"));
+        Parent root = loader.load();
+        controller = loader.getController();
+        
+        controller.setCont(realController);
+        controller.setUsuario(testUser);
+
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 
-    // Método para realizar el login automático
-    private void performLogin(String username, String password) {
-         // Esperar a que los campos del login estén disponibles
-        clickOn("#TextField_Username");
-        
-        write(username);
-        
-        clickOn("#PasswordField_Password");
-        write(password);
-        
-        clickOn("#Button_LogIn");
-        
-        // Esperar a que se cargue la ventana del menú y se cierre la de login
-        try {
-            Thread.sleep(300);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    @Before
+    public void setUp() {
+        mockDAO.setShouldThrowException(false, null);
     }
 
-    // Test that performs complete flow: Login -> Delete Cancel -> Modify Cancel -> LogOut
-    // Este es el test principal solicitado que simula el flujo completo del usuario
     @Test
-    public void test_CompleteFlowLoginDeleteModifyLogout(){
-        // Realizar el login con credenciales del archivo (rluna / zxcvbn)
-        performLogin("rluna", "zxcvbn");
-        
-        // Verificar que se está en el menú principal
-        verifyThat("#label_Username", hasText("rluna"));
-        
-        // Pulsar botón DELETE
+    public void test1_AllComponentsAreLoaded() {
+        Label usernameLabel = lookup("#label_Username").query();
+        Button deleteButton = lookup("#Button_Delete").query();
+        Button modifyButton = lookup("#Button_Modify").query();
+        Button logoutButton = lookup("#Button_LogOut").query();
+
+        assertNotNull(usernameLabel);
+        assertNotNull(deleteButton);
+        assertNotNull(modifyButton);
+        assertNotNull(logoutButton);
+
+        assertEquals("rluna", usernameLabel.getText());
+        assertEquals("Delete User", deleteButton.getText());
+        assertEquals("Modify User", modifyButton.getText());
+        assertEquals("Back", logoutButton.getText());
+    }
+
+    @Test
+    public void test2_NavigateToDeleteAndCancel() {
         clickOn("#Button_Delete");
+        sleep(500);
         
-        // Esperar a que se abra la ventana de eliminar
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        Button cancelButton = lookup("#Button_Cancel").query();
+        assertNotNull(cancelButton);
         
-        // Hacer click en CANCEL dentro de la ventana DELETE
         clickOn("#Button_Cancel");
+        sleep(500);
         
-        // Esperar a volver al menú
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        
-        // Verificar que estamos de vuelta en el menú
-        verifyThat("#Button_Delete", hasText("Delete User"));
-        
-        // Pulsar botón MODIFY
+        Button deleteButton = lookup("#Button_Delete").query();
+        assertNotNull(deleteButton);
+    }
+
+    @Test
+    public void test3_NavigateToModifyAndCancel() {
         clickOn("#Button_Modify");
+        sleep(500);
         
-        // Esperar a que se abra la ventana de modificar
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        Button cancelButton = lookup("#Button_Cancel").query();
+        assertNotNull(cancelButton);
         
-        // Hacer click en CANCEL dentro de la ventana MODIFY
         clickOn("#Button_Cancel");
+        sleep(500);
         
-        // Esperar a volver al menú
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        
-        // Verificar que estamos de vuelta en el menú
-        verifyThat("#Button_Modify", hasText("Modify User"));
-        
-        // Pulsar botón LOG OUT
+        Button modifyButton = lookup("#Button_Modify").query();
+        assertNotNull(modifyButton);
+    }
+
+    @Test
+    public void test4_Logout() {
         clickOn("#Button_LogOut");
+        sleep(500);
+    }
+
+    @Test
+    public void test5_CompleteFlow() {
+        clickOn("#Button_Delete");
+        sleep(500);
         
-        // Esperar a que se cierre la ventana
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        clickOn("#Button_Cancel");
+        sleep(500);
+        
+        clickOn("#Button_Modify");
+        sleep(500);
+        
+        clickOn("#Button_Cancel");
+        sleep(500);
+        
+        clickOn("#Button_LogOut");
+        sleep(500);
     }
 }
-

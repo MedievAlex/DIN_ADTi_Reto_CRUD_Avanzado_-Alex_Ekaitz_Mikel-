@@ -110,7 +110,7 @@ public class MockClassDAO implements ClassDAO
         {
             throw exceptionToThrow;
         }
-        if ("testuser".equals(username) && "Ab123456".equals(password))
+        if (mockUser != null && mockUser.getUsername().equals(username) && mockUser.getPassword().equals(password))
         {
             return mockUser;
         }
@@ -166,11 +166,11 @@ public class MockClassDAO implements ClassDAO
         {
             throw exceptionToThrow;
         }
-        ArrayList<String> genders = new ArrayList<>();
-        genders.add("MALE");
-        genders.add("FEMALE");
-        genders.add("OTHER");
-        return genders;
+        ArrayList<String> users = new ArrayList<>();
+        users.add("User1");
+        users.add("User2");
+        users.add("User3");
+        return users;
     }
 
     @Override

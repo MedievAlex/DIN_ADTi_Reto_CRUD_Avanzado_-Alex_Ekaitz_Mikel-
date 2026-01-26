@@ -1,132 +1,139 @@
 package viewText;
 
-import org.junit.After;
-import org.junit.AfterClass;
+import controller.Controller;
+import controller.ModifyWindowController;
+import dao.MockClassDAO;
+import exception.OurException;
+import model.Profile;
+import model.User;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.testfx.api.FxAssert.verifyThat;
-import static org.testfx.matcher.control.LabeledMatchers.hasText;
-
-import java.util.concurrent.TimeoutException;
-
 import org.testfx.framework.junit.ApplicationTest;
-
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import main.Main;
-import org.testfx.api.FxToolkit;
+import static org.junit.Assert.*;
+import org.junit.FixMethodOrder;
+import org.junit.runners.MethodSorters;
 
-/**
- *
- * @author acer
- */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ModifyTest extends ApplicationTest {
-    
-    public ModifyTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() throws TimeoutException {
-        FxToolkit.registerPrimaryStage();
-        FxToolkit.setupApplication(Main.class);
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
+
+    private ModifyWindowController controller;
+    private Controller realController;
+    private MockClassDAO mockDAO;
+    private Profile testUser;
 
     @Override
     public void start(Stage stage) throws Exception {
-        FxToolkit.showStage();
+        mockDAO = new MockClassDAO();
+        realController = new Controller(mockDAO);
+
+        testUser = new User("MALE", "ES1234567890123456789012", "jlopez", "pass123",
+                "jlopez@example.com", "Juan", "123456789", "Lopez");
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ModifyWindow.fxml"));
+        Parent root = loader.load();
+        controller = loader.getController();
+        
+        controller.setCont(realController);
+        controller.setProfile(testUser);
+
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 
-    private void performLogin(String username, String password) {
-        clickOn("#TextField_Username");
-        
-        write(username);
-        
-        clickOn("#PasswordField_Password");
-        write(password);
-        
-        clickOn("#Button_LogIn");
-        
-        try {
-            Thread.sleep(300);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    @Before
+    public void setUp() {
+        mockDAO.setShouldThrowException(false, null);
+        pressEscape();
     }
 
     @Test
-    public void test_ModifyUserData(){
-        // login
-        performLogin("jlopez", "pass123");
-        
-        verifyThat("#label_Username", hasText("jlopez"));
-        
-        // ir a ventana modify
-        clickOn("#Button_Modify");
-        
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        
-        // modificar nombre
+    public void test1_AllComponentsAreLoaded() {
+        Label usernameLabel = lookup("#LabelUsername").query();
+        Label emailLabel = lookup("#LabelEmail").query();
+        TextField nameField = lookup("#TextField_Name").query();
+        TextField surnameField = lookup("#TextField_Surname").query();
+        TextField telephoneField = lookup("#TextField_Telephone").query();
+        Button saveButton = lookup("#Button_SaveChanges").query();
+        Button cancelButton = lookup("#Button_Cancel").query();
+
+        assertNotNull(usernameLabel);
+        assertNotNull(emailLabel);
+        assertNotNull(nameField);
+        assertNotNull(surnameField);
+        assertNotNull(telephoneField);
+        assertNotNull(saveButton);
+        assertNotNull(cancelButton);
+
+        assertEquals("jlopez", usernameLabel.getText());
+        assertEquals("jlopez@example.com", emailLabel.getText());
+    }
+
+    @Test
+    public void test2_TextFieldWriting() {
         clickOn("#TextField_Name");
         write("Juan Carlos");
         
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        
-        // modificar apellido
         clickOn("#TextField_Surname");
         write("Lopez Garcia");
         
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        
-        // modificar telefono
         clickOn("#TextField_Telephone");
         write("666777888");
         
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        TextField nameField = lookup("#TextField_Name").query();
+        TextField surnameField = lookup("#TextField_Surname").query();
+        TextField telephoneField = lookup("#TextField_Telephone").query();
         
-        // boton save
+        assertEquals("Juan Carlos", nameField.getText());
+        assertEquals("Lopez Garcia", surnameField.getText());
+        assertEquals("666777888", telephoneField.getText());
+    }
+
+    @Test
+    public void test3_ModifyWithException() {
+        mockDAO.setShouldThrowException(true, new OurException("Database error"));
+
+        clickOn("#TextField_Name");
+        write("Juan Carlos");
+        
+        clickOn("#TextField_Surname");
+        write("Lopez Garcia");
+        
+        clickOn("#TextField_Telephone");
+        write("666777888");
+        
         clickOn("#Button_SaveChanges");
+        sleep(500);
         
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        pressEscape();
+    }
+
+    @Test
+    public void test4_SuccessfulModify() {
+        clickOn("#TextField_Name");
+        write("Juan Carlos");
         
-        // cerrar dialogo de exito
-        type(javafx.scene.input.KeyCode.ENTER);
+        clickOn("#TextField_Surname");
+        write("Lopez Garcia");
         
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        clickOn("#TextField_Telephone");
+        write("666777888");
+        
+        clickOn("#Button_SaveChanges");
+        sleep(500);
+        
+        pressEscape();
+    }
+
+    private void pressEscape() {
+        sleep(500);
+        push(javafx.scene.input.KeyCode.ESCAPE);
+        sleep(500);
     }
 }
