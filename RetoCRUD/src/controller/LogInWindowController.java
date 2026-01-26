@@ -172,4 +172,9 @@ public class LogInWindowController implements Initializable {
             showAlert("Error", "Failed to open user manual", Alert.AlertType.ERROR);
         }
     }
+    
+    @FXML
+    public void handleImprimirAction() {
+        
+    }
 }
