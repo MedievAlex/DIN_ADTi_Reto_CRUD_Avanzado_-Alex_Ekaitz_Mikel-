@@ -120,7 +120,7 @@ public class LogInWindowController implements Initializable {
                         Stage currentStage = (Stage) Button_LogIn.getScene().getWindow();
                         currentStage.close();
                         
-                        GeneraLog.getLogger().info("Logged correctly" + profile.getUsername());
+                        GeneraLog.getLogger().info("Logged correctly: " + profile.getUsername());
                     } catch (IOException ex) {
                         GeneraLog.getLogger().severe("Error trying to open Main Menu: " + ex.getMessage());
                         showAlert("Error", "Trying to open Main Menu", Alert.AlertType.ERROR);
