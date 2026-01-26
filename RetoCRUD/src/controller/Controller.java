@@ -181,4 +181,8 @@ public class Controller {
     public void deleteReview(Review review) throws OurException {
         DAO.deleteReview(review);
     }
+    
+    public void generateReport(String name) throws OurException{
+        DAO.generateReport(name);
+    }
 }

@@ -28,11 +28,9 @@ public class MockClassDAO implements ClassDAO
      */
     public MockClassDAO()
     {
-        // Mock profile
         this.mockUser = new User("MALE", "ES1234567890123456789012", "testuser", "Ab123456",
                 "test@test.com", "Test", "123456789", "User");
 
-        // Mock video games
         this.mockVideoGames = new ArrayList<>();
         mockVideoGames.add(new VideoGame(1, "The Legend of Zelda", LocalDate.of(2017, 3, 3),
                 Platform.NINTENDO, Pegi.PEGI12));
@@ -41,16 +39,13 @@ public class MockClassDAO implements ClassDAO
         mockVideoGames.add(new VideoGame(3, "Halo Infinite", LocalDate.of(2021, 12, 8),
                 Platform.XBOX, Pegi.PEGI16));
 
-        // Mock reviews
         this.mockReviews = new ArrayList<>();
         mockReviews.add(new Review(mockUser, mockVideoGames.get(0), 9, "Amazing game!", 
         LocalDate.now(), Platform.NINTENDO));
 
-        // User lists structure
         this.userLists = new HashMap<>();
         this.userListGames = new HashMap<>();
 
-        // Initialize default lists for test user
         ArrayList<String> defaultLists = new ArrayList<>();
         defaultLists.add("My Games");
         defaultLists.add("Favorites");
@@ -426,10 +421,8 @@ public class MockClassDAO implements ClassDAO
         {
             throw exceptionToThrow;
         }
-        // Remove existing review if present
         mockReviews.removeIf(r -> r.getProfile().getUsername().equals(review.getProfile().getUsername())
                 && r.getVideogame().getV_id() == review.getVideogame().getV_id());
-        // Add new/updated review
         mockReviews.add(review);
         return true;
     }
@@ -452,6 +445,13 @@ public class MockClassDAO implements ClassDAO
         {
             throw exceptionToThrow;
         }
-        // Mock initialization - already done in constructor
+    }
+
+    @Override
+    public void generateReport(String name) throws OurException {
+        if (shouldThrowException)
+        {
+            throw exceptionToThrow;
+        }
     }
 }

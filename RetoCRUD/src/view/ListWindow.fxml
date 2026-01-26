@@ -25,7 +25,7 @@
             <menus>
                 <Menu fx:id="menuActions" mnemonicParsing="false" text="Actions">
                     <items>
-                        <MenuItem fx:id="menuItemReport" mnemonicParsing="false" text="Report" />
+                        <MenuItem fx:id="menuItemReport" mnemonicParsing="false" onAction="#handleImprimirAction" text="Report" />
                   <MenuItem fx:id="menuItemNewGames" mnemonicParsing="false" onAction="#handleVideoAction" text="New Games" />
                     </items>
                 </Menu>

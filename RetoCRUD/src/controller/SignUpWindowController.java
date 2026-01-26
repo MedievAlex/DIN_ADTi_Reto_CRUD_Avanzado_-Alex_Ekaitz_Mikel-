@@ -320,4 +320,15 @@ public class SignUpWindowController implements Initializable {
             showAlert("Error", "Failed to open user manual", Alert.AlertType.ERROR);
         }
     }
+    
+    @FXML
+    public void handleImprimirAction() {
+        try {
+            cont.generateReport("");
+        }
+        catch (OurException ex) {
+            GeneraLog.getLogger().severe("Failed to generate report: " + ex.getMessage());
+            showAlert("Error", "Failed to generate report", Alert.AlertType.ERROR);
+        }
+    }
 }

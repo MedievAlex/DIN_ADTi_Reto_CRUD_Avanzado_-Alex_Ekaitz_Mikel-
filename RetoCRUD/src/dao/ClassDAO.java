@@ -68,4 +68,6 @@ public interface ClassDAO {
 
     //[OTHER]
     public void initializeDefault() throws OurException;
+    
+    public void generateReport(String name) throws OurException;
 }

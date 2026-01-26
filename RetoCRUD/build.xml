@@ -70,4 +70,13 @@
     nbproject/build-impl.xml file. 
 
     -->
+    <target name="-post-jar">
+        <jar destfile="${dist.jar}" update="true">
+            <fileset dir="${src.dir}" includes="**/*.jasper"/>
+            <fileset dir="${src.dir}" includes="**/*.properties"/>
+            <fileset dir="${src.dir}" includes="**/*.png"/>
+            <fileset dir="${src.dir}" includes="**/*.jpg"/>
+            <fileset dir="${src.dir}" includes="**/*.gif"/>
+        </jar>
+    </target>
 </project>

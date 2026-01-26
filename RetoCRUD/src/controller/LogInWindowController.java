@@ -46,10 +46,10 @@ public class LogInWindowController implements Initializable {
     @FXML
     private Label labelIncorrecto;
 
-    private Controller CONT;
+    private Controller cont;
 
     public void setCont(Controller controller) {
-        this.CONT = controller;
+        this.cont = controller;
     }
 
     /**
@@ -66,7 +66,7 @@ public class LogInWindowController implements Initializable {
             stage.show();
 
             controller.SignUpWindowController controllerWindow = fxmlLoader.getController();
-            controllerWindow.setCont(CONT);
+            controllerWindow.setCont(cont);
 
             Stage currentStage = (Stage) Button_SignUp.getScene().getWindow();
             currentStage.close();
@@ -89,7 +89,7 @@ public class LogInWindowController implements Initializable {
             labelIncorrecto.setText("Please fill in both fields.");
         } else {
             try {
-                Profile profile = CONT.logIn(username, password);
+                Profile profile = cont.logIn(username, password);
                 if (profile != null)
                 {
                     try
@@ -99,7 +99,7 @@ public class LogInWindowController implements Initializable {
                         Parent root = fxmlLoader.load();
 
                         controller.MainMenuWindowController controllerWindow = fxmlLoader.getController();
-                        controllerWindow.setCont(CONT);
+                        controllerWindow.setCont(cont);
                         controllerWindow.setUsuario(profile);
                         
                         MenuItem fullScreen = new MenuItem("Full screen");
@@ -120,7 +120,7 @@ public class LogInWindowController implements Initializable {
                         Stage currentStage = (Stage) Button_LogIn.getScene().getWindow();
                         currentStage.close();
                         
-                        GeneraLog.getLogger().info("Logged correctly");
+                        GeneraLog.getLogger().info("Logged correctly" + profile.getUsername());
                     } catch (IOException ex) {
                         GeneraLog.getLogger().severe("Error trying to open Main Menu: " + ex.getMessage());
                         showAlert("Error", "Trying to open Main Menu", Alert.AlertType.ERROR);
@@ -175,6 +175,12 @@ public class LogInWindowController implements Initializable {
     
     @FXML
     public void handleImprimirAction() {
-        
+        try {
+            cont.generateReport("");
+        }
+        catch (OurException ex) {
+            GeneraLog.getLogger().severe("Failed to generate report: " + ex.getMessage());
+            showAlert("Error", "Failed to generate report", Alert.AlertType.ERROR);
+        }
     }
 }

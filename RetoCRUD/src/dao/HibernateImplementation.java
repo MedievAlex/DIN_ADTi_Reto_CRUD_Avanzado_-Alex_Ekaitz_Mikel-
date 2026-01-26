@@ -2,8 +2,13 @@ package dao;
 
 import exception.ErrorMessages;
 import exception.OurException;
+import java.io.File;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import model.Admin;
 import model.Listed;
@@ -14,8 +19,12 @@ import model.Review;
 import model.ReviewId;
 import model.User;
 import model.VideoGame;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.jdbc.Work;
 import threads.SessionThread;
 
 public class HibernateImplementation implements ClassDAO {
@@ -1138,5 +1147,60 @@ public class HibernateImplementation implements ClassDAO {
         }
 
         return thread.getSession();
+    }
+    
+    @Override
+    public void generateReport(String name) throws OurException {
+        Session session = null;
+        try {
+            session = HibernateUtil.getSession();
+            HashMap<String, Object> params = new HashMap<>();
+            params.put("GENERATED_BY", name);
+            params.put("GENERATION_DATE", new java.util.Date());
+
+            session.doWork(new Work() {
+                @Override
+                public void execute(Connection connection) throws SQLException {
+                    try {
+                        String reportPath = "/reports/Report.jasper";
+                        InputStream reportStream = getClass().getResourceAsStream(reportPath);
+
+                        if (reportStream == null) {
+                            throw new SQLException("Report not found: " + reportPath);
+                        }
+
+                        JasperPrint jasperPrint = JasperFillManager.fillReport(
+                            reportStream, 
+                            params, 
+                            connection
+                        );
+
+                        File reportsDir = new File("reports");
+                        if (!reportsDir.exists()) {
+                            reportsDir.mkdirs();
+                        }
+
+                        String timestamp = new java.text.SimpleDateFormat("yyyyMMdd_HHmmss").format(new java.util.Date());
+                        String pdfPath = "reports/Report_" + timestamp + ".pdf";
+
+                        JasperExportManager.exportReportToPdfFile(jasperPrint, pdfPath);
+
+                        File pdfFile = new File(pdfPath);
+                        if (java.awt.Desktop.isDesktopSupported()) {
+                            java.awt.Desktop.getDesktop().open(pdfFile);
+                        }
+
+                    } catch (Exception ex) {
+                        throw new SQLException("Error generating PDF: " + ex.getMessage(), ex);
+                    }
+                }
+            });
+        } catch (Exception ex) {
+            throw new OurException("Error generating report: " + ex.getMessage());
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+        }
     }
 }
