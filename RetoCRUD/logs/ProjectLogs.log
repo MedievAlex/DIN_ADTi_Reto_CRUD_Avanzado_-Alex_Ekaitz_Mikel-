@@ -170,3 +170,13 @@ ene 26, 2026 9:11:29 PM controller.LogInWindowController logIn
 INFORMACIÓN: Logged correctly: asanchez
 ene 26, 2026 9:12:00 PM controller.LogInWindowController logIn
 INFORMACIÓN: Logged correctly: asanchez
+ene 27, 2026 8:13:57 AM controller.LogInWindowController logIn
+GRAVE: Error trying to login: Invalid credentials
+ene 27, 2026 8:14:01 AM controller.LogInWindowController logIn
+GRAVE: Error trying to login: Database error
+ene 27, 2026 9:09:35 AM controller.LogInWindowController logIn
+INFORMACIÓN: Logged correctly: asanchez
+ene 27, 2026 9:11:13 AM controller.LogInWindowController logIn
+INFORMACIÓN: Logged correctly: asanchez
+ene 27, 2026 9:16:46 AM controller.LogInWindowController logIn
+INFORMACIÓN: Logged correctly: asanchez

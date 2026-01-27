@@ -375,7 +375,7 @@ public class HibernateImplementation implements ClassDAO {
             if (e instanceof OurException) {
                 throw (OurException) e;
             } else {
-                throw new OurException(ErrorMessages.REGISTER_USER);
+                throw new OurException(ErrorMessages.DATABASE);
             }
         } finally {
             thread.releaseSession();
@@ -424,7 +424,7 @@ public class HibernateImplementation implements ClassDAO {
             if (e instanceof OurException) {
                 throw (OurException) e;
             } else {
-                throw new OurException(ErrorMessages.REGISTER_USER);
+                throw new OurException(ErrorMessages.DATABASE);
             }
         } finally {
             thread.releaseSession();
@@ -461,7 +461,7 @@ public class HibernateImplementation implements ClassDAO {
             if (e instanceof OurException) {
                 throw (OurException) e;
             } else {
-                throw new OurException(ErrorMessages.REGISTER_USER);
+                throw new OurException(ErrorMessages.DATABASE);
             }
         } finally {
             thread.releaseSession();
@@ -500,7 +500,7 @@ public class HibernateImplementation implements ClassDAO {
             if (e instanceof OurException) {
                 throw (OurException) e;
             } else {
-                throw new OurException(ErrorMessages.REGISTER_USER);
+                throw new OurException(ErrorMessages.DATABASE);
             }
         } finally {
             thread.releaseSession();
@@ -542,7 +542,7 @@ public class HibernateImplementation implements ClassDAO {
             if (e instanceof OurException) {
                 throw (OurException) e;
             } else {
-                throw new OurException(ErrorMessages.REGISTER_USER);
+                throw new OurException(ErrorMessages.DATABASE);
             }
         } finally {
             thread.releaseSession();
@@ -579,7 +579,7 @@ public class HibernateImplementation implements ClassDAO {
                 if (e instanceof OurException) {
                     throw (OurException) e;
                 } else {
-                    throw new OurException(ErrorMessages.REGISTER_USER);
+                    throw new OurException(ErrorMessages.DATABASE);
                 }
             } finally {
                 thread.releaseSession();
@@ -660,7 +660,7 @@ public class HibernateImplementation implements ClassDAO {
             if (e instanceof OurException) {
                 throw (OurException) e;
             } else {
-                throw new OurException(ErrorMessages.REGISTER_USER);
+                throw new OurException(ErrorMessages.DATABASE);
             }
         } finally {
             thread.releaseSession();
@@ -693,7 +693,7 @@ public class HibernateImplementation implements ClassDAO {
             if (e instanceof OurException) {
                 throw (OurException) e;
             } else {
-                throw new OurException(ErrorMessages.REGISTER_USER);
+                throw new OurException(ErrorMessages.DATABASE);
             }
         } finally {
             thread.releaseSession();
@@ -727,7 +727,7 @@ public class HibernateImplementation implements ClassDAO {
             if (e instanceof OurException) {
                 throw (OurException) e;
             } else {
-                throw new OurException(ErrorMessages.REGISTER_USER);
+                throw new OurException(ErrorMessages.DATABASE);
             }
         } finally {
             thread.releaseSession();
@@ -773,7 +773,7 @@ public class HibernateImplementation implements ClassDAO {
             if (e instanceof OurException) {
                 throw (OurException) e;
             } else {
-                throw new OurException(ErrorMessages.REGISTER_USER);
+                throw new OurException(ErrorMessages.DATABASE);
             }
         } finally {
             thread.releaseSession();
@@ -848,7 +848,7 @@ public class HibernateImplementation implements ClassDAO {
             if (e instanceof OurException) {
                 throw (OurException) e;
             } else {
-                throw new OurException(ErrorMessages.REGISTER_USER);
+                throw new OurException(ErrorMessages.DATABASE);
             }
         } finally {
             thread.releaseSession();
@@ -920,7 +920,7 @@ public class HibernateImplementation implements ClassDAO {
             if (e instanceof OurException) {
                 throw (OurException) e;
             } else {
-                throw new OurException(ErrorMessages.REGISTER_USER);
+                throw new OurException(ErrorMessages.DATABASE);
             }
         } finally {
             thread.releaseSession();
@@ -1005,7 +1005,7 @@ public class HibernateImplementation implements ClassDAO {
             if (e instanceof OurException) {
                 throw (OurException) e;
             } else {
-                throw new OurException(ErrorMessages.REGISTER_USER);
+                throw new OurException(ErrorMessages.DATABASE);
             }
         } finally {
             thread.releaseSession();

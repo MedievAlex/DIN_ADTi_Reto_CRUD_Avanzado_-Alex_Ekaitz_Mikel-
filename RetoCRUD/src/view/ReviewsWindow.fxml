@@ -76,7 +76,7 @@
             <TableView fx:id="tableReview" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="tcGame" minWidth="75.3333101272583" prefWidth="144.7999633550644" text="GAME" />
-               <TableColumn fx:id="tcAutor" prefWidth="71.20004272460938" text="AUTOR" />
+               <TableColumn fx:id="tcAutor" prefWidth="71.20004272460938" text="AUTHOR" />
                     <TableColumn fx:id="tcRelease" minWidth="26.666656494140625" prefWidth="98.4000244140625" text="RELEASE" />
                     <TableColumn fx:id="tcPlatform" minWidth="74.6666259765625" prefWidth="98.39996337890625" text="PLATFORM" />
                     <TableColumn fx:id="tcRate" minWidth="0.0" prefWidth="57.59991455078125" text="SCORE" />
