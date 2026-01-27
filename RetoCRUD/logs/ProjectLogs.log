@@ -184,3 +184,9 @@ ene 27, 2026 9:16:46 AM controller.LogInWindowController logIn
 ene 27, 2026 8:53:04 AM controller.LogInWindowController logIn
 >>>>>>> 87b7dbc947b54c220d62c92816988d0eaf727776
 INFORMACIÓN: Logged correctly: asanchez
+ene 27, 2026 9:20:53 AM controller.LogInWindowController logIn
+INFORMACIÓN: Logged correctly: asanchez
+ene 27, 2026 9:20:56 AM controller.ReviewsWindowController setComboBox
+GRAVE: Failed to get user lists: Error initializing database connection.
+ene 27, 2026 9:20:59 AM controller.ReviewsWindowController loadReview
+GRAVE: Failed to load reviews: Error initializing database connection.
