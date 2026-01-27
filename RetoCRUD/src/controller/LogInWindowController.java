@@ -48,12 +48,18 @@ public class LogInWindowController implements Initializable {
 
     private Controller cont;
 
+    /**
+     * Sets the main controller for this login controller.
+     *
+     * @param controller The main controller instance
+     */
     public void setCont(Controller controller) {
         this.cont = controller;
     }
 
     /**
      * Opens the SignUp window.
+     * Closes the current login window and displays the signup form.
      */
     @FXML
     private void signUp() {
@@ -79,6 +85,7 @@ public class LogInWindowController implements Initializable {
     /**
      * Attempts to log in the user. If successful, opens MenuWindow; otherwise,
      * shows an error.
+     * Validates input fields, authenticates credentials, and navigates to the main menu.
      */
     @FXML
     private void logIn() {
@@ -135,10 +142,21 @@ public class LogInWindowController implements Initializable {
         }
     }
 
+    /**
+     * Initializes the controller class.
+     * This method is called automatically after the FXML file has been loaded.
+     *
+     * @param url The location used to resolve relative paths for the root object, or null if unknown
+     * @param rb The resources used to localize the root object, or null if not localized
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
     }
 
+    /**
+     * Handles the video tutorial action by opening a YouTube tutorial video in a WebView.
+     * Opens the video in full screen mode.
+     */
     @FXML
     public void handleVideoAction() {
         try {
@@ -157,6 +175,10 @@ public class LogInWindowController implements Initializable {
         }
     }
 
+    /**
+     * Handles the help action by opening the user manual PDF file.
+     * Displays a warning if the file is not found.
+     */
     @FXML
     public void handleHelpAction() {
         try {
@@ -173,6 +195,10 @@ public class LogInWindowController implements Initializable {
         }
     }
     
+    /**
+     * Handles the print action by generating a report.
+     * Creates an empty report when triggered from the login screen.
+     */
     @FXML
     public void handleImprimirAction() {
         try {

@@ -37,16 +37,30 @@ public class DeleteAccountAdminController implements Initializable
     @FXML
     private Button Button_Delete;
 
+    /**
+     * Sets the main controller for this controller.
+     *
+     * @param cont The main controller instance
+     */
     public void setCont(Controller cont)
     {
         this.cont = cont;
     }
 
+    /**
+     * Sets the profile of the currently logged-in admin.
+     *
+     * @param profile The profile of the admin
+     */
     public void setProfile(Profile profile)
     {
         this.profile = profile;
     }
 
+    /**
+     * Populates the combo box with a list of users from the database.
+     * Clears existing items and adds all retrieved usernames.
+     */
     public void setComboBoxUser()
     {
         try
@@ -61,6 +75,11 @@ public class DeleteAccountAdminController implements Initializable
         }
     }
 
+    /**
+     * Handles the cancel button click event.
+     * Closes the current window and opens the main menu window.
+     * Displays an error alert if the menu window cannot be opened.
+     */
     @FXML
     private void cancel()
     {
@@ -89,6 +108,12 @@ public class DeleteAccountAdminController implements Initializable
         }
     }
 
+    /**
+     * Handles the delete button click event.
+     * Validates input fields, shows a confirmation dialog, and attempts to delete the selected user account.
+     * If successful, closes the current window and opens the main menu window.
+     * Displays appropriate alerts for validation errors or operation failures.
+     */
     @FXML
     private void delete()
     {
@@ -157,6 +182,13 @@ public class DeleteAccountAdminController implements Initializable
         }
     }
 
+    /**
+     * Initializes the controller class.
+     * This method is automatically called after the FXML file has been loaded.
+     *
+     * @param url The location used to resolve relative paths for the root object, or null if unknown
+     * @param rb The resources used to localize the root object, or null if not localized
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {}
 }

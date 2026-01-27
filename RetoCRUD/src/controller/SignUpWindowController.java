@@ -46,12 +46,18 @@ public class SignUpWindowController implements Initializable {
     private Controller cont;
     private ToggleGroup grupOp;
 
+    /**
+     * Sets the main controller for this signup controller.
+     *
+     * @param cont The main controller instance
+     */
     public void setCont(Controller cont) {
         this.cont = cont;
     }
 
     /**
      * Navigates back to login window.
+     * Closes the current signup window and opens the login interface.
      */
     @FXML
     private void login() {
@@ -77,6 +83,9 @@ public class SignUpWindowController implements Initializable {
 
     /**
      * Validates all input fields before signup.
+     * Checks email format, username length, name/surname format,
+     * phone number, card number, password requirements, and gender selection.
+     *
      * @return true if all fields are valid, false otherwise
      */
     private boolean validateInputs() {
@@ -188,6 +197,9 @@ public class SignUpWindowController implements Initializable {
 
     /**
      * Validates email format using regex.
+     *
+     * @param email The email address to validate
+     * @return true if the email format is valid, false otherwise
      */
     private boolean isValidEmail(String email) {
         String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
@@ -196,6 +208,10 @@ public class SignUpWindowController implements Initializable {
 
     /**
      * Validates name/surname contains only letters and spaces.
+     * Supports Spanish characters with accents.
+     *
+     * @param name The name or surname to validate
+     * @return true if the name contains only valid characters, false otherwise
      */
     private boolean isValidName(String name) {
         return name.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+");
@@ -203,6 +219,10 @@ public class SignUpWindowController implements Initializable {
 
     /**
      * Validates phone number format (exactly 9 digits).
+     * Removes common separators (spaces, hyphens, parentheses) before validation.
+     *
+     * @param phone The phone number to validate
+     * @return true if the phone number format is valid, false otherwise
      */
     private boolean isValidPhone(String phone) {
         String cleanPhone = phone.replaceAll("[\\s\\-\\(\\)]", "");
@@ -211,6 +231,11 @@ public class SignUpWindowController implements Initializable {
 
     /**
      * Validates card number format (2 uppercase letters + 22 digits).
+     * Removes spaces and hyphens before validation.
+     * Example valid format: ES1234567890123456789012
+     *
+     * @param cardNumber The card number to validate
+     * @return true if the card number format is valid, false otherwise
      */
     private boolean isValidCardNumber(String cardNumber) {
         String cleanCard = cardNumber.replaceAll("[\\s\\-]", "");
@@ -219,6 +244,8 @@ public class SignUpWindowController implements Initializable {
 
     /**
      * Signs up a new user and navigates to MainMenuWindow if successful.
+     * Validates inputs, creates a new user account, logs in automatically,
+     * and navigates to the main menu.
      */
     @FXML
     private void signup() {
@@ -279,6 +306,13 @@ public class SignUpWindowController implements Initializable {
         }
     }
     
+    /**
+     * Initializes the controller class.
+     * Sets up the toggle group for gender radio buttons.
+     *
+     * @param url The location used to resolve relative paths for the root object, or null if unknown
+     * @param rb The resources used to localize the root object, or null if not localized
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         grupOp = new ToggleGroup();
@@ -287,6 +321,10 @@ public class SignUpWindowController implements Initializable {
         rButtonO.setToggleGroup(grupOp);
     }
     
+    /**
+     * Handles the video tutorial action by opening a YouTube tutorial video in a WebView.
+     * Opens the video in full screen mode.
+     */
     @FXML
     public void handleVideoAction() {
         try {
@@ -305,6 +343,10 @@ public class SignUpWindowController implements Initializable {
         }
     }
 
+    /**
+     * Handles the help action by opening the user manual PDF file.
+     * Displays a warning if the file is not found.
+     */
     @FXML
     public void handleHelpAction() {
         try {
@@ -321,6 +363,10 @@ public class SignUpWindowController implements Initializable {
         }
     }
     
+    /**
+     * Handles the print action by generating a report.
+     * Creates an empty report when triggered from the signup screen.
+     */
     @FXML
     public void handleImprimirAction() {
         try {

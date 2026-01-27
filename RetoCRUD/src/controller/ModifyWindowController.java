@@ -43,19 +43,32 @@ public class ModifyWindowController implements Initializable {
     private Controller cont; // Controller instance for business logic
     private Profile profile; // Currently logged-in user
 
-    // Set controller instance
+    /**
+     * Sets the controller instance for business logic operations.
+     *
+     * @param cont The main controller instance
+     */
     public void setCont(Controller cont) {
         this.cont = cont;
     }
 
-    // Set current profile and populate labels
+    /**
+     * Sets the current user profile and populates the display fields with existing data.
+     *
+     * @param profile The currently logged-in user's profile
+     */
     public void setProfile(Profile profile) {
         this.profile = profile;
         LabelUsername.setText(profile.getUsername());
         LabelEmail.setText(profile.getEmail());
     }
 
-    // Save changes button action
+    /**
+     * Handles the save button action to update user profile information.
+     * Validates input fields, processes password changes, and saves modifications to the database.
+     *
+     * @param event The action event that triggered this method
+     */
     @FXML
     private void save(ActionEvent event) {
         String name = TextField_Name.getText();
@@ -141,12 +154,18 @@ public class ModifyWindowController implements Initializable {
         }
     }
 
-    // Cancel button action: returns to MenuWindow without saving
+    /**
+     * Handles the cancel button action. Returns to the main menu without saving changes.
+     */
     @FXML
     private void cancel() {
         navigateToMenu();
     }
 
+    /**
+     * Navigates back to the main menu window.
+     * Closes the current modification window and opens the profile menu.
+     */
     private void navigateToMenu() {
         try {
             javafx.fxml.FXMLLoader fxmlLoader = new javafx.fxml.FXMLLoader(getClass().getResource("/view/MenuWindow.fxml"));
@@ -170,6 +189,13 @@ public class ModifyWindowController implements Initializable {
         }
     }
 
+    /**
+     * Initializes the controller class.
+     * This method is called automatically after the FXML file has been loaded.
+     *
+     * @param url The location used to resolve relative paths for the root object, or null if unknown
+     * @param rb The resources used to localize the root object, or null if not localized
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Inicialización si es necesaria

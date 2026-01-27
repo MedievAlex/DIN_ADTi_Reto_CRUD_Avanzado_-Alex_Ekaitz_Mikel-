@@ -58,6 +58,11 @@ public class DeleteAccountController implements Initializable
         LabelUsername.setText(profile.getUsername());
     }
     
+    /**
+     * Sets the parent stage reference.
+     *
+     * @param parentStage The parent stage that opened this window
+     */
     public void setParentStage(Stage parentStage) {
         this.parentStage = parentStage;
     }
@@ -178,6 +183,13 @@ public class DeleteAccountController implements Initializable
         }
     }
 
+    /**
+     * Initializes the controller class. This method is called automatically
+     * after the FXML file has been loaded.
+     *
+     * @param url The location used to resolve relative paths for the root object, or null if unknown
+     * @param rb The resources used to localize the root object, or null if not localized
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Initialization logic if needed

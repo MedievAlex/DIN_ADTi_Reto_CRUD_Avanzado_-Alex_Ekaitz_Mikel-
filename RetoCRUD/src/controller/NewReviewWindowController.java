@@ -21,7 +21,7 @@ import model.Review;
 import model.VideoGame;
 
 /**
- * FXML Controller class
+ * FXML Controller class for creating and editing reviews.
  *
  * @author ema
  */
@@ -45,14 +45,29 @@ public class NewReviewWindowController implements Initializable {
     private ObservableList<Review> reviewsObservableList;
     private ReviewsWindowController parentController;
 
+    /**
+     * Sets the user profile for this controller.
+     *
+     * @param profile The user's profile object
+     */
     public void setUsuario(Profile profile) {
         this.profile = profile;
     }
 
+    /**
+     * Sets the parent controller to allow communication between windows.
+     *
+     * @param parentController The parent ReviewsWindowController instance
+     */
     public void setParentController(ReviewsWindowController parentController) {
         this.parentController = parentController;
     }
 
+    /**
+     * Sets the main controller and configures initial event handlers.
+     *
+     * @param cont The main controller instance
+     */
     public void setCont(Controller cont) {
 
         this.cont = cont;
@@ -65,19 +80,36 @@ public class NewReviewWindowController implements Initializable {
         });
     }
 
+    /**
+     * Gets the main controller instance.
+     *
+     * @return The main controller
+     */
     public Controller getCont() {
         return cont;
     }
 
+    /**
+     * Enables the game combo box for selection.
+     */
     public void setAvailableGames() {
 
         comboBoxGame.setDisable(false);
     }
 
+    /**
+     * Sets the observable list of reviews for data binding.
+     *
+     * @param reviewsObservableList The observable list of reviews
+     */
     public void setReviewsObservableList(ObservableList<Review> reviewsObservableList) {
         this.reviewsObservableList = reviewsObservableList;
     }
 
+    /**
+     * Loads existing review data when a game is selected from the combo box.
+     * If a review exists for the selected game and user, it populates the form fields.
+     */
     @FXML
     private void cargardatosReview() {
         try {
@@ -121,11 +153,18 @@ public class NewReviewWindowController implements Initializable {
         }
     }
 
+    /**
+     * Resets the review form to default values.
+     */
     private void resetReviewForm() {
         spinnerRating.getValueFactory().setValue(5);
         textAreaReview.clear();
     }
 
+    /**
+     * Populates the platform combo box with available platform options.
+     * Sets up a listener to update the game combo box when a platform is selected.
+     */
     private void populatePlatformComboBox() {
         ObservableList<String> platformNames = FXCollections.observableArrayList();
         for (Platform platform : Platform.values()) {
@@ -151,6 +190,12 @@ public class NewReviewWindowController implements Initializable {
         });
     }
 
+    /**
+     * Populates the game combo box with games available for the selected platform.
+     *
+     * @param selectedPlatform The selected platform name
+     * @throws OurException If there's an error retrieving games from the database
+     */
     private void populateGameComboBox(String selectedPlatform) throws OurException {
         comboBoxGame.getItems().clear();
 
@@ -178,6 +223,9 @@ public class NewReviewWindowController implements Initializable {
 
     }
 
+    /**
+     * Configures the rating spinner with appropriate values and validation.
+     */
     private void configureRatingSpinner() {
         SpinnerValueFactory.IntegerSpinnerValueFactory valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10, 5);
         spinnerRating.setValueFactory(valueFactory);
@@ -200,6 +248,12 @@ public class NewReviewWindowController implements Initializable {
         });
     }
 
+    /**
+     * Handles the confirm button action to save a new or updated review.
+     * Validates fields, creates a Review object, and saves it to the database.
+     *
+     * @param event The action event that triggered this method
+     */
     @FXML
     private void confirmReview(ActionEvent event) {
         if (!validateFields()) {
@@ -233,6 +287,11 @@ public class NewReviewWindowController implements Initializable {
         }
     }
 
+    /**
+     * Validates that all required fields are filled.
+     *
+     * @return true if all fields are valid, false otherwise
+     */
     private boolean validateFields() {
         ArrayList<String> errors = new ArrayList<String>();
 
@@ -256,6 +315,11 @@ public class NewReviewWindowController implements Initializable {
         return true;
     }
 
+    /**
+     * Saves or updates a review in the database.
+     *
+     * @param review The Review object to save
+     */
     private void saveReview(Review review) {
         try {
             if (cont.saveOrUpdateReview(review)) {
@@ -269,6 +333,11 @@ public class NewReviewWindowController implements Initializable {
         }
     }
 
+    /**
+     * Handles the cancel button action to close the window without saving.
+     *
+     * @param event The action event that triggered this method
+     */
     @FXML
     public void cancel(ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -277,9 +346,10 @@ public class NewReviewWindowController implements Initializable {
 
     /**
      * Initializes the controller class.
+     * Sets up platform combo box, rating spinner, and event handlers.
      *
-     * @param url
-     * @param rb
+     * @param url The location used to resolve relative paths for the root object, or null if unknown
+     * @param rb The resources used to localize the root object, or null if not localized
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {

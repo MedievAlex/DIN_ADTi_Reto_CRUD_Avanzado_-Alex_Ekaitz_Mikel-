@@ -7,6 +7,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+/**
+ * Logger utility class for generating and managing application logs.
+ * This class follows the Singleton pattern to ensure only one logger instance
+ * is created throughout the application. Logs are written to a file in the
+ * "./logs" directory.
+ *
+ * @author ema
+ */
 public class GeneraLog
 {
   // [ VARIABLES ]
@@ -14,7 +22,12 @@ public class GeneraLog
   private static FileHandler fileHandler = null;
 
   // [ CONSTRUCTORES ]
-  // Constructor privado para evitar la instanciación externa
+  /**
+   * Private constructor to prevent external instantiation.
+   * Initializes the logger only if it hasn't been initialized previously.
+   * Creates the logs directory if it doesn't exist, configures the file handler,
+   * and sets up the logger with appropriate formatting and log level.
+   */
 	private GeneraLog()
 	{
 		// Inicializa el logger solo si no se ha inicializado previamente
@@ -48,7 +61,12 @@ public class GeneraLog
 	}
 
 	// [ METODOS ]
-	// Método para obtener la instancia del logger
+	/**
+	 * Returns the singleton logger instance.
+	 * If the logger hasn't been initialized yet, it creates a new instance.
+	 *
+	 * @return The Logger instance for the application
+	 */
 	public static Logger getLogger()
 	{
 		if (logger == null)
@@ -58,7 +76,11 @@ public class GeneraLog
 		return logger;
 	}
 
-	// Método para cerrar el fileHandler
+	/**
+	 * Closes the file handler to release system resources.
+	 * This method should be called when the application is shutting down
+	 * to ensure all log data is properly written and resources are freed.
+	 */
 	public static void closeLogger()
 	{
 		if (fileHandler != null)

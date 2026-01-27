@@ -11,12 +11,20 @@ import javafx.stage.Stage;
 import dao.HibernateUtil;
 import logger.GeneraLog;
 
+/**
+ * Main class that serves as the entry point for the JavaFX application.
+ * Initializes the database, sets up the controller, and launches the login window.
+ * 
+ * @author ema
+ */
 public class Main extends Application
 {
     private HibernateImplementation dao;
 
     /**
      * Starts the JavaFX application by loading the login window.
+     * Initializes the database, sets up global exception handling,
+     * creates the controller, and displays the login interface.
      *
      * @param stage the primary stage for this application
      * @throws Exception if the FXML file cannot be loaded
@@ -63,6 +71,11 @@ public class Main extends Application
         launch(args);
     }
     
+    /**
+     * Called when the application is shutting down.
+     * Performs cleanup operations including closing database connections
+     * and stopping any running threads.
+     */
     @Override
     public void stop()
     {

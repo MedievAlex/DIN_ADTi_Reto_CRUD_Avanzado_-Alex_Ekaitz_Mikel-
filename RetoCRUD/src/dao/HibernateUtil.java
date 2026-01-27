@@ -9,11 +9,30 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+/**
+ * Utility class for managing Hibernate sessions and database connections.
+ * Provides methods to initialize and manage the Hibernate SessionFactory
+ * and database connections using connection pooling.
+ * 
+ * @author ema
+ */
 public final class HibernateUtil
 {
     private static SessionFactory sessionFactory;
+    
+    /**
+     * Private constructor to prevent instantiation of this utility class.
+     */
     private HibernateUtil() {}
     
+    /**
+     * Builds and configures the Hibernate SessionFactory if not already created.
+     * Reads database configuration from properties file, creates the database if it doesn't exist,
+     * and configures Hibernate with HikariCP connection pooling.
+     * 
+     * @return The configured SessionFactory instance
+     * @throws ExceptionInInitializerError if there's an error creating the SessionFactory
+     */
     private static SessionFactory buildSessionFactory()
     {
         if (sessionFactory == null)
@@ -84,11 +103,22 @@ public final class HibernateUtil
         return sessionFactory;
     }
     
+    /**
+     * Returns a new Hibernate Session from the SessionFactory.
+     * The SessionFactory is built if it hasn't been initialized yet.
+     * 
+     * @return A new Hibernate Session
+     */
     public static Session getSession()
     {
         return buildSessionFactory().openSession();
     }
     
+    /**
+     * Closes the Hibernate SessionFactory if it's open.
+     * This should be called when the application is shutting down
+     * to release database connections and other resources.
+     */
     public static void close()
     {
         if (sessionFactory != null && !sessionFactory.isClosed())

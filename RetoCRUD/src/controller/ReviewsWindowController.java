@@ -37,7 +37,8 @@ import javafx.util.Callback;
 import logger.GeneraLog;
 
 /**
- * FXML Controller class
+ * FXML Controller class for the Reviews window.
+ * Handles displaying, filtering, creating, and deleting reviews.
  *
  * @author ema
  */
@@ -78,19 +79,39 @@ public class ReviewsWindowController implements Initializable {
     private ObservableList<Review> reviews;
     private ContextMenu currentContextMenu;
 
+    /**
+     * Sets the user profile for this controller.
+     *
+     * @param profile The user's profile object
+     */
     public void setUsuario(Profile profile) {
         this.profile = profile;
         menu.setText(profile.getUsername());
     }
 
+    /**
+     * Sets the main controller for this controller.
+     *
+     * @param cont The main controller instance
+     */
     public void setCont(Controller cont) {
         this.cont = cont;
     }
 
+    /**
+     * Gets the main controller instance.
+     *
+     * @return The main controller
+     */
     public Controller getCont() {
         return cont;
     }
 
+    /**
+     * Loads all reviews from the database and populates the table.
+     *
+     * @throws OurException If there's an error retrieving reviews from the database
+     */
     public void loadReview() throws OurException {
         try {
             ArrayList<Review> allreviews = cont.getAllReviews();
@@ -112,6 +133,9 @@ public class ReviewsWindowController implements Initializable {
         }
     }
 
+    /**
+     * Opens a new window to create or edit a review.
+     */
     @FXML
     private void newReview() {
         try {
@@ -137,6 +161,9 @@ public class ReviewsWindowController implements Initializable {
         }
     }
 
+    /**
+     * Filters reviews by game name based on the search bar text.
+     */
     private void searchByName() {
         if (reviews == null) {
             return;
@@ -161,6 +188,10 @@ public class ReviewsWindowController implements Initializable {
         tableReview.setItems(filtered);
     }
 
+    /**
+     * Populates the combo box with the user's lists.
+     * Includes "All Reviews" as the first option.
+     */
     public void setComboBox() {
         ArrayList<String> listsNames = new ArrayList();
         try {
@@ -174,6 +205,13 @@ public class ReviewsWindowController implements Initializable {
         combLists.getItems().addAll(listsNames);
     }
 
+    /**
+     * Creates a context menu for a review with delete functionality.
+     * Only available for admin users (asanchez or rluna).
+     *
+     * @param review The review for which to create the context menu
+     * @return The configured ContextMenu
+     */
     private ContextMenu contextualMenu(Review review) {
         if (currentContextMenu != null && currentContextMenu.isShowing()) {
             currentContextMenu.hide();
@@ -218,6 +256,10 @@ public class ReviewsWindowController implements Initializable {
         return contextualMenu;
     }
 
+    /**
+     * Sets up context menu functionality for the table rows.
+     * Enables right-click to delete reviews for admin users.
+     */
     private void setupTableContextMenu() {
         tableReview.setRowFactory(new Callback<TableView<Review>, TableRow<Review>>() {
             public TableRow<Review> call(TableView<Review> tableView) {
@@ -264,6 +306,10 @@ public class ReviewsWindowController implements Initializable {
         });
     }
 
+    /**
+     * Filters reviews based on the selected list from the combo box.
+     * Shows reviews for games in the selected list, or all reviews if "All Reviews" is selected.
+     */
     public void showReviewsByList() {
         try {
             String selectedList = combLists.getValue();
@@ -317,6 +363,9 @@ public class ReviewsWindowController implements Initializable {
         }
     }
 
+    /**
+     * Configures the actions for menu items (Profile, Lists, Main Menu, Log Out).
+     */
     private void setMenuOptions() {
         miProfile.setOnAction((event)
                 -> {
@@ -402,9 +451,10 @@ public class ReviewsWindowController implements Initializable {
 
     /**
      * Initializes the controller class.
+     * Sets up menu options, search functionality, and list selection handlers.
      *
-     * @param url
-     * @param rb
+     * @param url The location used to resolve relative paths for the root object, or null if unknown
+     * @param rb The resources used to localize the root object, or null if not localized
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -415,6 +465,10 @@ public class ReviewsWindowController implements Initializable {
         });
     }
 
+    /**
+     * Handles the video tutorial action by opening a YouTube tutorial video in a WebView.
+     * Opens the video in full screen mode.
+     */
     @FXML
     public void handleVideoAction() {
         try {
@@ -433,6 +487,10 @@ public class ReviewsWindowController implements Initializable {
         }
     }
 
+    /**
+     * Handles the help action by opening the user manual PDF file.
+     * Displays a warning if the file is not found.
+     */
     @FXML
     public void handleHelpAction() {
         try {
@@ -448,6 +506,9 @@ public class ReviewsWindowController implements Initializable {
         }
     }
     
+    /**
+     * Handles the print action by generating a report for the current user.
+     */
     @FXML
     public void handleImprimirAction() {
         try {

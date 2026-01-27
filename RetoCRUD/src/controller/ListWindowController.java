@@ -80,20 +80,40 @@ public class ListWindowController implements Initializable {
     private ArrayList<Button> litsButtons = new ArrayList<>();
 
     //[USERS & CONTROLLER]
+    /**
+     * Sets the user profile for this controller.
+     *
+     * @param profile The user's profile object
+     */
     public void setUsuario(Profile profile) {
         this.profile = profile;
         menu.setText(profile.getUsername());
     }
 
+    /**
+     * Sets the main controller for this controller.
+     *
+     * @param cont The main controller instance
+     */
     public void setCont(Controller cont) {
         this.cont = cont;
     }
 
+    /**
+     * Gets the main controller instance.
+     *
+     * @return The main controller
+     */
     public Controller getCont() {
         return cont;
     }
 
     //[BUTTONS]
+    /**
+     * Applies a consistent style to list buttons.
+     *
+     * @param button The button to style
+     */
     private void buttonStyle(Button button) {
         button.setMinWidth(vbLists.getPrefWidth());
         button.setMaxWidth(vbLists.getPrefWidth());
@@ -102,6 +122,11 @@ public class ListWindowController implements Initializable {
         button.wrapTextProperty().setValue(true);
     }
 
+    /**
+     * Highlights the selected list button and unhighlights others.
+     *
+     * @param button The selected button
+     */
     private void selectedButton(Button button) {
         for (Button listButton : litsButtons) {
             if (button.getText().equals(listButton.getText())) {
@@ -112,6 +137,12 @@ public class ListWindowController implements Initializable {
         }
     }
 
+    /**
+     * Creates a contextual menu for list management (rename/delete).
+     *
+     * @param buttonName The name of the list for which the menu is created
+     * @return The configured ContextMenu
+     */
     private ContextMenu contextualMenu(String buttonName) {
         ContextMenu contextualMenu = new ContextMenu();
 
@@ -160,6 +191,9 @@ public class ListWindowController implements Initializable {
         return contextualMenu;
     }
 
+    /**
+     * Creates the "New List" button with its specific style and action.
+     */
     private void newListButton() {
         Button button = new Button("+ New List");
         buttonStyle(button);
@@ -172,6 +206,10 @@ public class ListWindowController implements Initializable {
         vbLists.getChildren().add(button);
     }
 
+    /**
+     * Loads and displays all user lists as buttons in the interface.
+     * Always shows "My Games" first, followed by other lists.
+     */
     public void loadListButtons() {
         vbLists.getChildren().clear();
         newListButton();
@@ -219,6 +257,11 @@ public class ListWindowController implements Initializable {
     }
 
     //[LISTS]
+    /**
+     * Displays the contents of a selected list in the table.
+     *
+     * @param button The button representing the list to show
+     */
     public void showList(Button button) {
         selectedList = button.getText();
         listName.setText(selectedList);
@@ -247,6 +290,11 @@ public class ListWindowController implements Initializable {
         }
     }
 
+    /**
+     * Generates a number for a new list to avoid name conflicts.
+     *
+     * @return The next available number for a "New List" name
+     */
     private int getListNumber() {
         String prevNumber;
         int newNumber = 1;
@@ -269,6 +317,9 @@ public class ListWindowController implements Initializable {
         return newNumber;
     }
 
+    /**
+     * Creates a new list with an auto-generated name and adds it to the interface.
+     */
     private void newList() {
 
         String buttonName = "New List " + getListNumber();
@@ -295,6 +346,9 @@ public class ListWindowController implements Initializable {
         }
     }
 
+    /**
+     * Populates the combo box with available lists (excluding "My Games").
+     */
     public void setComboBox() {
 
         ArrayList<String> listsNames = new ArrayList();
@@ -309,6 +363,10 @@ public class ListWindowController implements Initializable {
         combLists.getItems().addAll(listsNames);
     }
 
+    /**
+     * Adds selected games from the current list to another selected list.
+     * Handles cases where games already exist in the target list.
+     */
     private void addToList() {
         if (combLists.getValue() == null) {
             showAlert("Error", "[No list selected]", Alert.AlertType.ERROR);
@@ -358,6 +416,10 @@ public class ListWindowController implements Initializable {
         }
     }
 
+    /**
+     * Removes selected games from the current list.
+     * If removing from "My Games", removes from all lists.
+     */
     private void removeFromList() {
         try {
             boolean anyRemoved = false;
@@ -406,6 +468,9 @@ public class ListWindowController implements Initializable {
     }
 
     //[MENU]
+    /**
+     * Configures the actions for menu items (Profile, Reviews, Main Menu, Log Out).
+     */
     private void setMenuOptions() {
         miProfile.setOnAction((event) -> {
             try {
@@ -486,6 +551,9 @@ public class ListWindowController implements Initializable {
         });
     }
 
+    /**
+     * Sets up action handlers for buttons and initializes the list buttons.
+     */
     private void setOnActionHandlers() {
         newListButton();
 
@@ -504,6 +572,10 @@ public class ListWindowController implements Initializable {
 
     /**
      * Initializes the controller class.
+     * Sets up menu options, button handlers, and configures the table view.
+     *
+     * @param url The location used to resolve relative paths for the root object, or null if unknown
+     * @param rb The resources used to localize the root object, or null if not localized
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -520,6 +592,9 @@ public class ListWindowController implements Initializable {
         tcCheckBox.setCellFactory(CheckBoxTableCell.forTableColumn(tcCheckBox));
     }
 
+    /**
+     * Handles the video tutorial action by opening a YouTube video in a WebView.
+     */
     @FXML
     public void handleVideoAction() {
         try {
@@ -538,6 +613,9 @@ public class ListWindowController implements Initializable {
         }
     }
 
+    /**
+     * Handles the help action by opening the user manual PDF file.
+     */
     @FXML
     public void handleHelpAction() {
         try {
@@ -553,6 +631,9 @@ public class ListWindowController implements Initializable {
         }
     }
     
+    /**
+     * Handles the print action by generating a report for the current user.
+     */
     @FXML
     public void handleImprimirAction() {
         try {

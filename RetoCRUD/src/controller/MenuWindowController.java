@@ -41,25 +41,48 @@ public class MenuWindowController implements Initializable {
     private Controller cont;
     private Stage parentStage;
 
+    /**
+     * Sets the user profile and updates the username label.
+     *
+     * @param profile The user's profile object
+     */
     public void setUsuario(Profile profile) {
         this.profile = profile;
         label_Username.setText(profile.getUsername());
     }
 
+    /**
+     * Sets the main controller for this controller.
+     *
+     * @param cont The main controller instance
+     */
     public void setCont(Controller cont) {
         this.cont = cont;
     }
 
+    /**
+     * Gets the main controller instance.
+     *
+     * @return The main controller
+     */
     public Controller getCont() {
         return cont;
     }
     
+    /**
+     * Sets the parent stage that opened this window.
+     *
+     * @param parentStage The parent stage reference
+     */
     public void setParentStage(Stage parentStage) {
         this.parentStage = parentStage;
     }
 
     /**
      * Opens the Modify window.
+     * Closes the current window and displays the user modification form.
+     *
+     * @param event The action event that triggered this method
      */
     @FXML
     private void modifyVentana(ActionEvent event) {
@@ -89,6 +112,7 @@ public class MenuWindowController implements Initializable {
     /**
      * Opens the Delete Account window depending on profile type. Users open
      * DeleteAccount; Admins open DeleteAccountAdmin.
+     * Closes the current window and displays the appropriate delete interface.
      */
     @FXML
     private void delete() {
@@ -136,6 +160,8 @@ public class MenuWindowController implements Initializable {
 
     /**
      * Closes the current window (used for logout).
+     *
+     * @param event The action event that triggered this method
      */
     @FXML
     private void cerrarVentana(ActionEvent event) {
@@ -143,6 +169,13 @@ public class MenuWindowController implements Initializable {
         stage.close();
     }
 
+    /**
+     * Initializes the controller class.
+     * This method is called automatically after the FXML file has been loaded.
+     *
+     * @param url The location used to resolve relative paths for the root object, or null if unknown
+     * @param rb The resources used to localize the root object, or null if not localized
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Initialization logic if needed

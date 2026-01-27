@@ -27,6 +27,12 @@ import model.*;
 import javafx.scene.web.WebView;
 import logger.GeneraLog;
 
+/**
+ * Controller for the Main Menu window. Handles video game display, filtering,
+ * and navigation to other application sections.
+ * 
+ * @author ema
+ */
 public class MainMenuWindowController implements Initializable
 {
     @FXML
@@ -85,6 +91,11 @@ public class MainMenuWindowController implements Initializable
     private ObservableList<SelectableVideoGame> videoGames;
     private boolean filtersVisible = false;
 
+    /**
+     * Sets the user profile and loads the video games.
+     *
+     * @param profile The user's profile object
+     */
     public void setUsuario(Profile profile)
     {
         this.profile = profile;
@@ -92,16 +103,29 @@ public class MainMenuWindowController implements Initializable
         loadVideoGames();
     }
 
+    /**
+     * Sets the main controller for this controller.
+     *
+     * @param cont The main controller instance
+     */
     public void setCont(Controller cont)
     {
         this.cont = cont;
     }
 
+    /**
+     * Gets the main controller instance.
+     *
+     * @return The main controller
+     */
     public Controller getCont()
     {
         return cont;
     }
 
+    /**
+     * Configures the actions for menu items (Profile, Lists, Reviews, Log Out).
+     */
     private void setMenuOptions()
     {
         miProfile.setOnAction((event) ->
@@ -192,17 +216,26 @@ public class MainMenuWindowController implements Initializable
         });
     }
 
+    /**
+     * Sets up action handlers for UI components.
+     */
     private void setOnActionHandlers() 
     {
         setupAccordion();
     }
 
+    /**
+     * Configures the filter accordion toggle functionality.
+     */
     private void setupAccordion()
     {
         toggleFiltersButton.setOnAction(event -> toggleFilters());
         hideFilters();
     }
     
+    /**
+     * Toggles the visibility of the filter panel.
+     */
     private void toggleFilters()
     {
         filtersVisible = !filtersVisible;
@@ -213,6 +246,9 @@ public class MainMenuWindowController implements Initializable
         }
     }
     
+    /**
+     * Shows the filter panel.
+     */
     private void showFilters()
     {
         filtersContainer.setVisible(true);
@@ -220,6 +256,9 @@ public class MainMenuWindowController implements Initializable
         toggleFiltersButton.setText("-");
     }
     
+    /**
+     * Hides the filter panel.
+     */
     private void hideFilters()
     {
         filtersContainer.setVisible(false);
@@ -227,6 +266,10 @@ public class MainMenuWindowController implements Initializable
         toggleFiltersButton.setText("+");
     }
     
+    /**
+     * Applies filters to the video games table based on user selections.
+     * Filters by search text, platform, PEGI rating, and release date range.
+     */
     private void filterGames()
     {
         if (videoGames == null) return;
@@ -283,6 +326,10 @@ public class MainMenuWindowController implements Initializable
         tableGames.setItems(filtered);
     }
     
+    /**
+     * Loads all video games from the database and initializes the table.
+     * Checks which games are already in the user's "My Games" list.
+     */
     private void loadVideoGames()
     {
         try
@@ -357,6 +404,13 @@ public class MainMenuWindowController implements Initializable
         }
     }
 
+    /**
+     * Initializes the controller class.
+     * Sets up menu options, action handlers, table configuration, and filter listeners.
+     *
+     * @param url The location used to resolve relative paths for the root object, or null if unknown
+     * @param rb The resources used to localize the root object, or null if not localized
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
@@ -386,6 +440,10 @@ public class MainMenuWindowController implements Initializable
         toDate.valueProperty().addListener(dateListener);
     }
 
+    /**
+     * Handles the video tutorial action by opening a YouTube tutorial video in a WebView.
+     * Opens the video in full screen mode.
+     */
     @FXML
     public void handleVideoAction() {
         try {
@@ -404,6 +462,10 @@ public class MainMenuWindowController implements Initializable
         }
     }
 
+    /**
+     * Handles the help action by opening the user manual PDF file.
+     * Displays a warning if the file is not found.
+     */
     @FXML
     public void handleHelpAction() {
         try {
@@ -419,6 +481,9 @@ public class MainMenuWindowController implements Initializable
         }
     }
     
+    /**
+     * Handles the print action by generating a report for the current user.
+     */
     @FXML
     public void handleImprimirAction() {
         try {
