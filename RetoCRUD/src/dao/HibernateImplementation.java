@@ -1181,14 +1181,38 @@ public class HibernateImplementation implements ClassDAO {
             }
 
             Object[][] games = {
-                {"DEFAULT_GAME", LocalDate.now(), Platform.DEFAULT, Pegi.DEFAULT},
-                {"Owlboy", LocalDate.of(2016, 11, 1), Platform.NINTENDO, Pegi.PEGI3},
-                {"Animal Crossing New Horizons", LocalDate.of(2020, 5, 20), Platform.NINTENDO, Pegi.PEGI6},
-                {"Detroit: Become Human", LocalDate.of(2018, 5, 25), Platform.PLAYSTATION, Pegi.PEGI16},
-                {"ASTROBOT", LocalDate.of(2024, 9, 6), Platform.PLAYSTATION, Pegi.PEGI3},
-                {"Call of Duty: Black Ops II", LocalDate.of(2012, 11, 13), Platform.PLAYSTATION, Pegi.PEGI18},
-                {"Halo Infinite", LocalDate.of(2021, 12, 8), Platform.PC, Pegi.PEGI16},
-                {"Balatro", LocalDate.of(2024, 2, 20), Platform.PC, Pegi.PEGI12}
+                {"DEFAULT_GAME", LocalDate.now(), Platform.DEFAULT, Pegi.DEFAULT}, // 1
+                {"Owlboy", LocalDate.of(2016, 11, 1), Platform.NINTENDO, Pegi.PEGI3}, // 2
+                {"Owlboy", LocalDate.of(2016, 11, 1), Platform.PLAYSTATION, Pegi.PEGI3}, // 3
+                {"Owlboy", LocalDate.of(2016, 11, 1), Platform.PC, Pegi.PEGI3}, // 4
+                {"Owlboy", LocalDate.of(2016, 11, 1), Platform.XBOX, Pegi.PEGI3}, // 5
+                {"Animal Crossing New Horizons", LocalDate.of(2020, 5, 20), Platform.NINTENDO, Pegi.PEGI6}, // 6
+                {"Detroit: Become Human", LocalDate.of(2018, 5, 25), Platform.PLAYSTATION, Pegi.PEGI16}, // 7
+                {"Detroit: Become Human", LocalDate.of(2018, 5, 25), Platform.PC, Pegi.PEGI16}, // 8
+                {"Detroit: Become Human", LocalDate.of(2018, 5, 25), Platform.XBOX, Pegi.PEGI16}, // 9
+                {"ASTROBOT", LocalDate.of(2024, 9, 6), Platform.PLAYSTATION, Pegi.PEGI3}, // 10
+                {"Call of Duty: Black Ops II", LocalDate.of(2012, 11, 13), Platform.PLAYSTATION, Pegi.PEGI18}, // 11
+                {"Call of Duty: Black Ops II", LocalDate.of(2012, 11, 13), Platform.PC, Pegi.PEGI18}, // 12
+                {"Call of Duty: Black Ops II", LocalDate.of(2012, 11, 13), Platform.XBOX, Pegi.PEGI18}, // 13
+                {"Halo Infinite", LocalDate.of(2021, 12, 8), Platform.XBOX, Pegi.PEGI16}, // 14
+                {"Balatro", LocalDate.of(2024, 2, 20), Platform.NINTENDO, Pegi.PEGI12}, // 15
+                {"Balatro", LocalDate.of(2024, 2, 20), Platform.PC, Pegi.PEGI12}, // 16
+                {"Library of Ruina", LocalDate.of(2021, 8, 10), Platform.NINTENDO, Pegi.PEGI3}, // 17
+                {"Library of Ruina", LocalDate.of(2021, 8, 10), Platform.PC, Pegi.PEGI3}, // 18
+                {"Super Mario Odyssey", LocalDate.of(2017, 10, 27), Platform.NINTENDO, Pegi.PEGI3}, // 19
+                {"Hades", LocalDate.of(2020, 9, 17), Platform.NINTENDO, Pegi.PEGI12}, // 20
+                {"Hades", LocalDate.of(2020, 9, 17), Platform.PLAYSTATION, Pegi.PEGI12}, // 21
+                {"Hades", LocalDate.of(2020, 9, 17), Platform.PC, Pegi.PEGI12}, // 22
+                {"Hades", LocalDate.of(2020, 9, 17), Platform.XBOX, Pegi.PEGI12}, // 23
+                {"Cult of The Lamb", LocalDate.of(2022, 8, 11), Platform.NINTENDO, Pegi.PEGI12}, // 24
+                {"Cult of The Lamb", LocalDate.of(2022, 8, 11), Platform.PLAYSTATION, Pegi.PEGI12}, // 25
+                {"Cult of The Lamb", LocalDate.of(2022, 8, 11), Platform.PC, Pegi.PEGI12}, // 26
+                {"God of War Ragnarok", LocalDate.of(2022, 11, 9), Platform.PLAYSTATION, Pegi.PEGI18}, // 27
+                {"Hellblade: Senua's Sacrifice", LocalDate.of(2017, 8, 8), Platform.PLAYSTATION, Pegi.PEGI18}, // 28
+                {"Life is Strange", LocalDate.of(2015, 1, 30), Platform.PLAYSTATION, Pegi.PEGI16}, // 29
+                {"Life is Strange", LocalDate.of(2015, 1, 30), Platform.PC, Pegi.PEGI16}, // 30
+                {"Life is Strange", LocalDate.of(2015, 1, 30), Platform.XBOX, Pegi.PEGI16}, // 31
+                {"Hi-Fi Rush", LocalDate.of(2023, 1, 25), Platform.XBOX, Pegi.PEGI12} // 32
             };
 
             for (Object[] gameData : games) {
@@ -1200,19 +1224,48 @@ public class HibernateImplementation implements ClassDAO {
             }
 
             String[][] listEntries = {
-                {"jlopez", "User", "My Games", "1"},
-                {"mramirez", "User", "My Games", "1"},
-                {"cperez", "User", "My Games", "1"},
-                {"asanchez", "Admin", "My Games", "1"},
-                {"rluna", "Admin", "My Games", "1"},
-                {"asanchez", "Admin", "My Games", "2"},
-                {"asanchez", "Admin", "My Games", "3"},
-                {"asanchez", "Admin", "My Games", "5"},
-                {"asanchez", "Admin", "NINTENDO", "1"},
-                {"asanchez", "Admin", "NINTENDO", "2"},
-                {"asanchez", "Admin", "NINTENDO", "3"},
-                {"asanchez", "Admin", "PLAYSTATION", "1"},
-                {"asanchez", "Admin", "PLAYSTATION", "5"}
+                {"jlopez", "User", "My Games", "1"}, // DEFAULT_GAME
+                {"mramirez", "User", "My Games", "1"}, // DEFAULT_GAME
+                {"cperez", "User", "My Games", "1"}, // DEFAULT_GAME
+                {"rluna", "Admin", "My Games", "1"}, // DEFAULT_GAME
+                {"asanchez", "Admin", "My Games", "1"}, // DEFAULT_GAME
+                {"asanchez", "Admin", "My Games", "2"}, // Owlboy
+                {"asanchez", "Admin", "My Games", "6"}, // Animal Crossing
+                {"asanchez", "Admin", "My Games", "10"}, // ASTROBOT 
+                {"asanchez", "Admin", "My Games", "15"}, // Balatro
+                {"asanchez", "Admin", "My Games", "20"}, // Hades
+                {"asanchez", "Admin", "My Games", "24"}, // Cult of The Lamb
+                {"asanchez", "Admin", "My Games", "11"} // Call of Duty: Black Ops II
+                {"asanchez", "Admin", "My Games", "29"} // Life is Strange
+                {"asanchez", "Admin", "My Games", "7"} // Detroit: Become Human
+                {"asanchez", "Admin", "My Games", "16"} // Balatro
+                {"asanchez", "Admin", "My Games", "26"} // Cult of The Lamb
+                {"asanchez", "Admin", "My Games", "18"} // Library of Ruina
+                {"asanchez", "Admin", "My Games", "14"} // Halo Infinite
+                {"asanchez", "Admin", "My Games", "32"} // Hi-Fi Rush
+
+                {"asanchez", "Admin", "NINTENDO", "1"}, // DEFAULT_GAME
+                {"asanchez", "Admin", "NINTENDO", "2"}, // Owlboy
+                {"asanchez", "Admin", "NINTENDO", "6"}, // Animal Crossing
+                {"asanchez", "Admin", "NINTENDO", "15"}, // Balatro
+                {"asanchez", "Admin", "NINTENDO", "20"}, // Hades
+                {"asanchez", "Admin", "NINTENDO", "24"}, // Cult of The Lamb
+
+                {"asanchez", "Admin", "PLAYSTATION", "1"}, // DEFAULT_GAME
+                {"asanchez", "Admin", "PLAYSTATION", "10"} // ASTROBOT
+                {"asanchez", "Admin", "PLAYSTATION", "11"} // Call of Duty: Black Ops II
+                {"asanchez", "Admin", "PLAYSTATION", "29"} // Life is Strange
+                {"asanchez", "Admin", "PLAYSTATION", "7"} // Detroit: Become Human
+
+                {"asanchez", "Admin", "PC", "1"}, // DEFAULT_GAME
+                {"asanchez", "Admin", "PC", "16"} // Balatro
+                {"asanchez", "Admin", "PC", "26"} // Cult of The Lamb
+                {"asanchez", "Admin", "PC", "18"} // Library of Ruina
+
+                {"asanchez", "Admin", "XBOX", "1"}, // DEFAULT_GAME
+                {"asanchez", "Admin", "XBOX", "14"} // Halo Infinite
+                {"asanchez", "Admin", "XBOX", "32"} // Hi-Fi Rush
+
             };
 
             for (String[] entry : listEntries) {
