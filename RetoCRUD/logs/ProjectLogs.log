@@ -192,3 +192,53 @@ ene 27, 2026 9:20:59 AM controller.ReviewsWindowController loadReview
 GRAVE: Failed to load reviews: Error initializing database connection.
 ene 27, 2026 12:21:30 PM controller.LogInWindowController logIn
 INFORMACIÓN: Logged correctly: asanchez
+ene 27, 2026 1:41:43 PM controller.LogInWindowController logIn
+INFORMACIÓN: Logged correctly: asanchez
+ene 27, 2026 1:42:48 PM controller.LogInWindowController logIn
+INFORMACIÓN: Logged correctly: asanchez
+ene 27, 2026 1:47:37 PM controller.LogInWindowController logIn
+INFORMACIÓN: Logged correctly: asanchez
+ene 27, 2026 1:48:02 PM controller.LogInWindowController logIn
+INFORMACIÓN: Logged correctly: asanchez
+ene 27, 2026 1:51:37 PM controller.LogInWindowController logIn
+INFORMACIÓN: Logged correctly: asanchez
+ene 27, 2026 1:55:08 PM controller.LogInWindowController logIn
+INFORMACIÓN: Logged correctly: asanchez
+ene 27, 2026 1:55:51 PM controller.LogInWindowController logIn
+INFORMACIÓN: Logged correctly: asanchez
+ene 27, 2026 1:58:34 PM controller.LogInWindowController logIn
+INFORMACIÓN: Logged correctly: asanchez
+ene 27, 2026 1:59:45 PM controller.LogInWindowController logIn
+INFORMACIÓN: Logged correctly: asanchez
+ene 27, 2026 2:00:51 PM controller.LogInWindowController logIn
+INFORMACIÓN: Logged correctly: asanchez
+ene 27, 2026 2:02:34 PM controller.LogInWindowController logIn
+INFORMACIÓN: Logged correctly: asanchez
+ene 27, 2026 2:04:07 PM controller.LogInWindowController logIn
+INFORMACIÓN: Logged correctly: asanchez
+ene 27, 2026 2:06:02 PM controller.LogInWindowController logIn
+INFORMACIÓN: Logged correctly: asanchez
+ene 27, 2026 2:07:57 PM controller.LogInWindowController logIn
+INFORMACIÓN: Logged correctly: asanchez
+ene 27, 2026 2:08:04 PM controller.ListWindowController showList
+GRAVE: Failed showing lists: No connections available. The system is busy, please try again in a few moments.
+ene 27, 2026 2:08:08 PM controller.ListWindowController setComboBox
+GRAVE: Failed setting combobox: No connections available. The system is busy, please try again in a few moments.
+ene 27, 2026 2:08:18 PM controller.ListWindowController showList
+GRAVE: Failed showing lists: No connections available. The system is busy, please try again in a few moments.
+ene 27, 2026 2:10:00 PM controller.ListWindowController showList
+GRAVE: Failed showing lists: No connections available. The system is busy, please try again in a few moments.
+ene 27, 2026 2:14:45 PM controller.LogInWindowController logIn
+INFORMACIÓN: Logged correctly: asanchez
+ene 27, 2026 2:15:46 PM controller.ListWindowController showList
+GRAVE: Failed showing lists: No connections available. The system is busy, please try again in a few moments.
+ene 27, 2026 2:24:16 PM controller.LogInWindowController logIn
+INFORMACIÓN: Logged correctly: asanchez
+ene 27, 2026 2:24:19 PM controller.ListWindowController showList
+GRAVE: Failed showing lists: No connections available. The system is busy, please try again in a few moments.
+ene 27, 2026 2:24:21 PM controller.ListWindowController setComboBox
+GRAVE: Failed setting combobox: No connections available. The system is busy, please try again in a few moments.
+ene 27, 2026 2:25:21 PM controller.ListWindowController showList
+GRAVE: Failed showing lists: No connections available. The system is busy, please try again in a few moments.
+ene 27, 2026 2:26:40 PM controller.LogInWindowController logIn
+INFORMACIÓN: Logged correctly: asanchez

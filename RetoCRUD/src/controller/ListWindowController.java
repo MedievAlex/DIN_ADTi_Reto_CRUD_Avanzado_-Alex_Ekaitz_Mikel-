@@ -181,7 +181,7 @@ public class ListWindowController implements Initializable {
                     loadListButtons();
                 } catch (OurException ex) {
                     GeneraLog.getLogger().severe("Failed deleting list: " + ex.getMessage());
-                    showAlert("Error", "Failed deleting list", Alert.AlertType.ERROR);
+                    showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
                 }
             }
         });
@@ -252,7 +252,7 @@ public class ListWindowController implements Initializable {
             showList(button);
         } catch (OurException ex) {
             GeneraLog.getLogger().severe("Failed loading lists: " + ex.getMessage());
-            showAlert("Error", "Failed loading lists", Alert.AlertType.ERROR);
+            showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
@@ -286,7 +286,7 @@ public class ListWindowController implements Initializable {
             tableLists.setItems(videoGames);
         } catch (OurException ex) {
             GeneraLog.getLogger().severe("Failed showing lists: " + ex.getMessage());
-            showAlert("Error", "Failed showing lists", Alert.AlertType.ERROR);
+            showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
@@ -312,7 +312,7 @@ public class ListWindowController implements Initializable {
             }
         } catch (OurException ex) {
             GeneraLog.getLogger().severe("Failed to get list number: " + ex.getMessage());
-            showAlert("Error", "Failed to get list number", Alert.AlertType.ERROR);
+            showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
         }
         return newNumber;
     }
@@ -342,7 +342,7 @@ public class ListWindowController implements Initializable {
             setComboBox();
         } catch (OurException ex) {
             GeneraLog.getLogger().severe("Failed creating list: " + ex.getMessage());
-            showAlert("Error", "Failed creating list", Alert.AlertType.ERROR);
+            showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
@@ -357,7 +357,7 @@ public class ListWindowController implements Initializable {
             listsNames.remove("My Games");
         } catch (OurException ex) {
             GeneraLog.getLogger().severe("Failed setting combobox: " + ex.getMessage());
-            showAlert("Error", "Failed setting combobox", Alert.AlertType.ERROR);
+            showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
         }
         combLists.getItems().clear();
         combLists.getItems().addAll(listsNames);
@@ -411,7 +411,7 @@ public class ListWindowController implements Initializable {
                 }
             } catch (OurException ex) {
                 GeneraLog.getLogger().severe("Failed adding game to list: " + ex.getMessage());
-                showAlert("Error", "Failed adding game to list", Alert.AlertType.ERROR);
+                showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
             }
         }
     }
@@ -439,7 +439,7 @@ public class ListWindowController implements Initializable {
                             }
                         } catch (OurException ex) {
                             GeneraLog.getLogger().severe("Failed removing game from list: " + ex.getMessage());
-                            showAlert("Error", "Failed removing game from list", Alert.AlertType.ERROR);
+                            showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
                         }
                     } else {
                         profile.removeGame(selectedList, game);
@@ -463,7 +463,7 @@ public class ListWindowController implements Initializable {
             }
         } catch (OurException ex) {
             GeneraLog.getLogger().severe("Failed removing game from list: " + ex.getMessage());
-            showAlert("Error", "Failed removing game from list", Alert.AlertType.ERROR);
+            showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
@@ -512,7 +512,7 @@ public class ListWindowController implements Initializable {
                 showAlert("Error", "Failed reviews listener", Alert.AlertType.ERROR);
             } catch (OurException ex) {
                 GeneraLog.getLogger().severe("Failed loading reviews: " + ex.getMessage());
-                showAlert("Error", "Failed loading reviews", Alert.AlertType.ERROR);
+                showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
             }
         });
 
@@ -641,7 +641,7 @@ public class ListWindowController implements Initializable {
         }
         catch (OurException ex) {
             GeneraLog.getLogger().severe("Failed to generate report: " + ex.getMessage());
-            showAlert("Error", "Failed to generate report", Alert.AlertType.ERROR);
+            showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
 }

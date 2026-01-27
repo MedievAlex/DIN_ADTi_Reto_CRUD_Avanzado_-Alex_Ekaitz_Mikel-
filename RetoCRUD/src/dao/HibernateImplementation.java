@@ -10,28 +10,32 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import model.Admin;
-import model.Listed;
-import model.Pegi;
-import model.Platform;
-import model.Profile;
-import model.Review;
-import model.ReviewId;
-import model.User;
-import model.VideoGame;
+import model.*;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.jdbc.Work;
 import threads.SessionThread;
 
+/**
+ * Hibernate implementation of the ClassDAO interface.
+ * Provides data access operations for users, video games, lists, and reviews
+ * using Hibernate ORM with connection pool management through SessionThread.
+ *
+ * @author ema
+ */
 public class HibernateImplementation implements ClassDAO {
-
+    /**
+     * List of active SessionThread instances for connection management.
+     */
     private final List<SessionThread> activeThreads = new ArrayList<>();
 
-    // Help methods to manage session with threads
+    /**
+     * Starts a new SessionThread and adds it to the active threads list.
+     *
+     * @return The started SessionThread
+     */
     private SessionThread startSessionThread() {
         SessionThread thread = new SessionThread();
         activeThreads.add(thread);
@@ -39,6 +43,10 @@ public class HibernateImplementation implements ClassDAO {
         return thread;
     }
 
+    /**
+     * Cleans up all active threads by releasing their sessions and waiting for them to finish.
+     * Should be called when shutting down the application or when all operations are complete.
+     */
     public void cleanupThreads() {
         for (SessionThread t : activeThreads) {
             t.releaseSession();
@@ -53,7 +61,14 @@ public class HibernateImplementation implements ClassDAO {
         activeThreads.clear();
     }
 
-    //[USERS]
+    /**
+     * Authenticates a user or admin by username and password.
+     *
+     * @param username The username to authenticate
+     * @param password The password to verify
+     * @return The authenticated Profile (User or Admin), or null if authentication fails
+     * @throws OurException if a database error occurs during login
+     */
     @Override
     public Profile logIn(String username, String password) throws OurException {
         Session session = null;
@@ -86,14 +101,27 @@ public class HibernateImplementation implements ClassDAO {
         }
     }
 
+    /**
+     * Registers a new user in the system.
+     * Creates a new User entity and initializes their "My Games" list with the first game.
+     *
+     * @param gender User's gender
+     * @param cardNumber User's card number
+     * @param username Unique username for the new user
+     * @param password User's password
+     * @param email User's email address
+     * @param name User's first name
+     * @param telephone User's phone number
+     * @param surname User's surname
+     * @return true if registration is successful
+     * @throws OurException if registration fails or connection pool is full
+     */
     @Override
     public boolean signUp(String gender, String cardNumber, String username, String password, String email, String name, String telephone, String surname) throws OurException {
         SessionThread thread = startSessionThread();
+        Session session = null;
         try {
-            Session session = waitForSession(thread);
-            if (session == null) {
-                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
-            }
+            session = waitForSession(thread);
 
             session.beginTransaction();
 
@@ -105,29 +133,36 @@ public class HibernateImplementation implements ClassDAO {
 
             session.getTransaction().commit();
             return true;
+        } catch (OurException e) {
+            throw e;
         } catch (Exception e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
+            if (session != null && session.getTransaction() != null && session.getTransaction().isActive()) {
+                try {
+                    session.getTransaction().rollback();
+                } catch (Exception rollbackEx) {
+                }
             }
-
-            if (e instanceof OurException) {
-                throw (OurException) e;
-            } else {
-                throw new OurException(ErrorMessages.REGISTER_USER);
-            }
+            throw new OurException(ErrorMessages.REGISTER_USER);
         } finally {
             thread.releaseSession();
         }
     }
 
+    /**
+     * Deletes a user account from the system.
+     * Validates the password before deletion.
+     *
+     * @param username The username of the account to delete
+     * @param password The password for authentication
+     * @return true if the user is successfully deleted
+     * @throws OurException if deletion fails, credentials are invalid, or connection pool is full
+     */
     @Override
     public boolean dropOutUser(String username, String password) throws OurException {
         SessionThread thread = startSessionThread();
+        Session session = null;
         try {
-            Session session = waitForSession(thread);
-            if (session == null) {
-                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
-            }
+            session = waitForSession(thread);
 
             session.beginTransaction();
 
@@ -140,32 +175,37 @@ public class HibernateImplementation implements ClassDAO {
             session.getTransaction().commit();
 
             return true;
+        } catch (OurException e) {
+            throw e;
         } catch (Exception e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+            if (session != null && session.getTransaction() != null && session.getTransaction().isActive()) {
                 try {
-                    thread.getSession().getTransaction().rollback();
-                } catch (HibernateException he) {
+                    session.getTransaction().rollback();
+                } catch (Exception rollbackEx) {
                 }
             }
-
-            if (e instanceof OurException) {
-                throw (OurException) e;
-            } else {
-                throw new OurException(ErrorMessages.DELETE_USER);
-            }
+            throw new OurException(ErrorMessages.DELETE_USER);
         } finally {
             thread.releaseSession();
         }
     }
 
+    /**
+     * Allows an admin to delete another user or admin account.
+     * Requires valid admin credentials.
+     *
+     * @param usernameToDelete The username of the account to delete
+     * @param adminUsername The admin's username
+     * @param adminPassword The admin's password
+     * @return true if the account is successfully deleted
+     * @throws OurException if deletion fails, admin credentials are invalid, user not found, or connection pool is full
+     */
     @Override
     public boolean dropOutAdmin(String usernameToDelete, String adminUsername, String adminPassword) throws OurException {
         SessionThread thread = startSessionThread();
+        Session session = null;
         try {
-            Session session = waitForSession(thread);
-            if (session == null) {
-                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
-            }
+            session = waitForSession(thread);
 
             session.beginTransaction();
 
@@ -188,32 +228,41 @@ public class HibernateImplementation implements ClassDAO {
 
             session.getTransaction().commit();
             return true;
+        } catch (OurException e) {
+            throw e;
         } catch (Exception e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+            if (session != null && session.getTransaction() != null && session.getTransaction().isActive()) {
                 try {
-                    thread.getSession().getTransaction().rollback();
-                } catch (HibernateException he) {
+                    session.getTransaction().rollback();
+                } catch (Exception rollbackEx) {
                 }
             }
-
-            if (e instanceof OurException) {
-                throw (OurException) e;
-            } else {
-                throw new OurException(ErrorMessages.DELETE_USER);
-            }
+            throw new OurException(ErrorMessages.DELETE_USER);
         } finally {
             thread.releaseSession();
         }
     }
 
+    /**
+     * Updates user profile information.
+     * If the profile is a User (not Admin), also updates the gender field.
+     *
+     * @param password New password
+     * @param email New email address
+     * @param name New first name
+     * @param telephone New phone number
+     * @param surname New surname
+     * @param username Username of the profile to update
+     * @param gender New gender (only for User profiles)
+     * @return true if the profile is successfully updated
+     * @throws OurException if update fails, user not found, or connection pool is full
+     */
     @Override
     public boolean modifyUser(String password, String email, String name, String telephone, String surname, String username, String gender) throws OurException {
         SessionThread thread = startSessionThread();
+        Session session = null;
         try {
-            Session session = waitForSession(thread);
-            if (session == null) {
-                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
-            }
+            session = waitForSession(thread);
             session.beginTransaction();
 
             Profile profile = session.get(Profile.class, username);
@@ -234,23 +283,27 @@ public class HibernateImplementation implements ClassDAO {
             session.update(profile);
             session.getTransaction().commit();
             return true;
+        } catch (OurException e) {
+            throw e;
         } catch (Exception e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+            if (session != null && session.getTransaction() != null && session.getTransaction().isActive()) {
                 try {
-                    thread.getSession().getTransaction().rollback();
-                } catch (HibernateException he) {
+                    session.getTransaction().rollback();
+                } catch (Exception rollbackEx) {
                 }
             }
-            if (e instanceof OurException) {
-                throw (OurException) e;
-            } else {
-                throw new OurException(ErrorMessages.UPDATE_USER);
-            }
+            throw new OurException(ErrorMessages.UPDATE_USER);
         } finally {
             thread.releaseSession();
         }
     }
 
+    /**
+     * Retrieves all usernames for populating combo boxes or selection lists.
+     *
+     * @return ArrayList of all usernames in the system
+     * @throws OurException if retrieval fails
+     */
     @Override
     public ArrayList<String> comboBoxInsert() throws OurException {
         Session session = null;
@@ -271,46 +324,52 @@ public class HibernateImplementation implements ClassDAO {
         }
     }
 
+    /**
+     * Finds a profile (User or Admin) by username.
+     *
+     * @param username The username to search for
+     * @return The Profile object, or null if not found
+     * @throws OurException if search fails or connection pool is full
+     */
     @Override
     public Profile findProfileByUsername(String username) throws OurException {
         SessionThread thread = startSessionThread();
+        Session session = null;
         try {
-            Session session = waitForSession(thread);
-            if (session == null) {
-                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
-            }
+            session = waitForSession(thread);
             session.beginTransaction();
 
             Profile profile = session.get(Profile.class, username);
 
             session.getTransaction().commit();
             return profile;
+        } catch (OurException e) {
+            throw e;
         } catch (Exception e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+            if (session != null && session.getTransaction() != null && session.getTransaction().isActive()) {
                 try {
-                    thread.getSession().getTransaction().rollback();
-                } catch (HibernateException he) {
+                    session.getTransaction().rollback();
+                } catch (Exception rollbackEx) {
                 }
             }
-            if (e instanceof OurException) {
-                throw (OurException) e;
-            } else {
-                throw new OurException(ErrorMessages.DATABASE);
-            }
+            throw new OurException(ErrorMessages.DATABASE);
         } finally {
             thread.releaseSession();
         }
     }
 
-    //[VIDEOGAMES]
+    /**
+     * Retrieves all video games from the database.
+     *
+     * @return ArrayList of all VideoGame objects
+     * @throws OurException if retrieval fails or connection pool is full
+     */
     @Override
     public ArrayList<VideoGame> getAllVideoGames() throws OurException {
         SessionThread thread = startSessionThread();
+        Session session = null;
         try {
-            Session session = waitForSession(thread);
-            if (session == null) {
-                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
-            }
+            session = waitForSession(thread);
             session.beginTransaction();
 
             ArrayList<VideoGame> gamesList = new ArrayList<>(
@@ -319,34 +378,37 @@ public class HibernateImplementation implements ClassDAO {
 
             session.getTransaction().commit();
             return gamesList;
+        } catch (OurException e) {
+            throw e;
         } catch (Exception e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+            if (session != null && session.getTransaction() != null && session.getTransaction().isActive()) {
                 try {
-                    thread.getSession().getTransaction().rollback();
-                } catch (HibernateException he) {
+                    session.getTransaction().rollback();
+                } catch (Exception rollbackEx) {
                 }
             }
-            if (e instanceof OurException) {
-                throw (OurException) e;
-            } else {
-                throw new OurException(ErrorMessages.DATABASE);
-            }
+            throw new OurException(ErrorMessages.DATABASE);
         } finally {
             thread.releaseSession();
         }
     }
 
+    /**
+     * Retrieves all games from a specific user's list.
+     *
+     * @param username The username of the profile
+     * @param listName The name of the list
+     * @return ArrayList of VideoGame objects in the specified list
+     * @throws OurException if retrieval fails or connection pool is full
+     */
     @Override
     public ArrayList<VideoGame> getGamesFromList(String username, String listName) throws OurException {
         ArrayList<VideoGame> games = new ArrayList<>();
         SessionThread thread = startSessionThread();
+        Session session = null;
 
         try {
-            Session session = waitForSession(thread);
-
-            if (session == null) {
-                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
-            }
+            session = waitForSession(thread);
 
             session.beginTransaction();
 
@@ -367,37 +429,42 @@ public class HibernateImplementation implements ClassDAO {
             session.getTransaction().commit();
 
             return games;
+        } catch (OurException e) {
+            throw e;
         } catch (Exception e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
+            if (session != null && session.getTransaction() != null && session.getTransaction().isActive()) {
+                try {
+                    session.getTransaction().rollback();
+                } catch (Exception rollbackEx) {
+                }
             }
-
-            if (e instanceof OurException) {
-                throw (OurException) e;
-            } else {
-                throw new OurException(ErrorMessages.DATABASE);
-            }
+            throw new OurException(ErrorMessages.DATABASE);
         } finally {
             thread.releaseSession();
         }
     }
 
+    /**
+     * Verifies if a specific game exists in a user's list.
+     *
+     * @param username The username of the profile
+     * @param listName The name of the list
+     * @param gameId The ID of the game to verify
+     * @return true if the game exists in the list, false otherwise
+     * @throws OurException if verification fails or connection pool is full
+     */
     @Override
     public boolean verifyGameInList(String username, String listName, int gameId) throws OurException {
         SessionThread thread = startSessionThread();
+        Session session = null;
         boolean listed = false;
 
         try {
-            Session session = waitForSession(thread);
-
-            if (session == null) {
-                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
-            }
+            session = waitForSession(thread);
 
             session.beginTransaction();
 
-            Profile profile = session.get(Profile.class,
-                    username);
+            Profile profile = session.get(Profile.class, username);
 
             if (profile != null) {
                 List<Listed> listedGames = session.createQuery(
@@ -416,68 +483,76 @@ public class HibernateImplementation implements ClassDAO {
             session.getTransaction().commit();
 
             return listed;
+        } catch (OurException e) {
+            throw e;
         } catch (Exception e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
+            if (session != null && session.getTransaction() != null && session.getTransaction().isActive()) {
+                try {
+                    session.getTransaction().rollback();
+                } catch (Exception rollbackEx) {
+                }
             }
-
-            if (e instanceof OurException) {
-                throw (OurException) e;
-            } else {
-                throw new OurException(ErrorMessages.DATABASE);
-            }
+            throw new OurException(ErrorMessages.DATABASE);
         } finally {
             thread.releaseSession();
         }
     }
 
+    /**
+     * Adds a game to a user's list.
+     *
+     * @param username The username of the profile
+     * @param listName The name of the list
+     * @param gameId The ID of the game to add
+     * @throws OurException if addition fails or connection pool is full
+     */
     @Override
     public void addGameToList(String username, String listName, int gameId) throws OurException {
         SessionThread thread = startSessionThread();
+        Session session = null;
 
         try {
-            Session session = waitForSession(thread);
-
-            if (session == null) {
-                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
-            }
+            session = waitForSession(thread);
 
             session.beginTransaction();
-
             Profile profile = session.get(Profile.class, username);
             VideoGame game = session.get(VideoGame.class, gameId);
-
             if (profile != null && game != null) {
                 Listed listed = new Listed(profile, game, listName);
                 session.save(listed);
             }
-
             session.getTransaction().commit();
-        } catch (Exception e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
-            }
 
-            if (e instanceof OurException) {
-                throw (OurException) e;
-            } else {
-                throw new OurException(ErrorMessages.DATABASE);
+        } catch (OurException e) {
+            throw e;
+        } catch (Exception e) {
+            if (session != null && session.getTransaction() != null && session.getTransaction().isActive()) {
+                try {
+                    session.getTransaction().rollback();
+                } catch (Exception rollbackEx) {
+                }
             }
+            throw new OurException(ErrorMessages.DATABASE);
         } finally {
             thread.releaseSession();
         }
     }
 
+    /**
+     * Adds multiple games to a user's list.
+     *
+     * @param username The username of the profile
+     * @param listName The name of the list
+     * @param games ArrayList of VideoGame objects to add
+     * @throws OurException if addition fails or connection pool is full
+     */
     @Override
     public void addGamesToList(String username, String listName, ArrayList<VideoGame> games) throws OurException {
         SessionThread thread = startSessionThread();
+        Session session = null;
 
         try {
-            Session session = waitForSession(thread);
-
-            if (session == null) {
-                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
-            }
+            session = waitForSession(thread);
 
             session.beginTransaction();
 
@@ -492,31 +567,37 @@ public class HibernateImplementation implements ClassDAO {
             }
 
             session.getTransaction().commit();
+        } catch (OurException e) {
+            throw e;
         } catch (Exception e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
+            if (session != null && session.getTransaction() != null && session.getTransaction().isActive()) {
+                try {
+                    session.getTransaction().rollback();
+                } catch (Exception rollbackEx) {
+                }
             }
-
-            if (e instanceof OurException) {
-                throw (OurException) e;
-            } else {
-                throw new OurException(ErrorMessages.DATABASE);
-            }
+            throw new OurException(ErrorMessages.DATABASE);
         } finally {
             thread.releaseSession();
         }
     }
 
+    /**
+     * Removes a game from a user's list.
+     * If the list is "My Games", removes the game from all lists.
+     *
+     * @param username The username of the profile
+     * @param listName The name of the list
+     * @param gameId The ID of the game to remove
+     * @throws OurException if removal fails or connection pool is full
+     */
     @Override
     public void removeGameFromList(String username, String listName, int gameId) throws OurException {
         SessionThread thread = startSessionThread();
+        Session session = null;
 
         try {
-            Session session = waitForSession(thread);
-
-            if (session == null) {
-                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
-            }
+            session = waitForSession(thread);
 
             session.beginTransaction();
 
@@ -534,32 +615,37 @@ public class HibernateImplementation implements ClassDAO {
             }
 
             session.getTransaction().commit();
+        } catch (OurException e) {
+            throw e;
         } catch (Exception e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
+            if (session != null && session.getTransaction() != null && session.getTransaction().isActive()) {
+                try {
+                    session.getTransaction().rollback();
+                } catch (Exception rollbackEx) {
+                }
             }
-
-            if (e instanceof OurException) {
-                throw (OurException) e;
-            } else {
-                throw new OurException(ErrorMessages.DATABASE);
-            }
+            throw new OurException(ErrorMessages.DATABASE);
         } finally {
             thread.releaseSession();
         }
     }
 
+    /**
+     * Removes multiple games from a user's list.
+     *
+     * @param username The username of the profile
+     * @param listName The name of the list
+     * @param games ArrayList of VideoGame objects to remove
+     * @throws OurException if removal fails or connection pool is full
+     */
     @Override
     public void removeGamesFromList(String username, String listName, ArrayList<VideoGame> games) throws OurException {
         SessionThread thread = startSessionThread();
+        Session session = null;
 
         if (!games.isEmpty()) {
             try {
-                Session session = waitForSession(thread);
-
-                if (session == null) {
-                    throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
-                }
+                session = waitForSession(thread);
 
                 session.beginTransaction();
                 for (VideoGame game : games) {
@@ -571,30 +657,35 @@ public class HibernateImplementation implements ClassDAO {
                 }
 
                 session.getTransaction().commit();
+            } catch (OurException e) {
+                throw e;
             } catch (Exception e) {
-                if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                    thread.getSession().getTransaction().rollback();
+                if (session != null && session.getTransaction() != null && session.getTransaction().isActive()) {
+                    try {
+                        session.getTransaction().rollback();
+                    } catch (Exception rollbackEx) {
+                    }
                 }
-
-                if (e instanceof OurException) {
-                    throw (OurException) e;
-                } else {
-                    throw new OurException(ErrorMessages.DATABASE);
-                }
+                throw new OurException(ErrorMessages.DATABASE);
             } finally {
                 thread.releaseSession();
             }
         }
     }
 
+    /**
+     * Finds a video game by its name.
+     *
+     * @param name The name of the video game to search for
+     * @return The VideoGame object, or null if not found
+     * @throws OurException if search fails or connection pool is full
+     */
     @Override
     public VideoGame findVideoGameByName(String name) throws OurException {
         SessionThread thread = startSessionThread();
+        Session session = null;
         try {
-            Session session = waitForSession(thread);
-            if (session == null) {
-                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
-            }
+            session = waitForSession(thread);
             session.beginTransaction();
 
             VideoGame videoGame = (VideoGame) session.createNativeQuery(
@@ -604,35 +695,36 @@ public class HibernateImplementation implements ClassDAO {
 
             session.getTransaction().commit();
             return videoGame;
+        } catch (OurException e) {
+            throw e;
         } catch (Exception e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+            if (session != null && session.getTransaction() != null && session.getTransaction().isActive()) {
                 try {
-                    thread.getSession().getTransaction().rollback();
-                } catch (HibernateException he) {
+                    session.getTransaction().rollback();
+                } catch (Exception rollbackEx) {
                 }
             }
-            if (e instanceof OurException) {
-                throw (OurException) e;
-            } else {
-                throw new OurException(ErrorMessages.DATABASE);
-            }
+            throw new OurException(ErrorMessages.DATABASE);
         } finally {
             thread.releaseSession();
         }
     }
 
-    //[LISTS]
+    /**
+     * Retrieves all list names for a specific user.
+     *
+     * @param username The username of the profile
+     * @return ArrayList of distinct list names
+     * @throws OurException if retrieval fails or connection pool is full
+     */
     @Override
     public ArrayList<String> getUserLists(String username) throws OurException {
         ArrayList<String> lists = new ArrayList<>();
         SessionThread thread = startSessionThread();
+        Session session = null;
 
         try {
-            Session session = waitForSession(thread);
-
-            if (session == null) {
-                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
-            }
+            session = waitForSession(thread);
 
             session.beginTransaction();
 
@@ -652,31 +744,36 @@ public class HibernateImplementation implements ClassDAO {
             session.getTransaction().commit();
 
             return lists;
+        } catch (OurException e) {
+            throw e;
         } catch (Exception e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
+            if (session != null && session.getTransaction() != null && session.getTransaction().isActive()) {
+                try {
+                    session.getTransaction().rollback();
+                } catch (Exception rollbackEx) {
+                }
             }
-
-            if (e instanceof OurException) {
-                throw (OurException) e;
-            } else {
-                throw new OurException(ErrorMessages.DATABASE);
-            }
+            throw new OurException(ErrorMessages.DATABASE);
         } finally {
             thread.releaseSession();
         }
     }
 
+    /**
+     * Creates a new list for a profile.
+     * Initializes the list with the first game in the database.
+     *
+     * @param profile The Profile object for which to create the list
+     * @param listName The name of the new list
+     * @throws OurException if creation fails or connection pool is full
+     */
     @Override
     public void newList(Profile profile, String listName) throws OurException {
         SessionThread thread = startSessionThread();
+        Session session = null;
 
         try {
-            Session session = waitForSession(thread);
-
-            if (session == null) {
-                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
-            }
+            session = waitForSession(thread);
 
             session.beginTransaction();
 
@@ -685,31 +782,35 @@ public class HibernateImplementation implements ClassDAO {
             session.save(listed);
 
             session.getTransaction().commit();
+        } catch (OurException e) {
+            throw e;
         } catch (Exception e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
+            if (session != null && session.getTransaction() != null && session.getTransaction().isActive()) {
+                try {
+                    session.getTransaction().rollback();
+                } catch (Exception rollbackEx) {
+                }
             }
-
-            if (e instanceof OurException) {
-                throw (OurException) e;
-            } else {
-                throw new OurException(ErrorMessages.DATABASE);
-            }
+            throw new OurException(ErrorMessages.DATABASE);
         } finally {
             thread.releaseSession();
         }
     }
 
+    /**
+     * Deletes all entries of a specific list for a user.
+     *
+     * @param username The username of the profile
+     * @param listName The name of the list to delete
+     * @throws OurException if deletion fails or connection pool is full
+     */
     @Override
     public void deleteList(String username, String listName) throws OurException {
         SessionThread thread = startSessionThread();
+        Session session = null;
 
         try {
-            Session session = waitForSession(thread);
-
-            if (session == null) {
-                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
-            }
+            session = waitForSession(thread);
 
             session.beginTransaction();
 
@@ -719,32 +820,37 @@ public class HibernateImplementation implements ClassDAO {
                     .executeUpdate();
 
             session.getTransaction().commit();
+        } catch (OurException e) {
+            throw e;
         } catch (Exception e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
+            if (session != null && session.getTransaction() != null && session.getTransaction().isActive()) {
+                try {
+                    session.getTransaction().rollback();
+                } catch (Exception rollbackEx) {
+                }
             }
-
-            if (e instanceof OurException) {
-                throw (OurException) e;
-            } else {
-                throw new OurException(ErrorMessages.DATABASE);
-            }
+            throw new OurException(ErrorMessages.DATABASE);
         } finally {
             thread.releaseSession();
         }
     }
 
+    /**
+     * Verifies if a list name already exists for a user.
+     *
+     * @param username The username of the profile
+     * @param listName The list name to verify
+     * @return true if the list name exists, false otherwise
+     * @throws OurException if verification fails or connection pool is full
+     */
     @Override
     public boolean verifyListName(String username, String listName) throws OurException {
         boolean nameExist = true;
         SessionThread thread = startSessionThread();
+        Session session = null;
 
         try {
-            Session session = waitForSession(thread);
-
-            if (session == null) {
-                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
-            }
+            session = waitForSession(thread);
 
             session.beginTransaction();
 
@@ -765,29 +871,35 @@ public class HibernateImplementation implements ClassDAO {
             }
 
             return nameExist;
+        } catch (OurException e) {
+            throw e;
         } catch (Exception e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
+            if (session != null && session.getTransaction() != null && session.getTransaction().isActive()) {
+                try {
+                    session.getTransaction().rollback();
+                } catch (Exception rollbackEx) {
+                }
             }
-
-            if (e instanceof OurException) {
-                throw (OurException) e;
-            } else {
-                throw new OurException(ErrorMessages.DATABASE);
-            }
+            throw new OurException(ErrorMessages.DATABASE);
         } finally {
             thread.releaseSession();
         }
     }
 
+    /**
+     * Renames an existing list for a user.
+     *
+     * @param username The username of the profile
+     * @param listName The current name of the list
+     * @param listNewName The new name for the list
+     * @throws OurException if renaming fails or connection pool is full
+     */
     @Override
     public void renameList(String username, String listName, String listNewName) throws OurException {
         SessionThread thread = startSessionThread();
+        Session session = null;
         try {
-            Session session = waitForSession(thread);
-            if (session == null) {
-                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
-            }
+            session = waitForSession(thread);
             session.beginTransaction();
 
             Profile profile = session.get(Profile.class, username);
@@ -801,34 +913,36 @@ public class HibernateImplementation implements ClassDAO {
             }
 
             session.getTransaction().commit();
+        } catch (OurException e) {
+            throw e;
         } catch (Exception e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+            if (session != null && session.getTransaction() != null && session.getTransaction().isActive()) {
                 try {
-                    thread.getSession().getTransaction().rollback();
-                } catch (HibernateException he) {
+                    session.getTransaction().rollback();
+                } catch (Exception rollbackEx) {
                 }
             }
-            if (e instanceof OurException) {
-                throw (OurException) e;
-            } else {
-                throw new OurException(ErrorMessages.DATABASE);
-            }
+            throw new OurException(ErrorMessages.DATABASE);
         } finally {
             thread.releaseSession();
         }
     }
 
-    //[REVIEWS]
+    /**
+     * Finds a specific review by username and game ID.
+     *
+     * @param username The username of the reviewer
+     * @param gameId The ID of the game
+     * @return The Review object, or null if not found
+     * @throws OurException if search fails or connection pool is full
+     */
     @Override
     public Review findReview(String username, int gameId) throws OurException {
         SessionThread thread = startSessionThread();
+        Session session = null;
         Review review = null;
         try {
-            Session session = waitForSession(thread);
-
-            if (session == null) {
-                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
-            }
+            session = waitForSession(thread);
 
             session.beginTransaction();
             review = session.createQuery("SELECT r FROM Review r JOIN r.profile p JOIN r.videogame v WHERE p.username = :username AND v.v_id = :gameId", Review.class)
@@ -840,31 +954,36 @@ public class HibernateImplementation implements ClassDAO {
             session.getTransaction().commit();
 
             return review;
+        } catch (OurException e) {
+            throw e;
         } catch (Exception e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
+            if (session != null && session.getTransaction() != null && session.getTransaction().isActive()) {
+                try {
+                    session.getTransaction().rollback();
+                } catch (Exception rollbackEx) {
+                }
             }
-
-            if (e instanceof OurException) {
-                throw (OurException) e;
-            } else {
-                throw new OurException(ErrorMessages.DATABASE);
-            }
+            throw new OurException(ErrorMessages.DATABASE);
         } finally {
             thread.releaseSession();
         }
     }
 
+    /**
+     * Retrieves all reviews for a specific game.
+     *
+     * @param gameId The ID of the game
+     * @return ArrayList of Review objects for the game
+     * @throws OurException if retrieval fails or connection pool is full
+     */
     @Override
     public ArrayList<Review> findReviews(int gameId) throws OurException {
         SessionThread thread = startSessionThread();
+        Session session = null;
         ArrayList<Review> review = new ArrayList<>();
 
         try {
-            Session session = waitForSession(thread);
-            if (session == null) {
-                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
-            }
+            session = waitForSession(thread);
             session.beginTransaction();
             List<Review> reviews = session.createQuery("FROM Review r WHERE r.videogame.v_id = :gameId", Review.class)
                     .setParameter("gameId", gameId)
@@ -873,38 +992,36 @@ public class HibernateImplementation implements ClassDAO {
             review.addAll(reviews);
             session.getTransaction().commit();
             return review;
+        } catch (OurException e) {
+            throw e;
         } catch (Exception e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
+            if (session != null && session.getTransaction() != null && session.getTransaction().isActive()) {
                 try {
-                    thread.getSession().getTransaction().rollback();
-                } catch (HibernateException he) {
+                    session.getTransaction().rollback();
+                } catch (Exception rollbackEx) {
                 }
             }
-            if (e instanceof OurException) {
-                throw (OurException) e;
-            } else {
-                throw new OurException(ErrorMessages.DATABASE);
-            }
+            throw new OurException(ErrorMessages.DATABASE);
         } finally {
             thread.releaseSession();
         }
     }
 
     /**
+     * Retrieves all reviews in the system, ordered by review date descending.
      *
-     * @return @throws OurException
+     * @return ArrayList of all Review objects
+     * @throws OurException if retrieval fails or connection pool is full
      */
     @Override
     public ArrayList<Review> getAllReviews() throws OurException {
         ArrayList<Review> reviews;
         SessionThread thread = startSessionThread();
+        Session session = null;
 
         try {
-            Session session = waitForSession(thread);
+            session = waitForSession(thread);
 
-            if (session == null) {
-                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
-            }
             session.beginTransaction();
             List<Review> reviewList = session.createQuery("FROM Review r ORDER BY r.reviewDate DESC", Review.class).list();
             reviews = new ArrayList<>(reviewList);
@@ -912,31 +1029,37 @@ public class HibernateImplementation implements ClassDAO {
             session.getTransaction().commit();
 
             return reviews;
+        } catch (OurException e) {
+            throw e;
         } catch (Exception e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
+            if (session != null && session.getTransaction() != null && session.getTransaction().isActive()) {
+                try {
+                    session.getTransaction().rollback();
+                } catch (Exception rollbackEx) {
+                }
             }
-
-            if (e instanceof OurException) {
-                throw (OurException) e;
-            } else {
-                throw new OurException(ErrorMessages.DATABASE);
-            }
+            throw new OurException(ErrorMessages.DATABASE);
         } finally {
             thread.releaseSession();
         }
     }
 
+    /**
+     * Saves a new review or updates an existing review.
+     * If a review already exists for the user-game combination, updates it.
+     * Otherwise, creates a new review.
+     *
+     * @param review The Review object to save or update
+     * @return true if the operation is successful
+     * @throws OurException if save/update fails, profile or game not found, or connection pool is full
+     */
     @Override
     public boolean saveOrUpdateReview(Review review) throws OurException {
-
         SessionThread thread = startSessionThread();
+        Session session = null;
 
         try {
-            Session session = waitForSession(thread);
-            if (session == null) {
-                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
-            }
+            session = waitForSession(thread);
 
             session.beginTransaction();
 
@@ -970,9 +1093,14 @@ public class HibernateImplementation implements ClassDAO {
             session.getTransaction().commit();
             return true;
 
+        } catch (OurException e) {
+            throw e;
         } catch (Exception e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
+            if (session != null && session.getTransaction() != null && session.getTransaction().isActive()) {
+                try {
+                    session.getTransaction().rollback();
+                } catch (Exception rollbackEx) {
+                }
             }
             throw new OurException(ErrorMessages.SAVE_REVIEW_ERROR);
         } finally {
@@ -980,15 +1108,18 @@ public class HibernateImplementation implements ClassDAO {
         }
     }
 
+    /**
+     * Deletes a review from the database.
+     *
+     * @param review The Review object to delete
+     * @throws OurException if deletion fails or connection pool is full
+     */
     @Override
     public void deleteReview(Review review) throws OurException {
         SessionThread thread = startSessionThread();
+        Session session = null;
         try {
-            Session session = waitForSession(thread);
-
-            if (session == null) {
-                throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
-            }
+            session = waitForSession(thread);
 
             session.beginTransaction();
             session.createQuery("DELETE FROM Review r WHERE r.profile.username = :username AND r.videogame.v_id = :gameId")
@@ -997,22 +1128,27 @@ public class HibernateImplementation implements ClassDAO {
                     .executeUpdate();
 
             session.getTransaction().commit();
+        } catch (OurException e) {
+            throw e;
         } catch (Exception e) {
-            if (thread.getSession() != null && thread.getSession().getTransaction().isActive()) {
-                thread.getSession().getTransaction().rollback();
+            if (session != null && session.getTransaction() != null && session.getTransaction().isActive()) {
+                try {
+                    session.getTransaction().rollback();
+                } catch (Exception rollbackEx) {
+                }
             }
-
-            if (e instanceof OurException) {
-                throw (OurException) e;
-            } else {
-                throw new OurException(ErrorMessages.DATABASE);
-            }
+            throw new OurException(ErrorMessages.DATABASE);
         } finally {
             thread.releaseSession();
         }
     }
 
-    //[OTHER]
+    /**
+     * Initializes the database with default data including users, admins, games, lists, and reviews.
+     * Only creates entities that don't already exist in the database.
+     *
+     * @throws OurException if initialization fails
+     */
     @Override
     public void initializeDefault() throws OurException {
         Session session = null;
@@ -1021,7 +1157,6 @@ public class HibernateImplementation implements ClassDAO {
             session = HibernateUtil.getSession();
             session.beginTransaction();
 
-            //******************************************************USERS*******************************************************
             String[][] users = {
                 {"User", "jlopez", "Masculino", "AB1234567890123456789012", "pass123", "jlopez@example.com", "Juan", "987654321", "Lopez", null},
                 {"User", "mramirez", "Femenino", "ZX9081726354891027364512", "pass456", "mramirez@example.com", "Maria", "912345678", "Ramirez", null},
@@ -1045,7 +1180,6 @@ public class HibernateImplementation implements ClassDAO {
                 }
             }
 
-            //******************************************************GAMES*******************************************************
             Object[][] games = {
                 {"DEFAULT_GAME", LocalDate.now(), Platform.DEFAULT, Pegi.DEFAULT},
                 {"Owlboy", LocalDate.of(2016, 11, 1), Platform.NINTENDO, Pegi.PEGI3},
@@ -1065,7 +1199,6 @@ public class HibernateImplementation implements ClassDAO {
                 }
             }
 
-            //******************************************************LISTS*******************************************************
             String[][] listEntries = {
                 {"jlopez", "User", "My Games", "1"},
                 {"mramirez", "User", "My Games", "1"},
@@ -1075,11 +1208,9 @@ public class HibernateImplementation implements ClassDAO {
                 {"asanchez", "Admin", "My Games", "2"},
                 {"asanchez", "Admin", "My Games", "3"},
                 {"asanchez", "Admin", "My Games", "5"},
-                // NINTENDO
                 {"asanchez", "Admin", "NINTENDO", "1"},
                 {"asanchez", "Admin", "NINTENDO", "2"},
                 {"asanchez", "Admin", "NINTENDO", "3"},
-                // PLAYSTATION
                 {"asanchez", "Admin", "PLAYSTATION", "1"},
                 {"asanchez", "Admin", "PLAYSTATION", "5"}
             };
@@ -1100,7 +1231,6 @@ public class HibernateImplementation implements ClassDAO {
                 }
             }
 
-            //******************************************************REVIEWS*******************************************************
             Object[][] reviews = {
                 {"asanchez", "Admin", "2", 7, "Review description", Platform.NINTENDO},
                 {"asanchez", "Admin", "3", 2, "Bad experience", Platform.NINTENDO},
@@ -1138,17 +1268,48 @@ public class HibernateImplementation implements ClassDAO {
         }
     }
 
-    private Session waitForSession(SessionThread thread) throws InterruptedException {
+    /**
+     * Waits for a SessionThread to be ready and validates the connection.
+     * Performs a test transaction to verify connection pool availability.
+     *
+     * @param thread The SessionThread to wait for
+     * @return The Session object from the thread
+     * @throws InterruptedException if the wait is interrupted
+     * @throws OurException if session creation fails or connection pool is full
+     */
+    private Session waitForSession(SessionThread thread) throws InterruptedException, OurException {
         int attempts = 0;
-
         while (!thread.isReady() && attempts < 50) {
             Thread.sleep(10);
             attempts++;
         }
 
-        return thread.getSession();
+        if (thread.hasSessionCreationFailed()) {
+            throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
+        }
+
+        Session session = thread.getSession();
+        if (session == null) {
+            throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
+        }
+
+        try {
+            session.beginTransaction();
+            session.getTransaction().rollback();
+        } catch (org.hibernate.exception.JDBCConnectionException ex) {
+            throw new OurException(ErrorMessages.CONNECTION_POOL_FULL);
+        }
+
+        return session;
     }
     
+    /**
+     * Generates a PDF report of all reviews using JasperReports.
+     * The report is saved with a timestamp in the reports directory and opened automatically.
+     *
+     * @param name The name of the user generating the report
+     * @throws OurException if report generation fails
+     */
     @Override
     public void generateReport(String name) throws OurException {
         Session session = null;

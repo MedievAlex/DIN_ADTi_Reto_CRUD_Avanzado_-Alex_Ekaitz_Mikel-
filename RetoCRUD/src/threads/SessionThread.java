@@ -35,6 +35,11 @@ public class SessionThread extends Thread
      * Delay in seconds before committing the transaction when releaseSession() is called.
      */
     private int delay;
+    
+    /**
+     * Flag indicating whether the session creation process failed.
+     */
+    private boolean sessionCreationFailed = false;
 
     /**
      * Constructs a new SessionThread.
@@ -74,6 +79,16 @@ public class SessionThread extends Thread
     {
         return ready;
     }
+    
+    /**
+     * Checks if the session creation process failed.
+     *
+     * @return true if session creation failed, false otherwise
+     */
+    public boolean hasSessionCreationFailed()
+    {
+        return sessionCreationFailed;
+    }
 
     /**
      * Signals the thread to end execution and commit any pending transaction.
@@ -91,6 +106,7 @@ public class SessionThread extends Thread
      * Opens a Hibernate session, waits for the release signal,
      * then commits any transaction with the configured delay.
      * Ensures proper cleanup of session resources in the finally block.
+     * If session creation fails, marks the failure and returns immediately.
      */
     @Override
     public void run()
@@ -101,9 +117,12 @@ public class SessionThread extends Thread
             {
                 session = HibernateUtil.getSession();
             }
-            catch (HibernateException ex)
+            catch (Exception ex)
             {
-                Logger.getLogger(SessionThread.class.getName()).log(Level.SEVERE, null, ex);
+                this.sessionCreationFailed = true;
+                Logger.getLogger(SessionThread.class.getName()).log(Level.SEVERE, "Error al obtener sesión", ex);
+                ready = true;
+                return;
             }
             ready = true;
             
@@ -122,13 +141,11 @@ public class SessionThread extends Thread
             try
             {
                 session.beginTransaction();
-
                 try {
                     Thread.sleep(delay * 1000L);
                 } catch (InterruptedException e) {
                     return;
                 }
-
                 session.getTransaction().commit();
             }
             catch (Exception e)

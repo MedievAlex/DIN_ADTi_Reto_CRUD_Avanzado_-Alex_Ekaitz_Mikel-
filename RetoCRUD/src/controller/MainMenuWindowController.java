@@ -205,7 +205,7 @@ public class MainMenuWindowController implements Initializable
                 showAlert("Error", "Failed reviews listener", Alert.AlertType.ERROR);
             } catch (OurException ex) {
                 GeneraLog.getLogger().severe("Failed loading reviews: " + ex.getMessage());
-                showAlert("Error", "Failed loading reviews", Alert.AlertType.ERROR);
+                showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
             }
         });
 

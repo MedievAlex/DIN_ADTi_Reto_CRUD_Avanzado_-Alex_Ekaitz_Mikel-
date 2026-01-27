@@ -198,7 +198,7 @@ public class ReviewsWindowController implements Initializable {
             listsNames = cont.getUserLists(profile.getUsername());
         } catch (OurException ex) {
             GeneraLog.getLogger().severe("Failed to get user lists: " + ex.getMessage());
-            showAlert("Error", "Failed to get user lists", Alert.AlertType.ERROR);
+            showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
         }
         combLists.getItems().clear();
         combLists.getItems().add("All Reviews");
@@ -239,7 +239,7 @@ public class ReviewsWindowController implements Initializable {
                     }
                 } catch (OurException ex) {
                     GeneraLog.getLogger().severe("Failed deleting a review: " + ex.getMessage());
-                    showAlert("Error", "Failed deleting a review", Alert.AlertType.ERROR);
+                    showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
                 }
             }
         });
@@ -350,12 +350,8 @@ public class ReviewsWindowController implements Initializable {
             tableReview.setItems(reviews);
 
         } catch (OurException ex) {
-            String errorMessage = ex.getMessage();
-            if (errorMessage.contains("connection") || errorMessage.contains("database")) {
-                showAlert("Database Error","Cannot connect to database.",Alert.AlertType.ERROR);
-            } else {
-                showAlert("Error", errorMessage, Alert.AlertType.ERROR);
-            }
+            GeneraLog.getLogger().severe("Failed to show reviews: " + ex.getMessage());
+            showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
         } catch (Exception ex) {
             showAlert("Unexpected Error",
                     "An unexpected error occurred: " + ex.getMessage(),
@@ -516,7 +512,7 @@ public class ReviewsWindowController implements Initializable {
         }
         catch (OurException ex) {
             GeneraLog.getLogger().severe("Failed to generate report: " + ex.getMessage());
-            showAlert("Error", "Failed to generate report", Alert.AlertType.ERROR);
+            showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
 }
