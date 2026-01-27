@@ -1190,7 +1190,7 @@ public class HibernateImplementation implements ClassDAO {
                 {"Detroit: Become Human", LocalDate.of(2018, 5, 25), Platform.PLAYSTATION, Pegi.PEGI16}, // 7
                 {"Detroit: Become Human", LocalDate.of(2018, 5, 25), Platform.PC, Pegi.PEGI16}, // 8
                 {"Detroit: Become Human", LocalDate.of(2018, 5, 25), Platform.XBOX, Pegi.PEGI16}, // 9
-                {"ASTROBOT", LocalDate.of(2024, 9, 6), Platform.PLAYSTATION, Pegi.PEGI3}, // 10
+                {"ASTRO BOT", LocalDate.of(2024, 9, 6), Platform.PLAYSTATION, Pegi.PEGI3}, // 10
                 {"Call of Duty: Black Ops II", LocalDate.of(2012, 11, 13), Platform.PLAYSTATION, Pegi.PEGI18}, // 11
                 {"Call of Duty: Black Ops II", LocalDate.of(2012, 11, 13), Platform.PC, Pegi.PEGI18}, // 12
                 {"Call of Duty: Black Ops II", LocalDate.of(2012, 11, 13), Platform.XBOX, Pegi.PEGI18}, // 13
@@ -1231,7 +1231,7 @@ public class HibernateImplementation implements ClassDAO {
                 {"asanchez", "Admin", "My Games", "1"}, // DEFAULT_GAME
                 {"asanchez", "Admin", "My Games", "2"}, // Owlboy
                 {"asanchez", "Admin", "My Games", "6"}, // Animal Crossing
-                {"asanchez", "Admin", "My Games", "10"}, // ASTROBOT 
+                {"asanchez", "Admin", "My Games", "10"}, // ASTRO BOT 
                 {"asanchez", "Admin", "My Games", "15"}, // Balatro
                 {"asanchez", "Admin", "My Games", "20"}, // Hades
                 {"asanchez", "Admin", "My Games", "24"}, // Cult of The Lamb
@@ -1252,7 +1252,7 @@ public class HibernateImplementation implements ClassDAO {
                 {"asanchez", "Admin", "NINTENDO", "24"}, // Cult of The Lamb
 
                 {"asanchez", "Admin", "PLAYSTATION", "1"}, // DEFAULT_GAME
-                {"asanchez", "Admin", "PLAYSTATION", "10"}, // ASTROBOT
+                {"asanchez", "Admin", "PLAYSTATION", "10"}, // ASTRO BOT
                 {"asanchez", "Admin", "PLAYSTATION", "11"}, // Call of Duty: Black Ops II
                 {"asanchez", "Admin", "PLAYSTATION", "29"}, // Life is Strange
                 {"asanchez", "Admin", "PLAYSTATION", "7"}, // Detroit: Become Human
@@ -1284,12 +1284,12 @@ public class HibernateImplementation implements ClassDAO {
             }
 
             Object[][] reviews = {
-                {"asanchez", "Admin", "2", 14, "Really bad experience. Really boring and repetitive.", Platform.XBOX},
-                {"asanchez", "Admin", "9", 2, "Underrated game. Most people should play it.", Platform.NINTENDO},
-                {"asanchez", "Admin", "10", 10, "It won the Game of the Year for something.", Platform.PLAYSTATION},
-                {"cperez", "User", "9", 10, "GOTY.", Platform.PLAYSTATION},
-                {"cperez", "User", "7", 12, "They dont make games llike this now a day.", Platform.PC},
-                {"jlopez", "User", "5", 27, "Mid game.", Platform.PLAYSTATION}
+                {"asanchez", "Admin", "2", 14, "Played a bit, thought it was fun. However this game CONTINUES to reinstall itself on my computer. For that I do not recommend it. I have uninstalled it over a dozen times and it keeps coming back, at this point I consider it a virus.", Platform.XBOX}, // Halo Infinite
+                {"asanchez", "Admin", "9", 2, "If Hayao Miyazaki directed a video game I feel like it'd be something like Owlboy. By which I mean; stunning visuals, incredible soundtrack and a wonderful story. The three intertwine so well that I'd consider it to be my Ocarina of Time for Pixel Platformers. And an indie game that's so damn beautiful it made me write my first review.", Platform.NINTENDO}, // Owlboy
+                {"asanchez", "Admin", "10", 10, "It is not only graphically stunning, it is funny and beautiful. It is a masterpiece that, in my opinion, is the best game of all time.", Platform.PLAYSTATION}, // ASTRO BOT
+                {"cperez", "User", "9", 10, "GOTY.", Platform.PLAYSTATION}, // ASTRO BOT
+                {"cperez", "User", "7", 12, "They dont make games llike this now a day.", Platform.PC}, // Call of Duty: Black Ops II
+                {"jlopez", "User", "5", 27, "Mid game.", Platform.PLAYSTATION} // God of War Ragnarok
             };
 
             for (Object[] reviewData : reviews) {
@@ -1418,4 +1418,5 @@ public class HibernateImplementation implements ClassDAO {
         }
     }
 }
+
 
