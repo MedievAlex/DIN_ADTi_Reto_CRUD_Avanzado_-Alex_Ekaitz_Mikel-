@@ -190,3 +190,5 @@ ene 27, 2026 9:20:56 AM controller.ReviewsWindowController setComboBox
 GRAVE: Failed to get user lists: Error initializing database connection.
 ene 27, 2026 9:20:59 AM controller.ReviewsWindowController loadReview
 GRAVE: Failed to load reviews: Error initializing database connection.
+ene 27, 2026 12:21:30 PM controller.LogInWindowController logIn
+INFORMACIÓN: Logged correctly: asanchez
