@@ -170,6 +170,7 @@ ene 26, 2026 9:11:29 PM controller.LogInWindowController logIn
 INFORMACIÓN: Logged correctly: asanchez
 ene 26, 2026 9:12:00 PM controller.LogInWindowController logIn
 INFORMACIÓN: Logged correctly: asanchez
+<<<<<<< HEAD
 ene 27, 2026 8:13:57 AM controller.LogInWindowController logIn
 GRAVE: Error trying to login: Invalid credentials
 ene 27, 2026 8:14:01 AM controller.LogInWindowController logIn
@@ -179,4 +180,7 @@ INFORMACIÓN: Logged correctly: asanchez
 ene 27, 2026 9:11:13 AM controller.LogInWindowController logIn
 INFORMACIÓN: Logged correctly: asanchez
 ene 27, 2026 9:16:46 AM controller.LogInWindowController logIn
+=======
+ene 27, 2026 8:53:04 AM controller.LogInWindowController logIn
+>>>>>>> 87b7dbc947b54c220d62c92816988d0eaf727776
 INFORMACIÓN: Logged correctly: asanchez
