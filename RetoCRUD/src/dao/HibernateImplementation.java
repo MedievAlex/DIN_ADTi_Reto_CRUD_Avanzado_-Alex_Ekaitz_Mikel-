@@ -1235,14 +1235,14 @@ public class HibernateImplementation implements ClassDAO {
                 {"asanchez", "Admin", "My Games", "15"}, // Balatro
                 {"asanchez", "Admin", "My Games", "20"}, // Hades
                 {"asanchez", "Admin", "My Games", "24"}, // Cult of The Lamb
-                {"asanchez", "Admin", "My Games", "11"} // Call of Duty: Black Ops II
-                {"asanchez", "Admin", "My Games", "29"} // Life is Strange
-                {"asanchez", "Admin", "My Games", "7"} // Detroit: Become Human
-                {"asanchez", "Admin", "My Games", "16"} // Balatro
-                {"asanchez", "Admin", "My Games", "26"} // Cult of The Lamb
-                {"asanchez", "Admin", "My Games", "18"} // Library of Ruina
-                {"asanchez", "Admin", "My Games", "14"} // Halo Infinite
-                {"asanchez", "Admin", "My Games", "32"} // Hi-Fi Rush
+                {"asanchez", "Admin", "My Games", "11"}, // Call of Duty: Black Ops II
+                {"asanchez", "Admin", "My Games", "29"}, // Life is Strange
+                {"asanchez", "Admin", "My Games", "7"}, // Detroit: Become Human
+                {"asanchez", "Admin", "My Games", "16"}, // Balatro
+                {"asanchez", "Admin", "My Games", "26"}, // Cult of The Lamb
+                {"asanchez", "Admin", "My Games", "18"}, // Library of Ruina
+                {"asanchez", "Admin", "My Games", "14"}, // Halo Infinite
+                {"asanchez", "Admin", "My Games", "32"}, // Hi-Fi Rush
 
                 {"asanchez", "Admin", "NINTENDO", "1"}, // DEFAULT_GAME
                 {"asanchez", "Admin", "NINTENDO", "2"}, // Owlboy
@@ -1252,20 +1252,19 @@ public class HibernateImplementation implements ClassDAO {
                 {"asanchez", "Admin", "NINTENDO", "24"}, // Cult of The Lamb
 
                 {"asanchez", "Admin", "PLAYSTATION", "1"}, // DEFAULT_GAME
-                {"asanchez", "Admin", "PLAYSTATION", "10"} // ASTROBOT
-                {"asanchez", "Admin", "PLAYSTATION", "11"} // Call of Duty: Black Ops II
-                {"asanchez", "Admin", "PLAYSTATION", "29"} // Life is Strange
-                {"asanchez", "Admin", "PLAYSTATION", "7"} // Detroit: Become Human
+                {"asanchez", "Admin", "PLAYSTATION", "10"}, // ASTROBOT
+                {"asanchez", "Admin", "PLAYSTATION", "11"}, // Call of Duty: Black Ops II
+                {"asanchez", "Admin", "PLAYSTATION", "29"}, // Life is Strange
+                {"asanchez", "Admin", "PLAYSTATION", "7"}, // Detroit: Become Human
 
                 {"asanchez", "Admin", "PC", "1"}, // DEFAULT_GAME
-                {"asanchez", "Admin", "PC", "16"} // Balatro
-                {"asanchez", "Admin", "PC", "26"} // Cult of The Lamb
-                {"asanchez", "Admin", "PC", "18"} // Library of Ruina
+                {"asanchez", "Admin", "PC", "16"}, // Balatro
+                {"asanchez", "Admin", "PC", "26"}, // Cult of The Lamb
+                {"asanchez", "Admin", "PC", "18"}, // Library of Ruina
 
                 {"asanchez", "Admin", "XBOX", "1"}, // DEFAULT_GAME
-                {"asanchez", "Admin", "XBOX", "14"} // Halo Infinite
+                {"asanchez", "Admin", "XBOX", "14"}, // Halo Infinite
                 {"asanchez", "Admin", "XBOX", "32"} // Hi-Fi Rush
-
             };
 
             for (String[] entry : listEntries) {
@@ -1285,11 +1284,12 @@ public class HibernateImplementation implements ClassDAO {
             }
 
             Object[][] reviews = {
-                {"asanchez", "Admin", "2", 7, "Review description", Platform.NINTENDO},
-                {"asanchez", "Admin", "3", 2, "Bad experience", Platform.NINTENDO},
-                {"cperez", "User", "4", 5, "Bad game", Platform.PLAYSTATION},
-                {"cperez", "User", "5", 10, "Great game", Platform.PLAYSTATION},
-                {"jlopez", "User", "6", 6, "Mid game", Platform.PLAYSTATION}
+                {"asanchez", "Admin", "2", 14, "Really bad experience. Really boring and repetitive.", Platform.XBOX},
+                {"asanchez", "Admin", "9", 2, "Underrated game. Most people should play it.", Platform.NINTENDO},
+                {"asanchez", "Admin", "10", 10, "It won the Game of the Year for something.", Platform.PLAYSTATION},
+                {"cperez", "User", "9", 10, "GOTY.", Platform.PLAYSTATION},
+                {"cperez", "User", "7", 12, "They dont make games llike this now a day.", Platform.PC},
+                {"jlopez", "User", "5", 27, "Mid game.", Platform.PLAYSTATION}
             };
 
             for (Object[] reviewData : reviews) {
@@ -1418,3 +1418,4 @@ public class HibernateImplementation implements ClassDAO {
         }
     }
 }
+
