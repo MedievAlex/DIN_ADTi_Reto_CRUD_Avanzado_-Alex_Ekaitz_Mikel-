@@ -8,4 +8,11 @@ Changes ->
   - Replace passwordequalspassword exception, by the unified OurException.
   - The Datasource pool to use Hikaricp pool.
   - Adapt the thread and other parts to use Hibernate.
-  - Change primary key of Profile, from Id to Username.
+  - Change primary key of Profile, from Id to Username and delete Id.
+
+Distribution ->
+  - MainMenuWindow -> Ekaitz
+  - ListWindow -> Alex
+  - ReviewsWindow -> Mikel
+  - Overall design -> Alex
+  - Everything else -> Ekaitz, Mikel and Alex
