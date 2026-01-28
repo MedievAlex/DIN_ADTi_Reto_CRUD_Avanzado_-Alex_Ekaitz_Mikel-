@@ -56,6 +56,8 @@ public class MockClassDAO implements ClassDAO
         testUserLists.put("Favorites", new ArrayList<>());
         userListGames.put("testuser", testUserLists);
 
+        
+        
         this.shouldThrowException = false;
     }
 
