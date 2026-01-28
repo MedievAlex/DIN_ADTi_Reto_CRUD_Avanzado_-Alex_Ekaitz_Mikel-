@@ -184,6 +184,7 @@ public class ListTest extends ApplicationTest {
     public void test09_RemoveGames() {
         // Que al darle a remove se elimine el juego
         Button bttnRemove = lookup("#bttnRemove").query();
+        clickOn("#bttnRemove");
     }
     
     @Test
