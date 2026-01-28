@@ -94,6 +94,8 @@ public class RenameListWindowController implements Initializable {
                 txtMessage.setText("List named " + newName + " already exists.");
             } else if (listNewName.getText().trim().length() == 0) {
                 txtMessage.setText("List can't have an empty name.");
+            } else if (listNewName.getText().length() > 20) {
+                txtMessage.setText("Name too long.");
             }else {
                 cont.renameList(profile.getUsername(), listName, newName);
                 txtMessage.setText(listName + " updated to " + newName + ".");
