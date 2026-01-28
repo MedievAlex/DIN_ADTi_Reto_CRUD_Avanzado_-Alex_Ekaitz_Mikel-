@@ -242,3 +242,5 @@ ene 27, 2026 2:25:21 PM controller.ListWindowController showList
 GRAVE: Failed showing lists: No connections available. The system is busy, please try again in a few moments.
 ene 27, 2026 2:26:40 PM controller.LogInWindowController logIn
 INFORMACIÓN: Logged correctly: asanchez
+ene 27, 2026 3:36:42 PM controller.LogInWindowController logIn
+INFORMACIÓN: Logged correctly: asanchez
