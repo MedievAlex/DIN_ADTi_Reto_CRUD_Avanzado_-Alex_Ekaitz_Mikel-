@@ -91,8 +91,10 @@ public class RenameListWindowController implements Initializable {
 
         try {
             if (cont.verifyListName(profile.getUsername(), listNewName.getText())) {
-                txtMessage.setText(" List named " + newName + " already exists.");
-            } else {
+                txtMessage.setText("List named " + newName + " already exists.");
+            } else if (listNewName.getText().trim().length() == 0) {
+                txtMessage.setText("List can't have an empty name.");
+            }else {
                 cont.renameList(profile.getUsername(), listName, newName);
                 txtMessage.setText(listName + " updated to " + newName + ".");
                 Button newNameButton = new Button(newName);

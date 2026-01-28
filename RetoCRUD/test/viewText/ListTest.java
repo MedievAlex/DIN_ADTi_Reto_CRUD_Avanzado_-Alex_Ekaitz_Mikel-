@@ -2,6 +2,7 @@ package viewText;
 
 import controller.Controller;
 import controller.ListWindowController;
+import controller.RenameListWindowController;
 import dao.MockClassDAO;
 import javafx.collections.ObservableList;
 import model.Profile;
@@ -22,7 +23,7 @@ import javafx.stage.Stage;
 
 import static org.junit.Assert.*;
 
-@FixMethodOrder(MethodSorters.DEFAULT)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ListTest extends ApplicationTest {
 
     private ListWindowController controller;
@@ -57,7 +58,7 @@ public class ListTest extends ApplicationTest {
     }
 
     @Test
-    public void test1_AllComponentsAreLoaded() {
+    public void test01_AllComponentsAreLoaded() {
         MenuButton menuButton = lookup("#menu").query();
         Text listName = lookup("#listName").query();  
         TableView<?> tableLists = lookup("#tableLists").query();
@@ -77,7 +78,7 @@ public class ListTest extends ApplicationTest {
     }
 
     @Test
-    public void test2_MenuButtonActions() {
+    public void test02_MenuButtonActions() {
         MenuButton menuButton = lookup("#menu").query();
         assertNotNull(menuButton);
 
@@ -96,7 +97,7 @@ public class ListTest extends ApplicationTest {
     }
 
     @Test
-    public void test3_TableListsLoaded() {
+    public void test03_TableListsLoaded() {
         TableView<?> tableLists = lookup("#tableLists").query();
         sleep(1000);
 
@@ -105,30 +106,71 @@ public class ListTest extends ApplicationTest {
     }
     
     @Test
-    public void test4_NewListButton() {
+    public void test04_ListButtons() {
         VBox vbLists = lookup("#vbLists").query();
-        ObservableList listButtons = vbLists.getChildren();
-        listButtons.get(1);
-        // ???
+        // Create Lists
+        clickOn("+ New List");
+        clickOn("+ New List");
+        clickOn("+ New List");
+        sleep(1000);
+        
+        assertTrue(vbLists.getChildren().size() == 6);
     }
 
     @Test
-    public void test5_ListButtonsLoad() {
+    public void test05_ListButtonsLoad() {
         //Clickar a un boton y que la tabla cambie de valores
+        
     }
 
     @Test
-    public void test6_RenameListName() {
-        // Hacer click derecho y que se pueda abrir la ventana para renombrar
+    public void test06_RenameListName() { // Rename list with the contextual menu
+        VBox vbLists = lookup("#vbLists").query();
+        // Create Lists
+        clickOn("+ New List");
+        sleep(500);
+        
+        // Rename List
+        rightClickOn("New List 1");
+        clickOn("Rename List");
+        sleep(500);
+        
+        clickOn("Confirm");
+        sleep(500);
+        
+        clickOn("Cancel");
+        sleep(500);
     }
 
     @Test
-    public void test7_DeleteList() {
-        // Hacer click derecho y que se pueda eliminar la lista
+    public void test07_DeleteList() { // Delete list with the contextual menu
+        VBox vbLists = lookup("#vbLists").query();
+        
+        // Create Lists
+        clickOn("+ New List");
+        clickOn("+ New List");
+        clickOn("+ New List");
+        sleep(500);
+        
+        // Delete Lists
+        rightClickOn("New List 2");
+        clickOn("Delete List");
+        sleep(500);
+        
+        rightClickOn("New List 3");
+        clickOn("Delete List");
+        sleep(500);
+
+        rightClickOn("New List 1");
+        clickOn("Delete List");
+        sleep(500);
+        
+        assertTrue(vbLists.getChildren().size() == 3);
+        sleep(500);
     }
     
     @Test
-    public void test8_SelectGameInTable() {
+    public void test08_SelectGameInTable() {
         TableView<?> tableLists = lookup("#tableLists").query();
         sleep(1000);
         
@@ -139,7 +181,7 @@ public class ListTest extends ApplicationTest {
     }
     
     @Test
-    public void test9_RemoveGames() {
+    public void test09_RemoveGames() {
         // Que al darle a remove se elimine el juego
         Button bttnRemove = lookup("#bttnRemove").query();
     }
@@ -165,5 +207,17 @@ public class ListTest extends ApplicationTest {
     public void test11_AddGamesGames() {
         // Que al darle a add se añada el juego
         Button bttnAdd = lookup("#bttnAdd").query();
+        ComboBox<String> combLists = lookup("#combLists").query();
+        sleep(500);
+
+        clickOn("#combLists");
+        sleep(500);
+
+        interact(() -> {
+            assertTrue(combLists.getItems().size() > 0);
+            combLists.getSelectionModel().select(0);
+        });
+        clickOn("#bttnAdd");
+        sleep(500);
     }
 }
