@@ -1243,25 +1243,21 @@ public class HibernateImplementation implements ClassDAO {
                 {"asanchez", "Admin", "My Games", "18"}, // Library of Ruina
                 {"asanchez", "Admin", "My Games", "14"}, // Halo Infinite
                 {"asanchez", "Admin", "My Games", "32"}, // Hi-Fi Rush
-
                 {"asanchez", "Admin", "NINTENDO", "1"}, // DEFAULT_GAME
                 {"asanchez", "Admin", "NINTENDO", "2"}, // Owlboy
                 {"asanchez", "Admin", "NINTENDO", "6"}, // Animal Crossing
                 {"asanchez", "Admin", "NINTENDO", "15"}, // Balatro
                 {"asanchez", "Admin", "NINTENDO", "20"}, // Hades
                 {"asanchez", "Admin", "NINTENDO", "24"}, // Cult of The Lamb
-
                 {"asanchez", "Admin", "PLAYSTATION", "1"}, // DEFAULT_GAME
                 {"asanchez", "Admin", "PLAYSTATION", "10"}, // ASTRO BOT
                 {"asanchez", "Admin", "PLAYSTATION", "11"}, // Call of Duty: Black Ops II
                 {"asanchez", "Admin", "PLAYSTATION", "29"}, // Life is Strange
                 {"asanchez", "Admin", "PLAYSTATION", "7"}, // Detroit: Become Human
-
                 {"asanchez", "Admin", "PC", "1"}, // DEFAULT_GAME
                 {"asanchez", "Admin", "PC", "16"}, // Balatro
                 {"asanchez", "Admin", "PC", "26"}, // Cult of The Lamb
                 {"asanchez", "Admin", "PC", "18"}, // Library of Ruina
-
                 {"asanchez", "Admin", "XBOX", "1"}, // DEFAULT_GAME
                 {"asanchez", "Admin", "XBOX", "14"}, // Halo Infinite
                 {"asanchez", "Admin", "XBOX", "32"} // Hi-Fi Rush

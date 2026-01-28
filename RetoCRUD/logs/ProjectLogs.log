@@ -242,3 +242,15 @@ ene 27, 2026 2:25:21 PM controller.ListWindowController showList
 GRAVE: Failed showing lists: No connections available. The system is busy, please try again in a few moments.
 ene 27, 2026 2:26:40 PM controller.LogInWindowController logIn
 INFORMACIÓN: Logged correctly: asanchez
+ene 28, 2026 8:23:09 AM main.Main start
+GRAVE: Error initializing the app.
+ene 28, 2026 8:24:43 AM main.Main start
+GRAVE: Error initializing the app.
+ene 28, 2026 8:30:32 AM main.Main start
+GRAVE: Error initializing the app.
+ene 28, 2026 8:33:04 AM main.Main start
+GRAVE: Error initializing the app.
+ene 28, 2026 8:33:36 AM main.Main start
+GRAVE: Error initializing the app.
+ene 28, 2026 8:41:45 AM main.Main start
+GRAVE: Error initializing the app.
