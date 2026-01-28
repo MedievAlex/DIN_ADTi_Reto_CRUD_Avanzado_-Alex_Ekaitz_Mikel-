@@ -1200,7 +1200,7 @@ public class HibernateImplementation implements ClassDAO {
                 {"Library of Ruina", LocalDate.of(2021, 8, 10), Platform.NINTENDO, Pegi.PEGI3}, // 17
                 {"Library of Ruina", LocalDate.of(2021, 8, 10), Platform.PC, Pegi.PEGI3}, // 18
                 {"Super Mario Odyssey", LocalDate.of(2017, 10, 27), Platform.NINTENDO, Pegi.PEGI3}, // 19
-                {"Hades", LocalDate.of(2020, 9, 17), Platform.NINTENDO, Pegi.PEGI12}, // 20
+                {"Hades", LocalDate.of(2020, 9, 17), Platform.NINTENDO, Pegi.PEGI12}, // 20 [PETA]
                 {"Hades", LocalDate.of(2020, 9, 17), Platform.PLAYSTATION, Pegi.PEGI12}, // 21
                 {"Hades", LocalDate.of(2020, 9, 17), Platform.PC, Pegi.PEGI12}, // 22
                 {"Hades", LocalDate.of(2020, 9, 17), Platform.XBOX, Pegi.PEGI12}, // 23
@@ -1233,7 +1233,7 @@ public class HibernateImplementation implements ClassDAO {
                 {"asanchez", "Admin", "My Games", "6"}, // Animal Crossing
                 {"asanchez", "Admin", "My Games", "10"}, // ASTRO BOT 
                 {"asanchez", "Admin", "My Games", "15"}, // Balatro
-                {"asanchez", "Admin", "My Games", "20"}, // Hades
+                {"asanchez", "Admin", "My Games", "20"}, // Hades [PETA]
                 {"asanchez", "Admin", "My Games", "24"}, // Cult of The Lamb
                 {"asanchez", "Admin", "My Games", "11"}, // Call of Duty: Black Ops II
                 {"asanchez", "Admin", "My Games", "29"}, // Life is Strange
