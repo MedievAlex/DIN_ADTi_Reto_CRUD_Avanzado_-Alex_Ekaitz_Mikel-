@@ -13,6 +13,7 @@ import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
 import org.testfx.framework.junit.ApplicationTest;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -21,6 +22,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import model.SelectableVideoGame;
 
 import static org.junit.Assert.*;
 
@@ -62,7 +64,7 @@ public class ListTest extends ApplicationTest {
     public void test01_AllComponentsAreLoaded() {
         MenuButton menuButton = lookup("#menu").query();
         Text listName = lookup("#listName").query();
-        TableView<?> tableLists = lookup("#tableLists").query();
+        TableView<SelectableVideoGame> tableLists = lookup("#tableLists").query();
         VBox vbLists = lookup("#vbLists").query();
         Button bttnRemove = lookup("#bttnRemove").query();
         Button bttnAdd = lookup("#bttnAdd").query();
@@ -78,8 +80,9 @@ public class ListTest extends ApplicationTest {
         assertNotNull(combLists);
     }
 
+    // Menu has other windows
     @Test
-    public void test02_MenuButtonActions() { // Menu has other windows
+    public void test02_MenuButtonActions() { 
         MenuButton menuButton = lookup("#menu").query();
         assertNotNull(menuButton);
 
@@ -97,29 +100,37 @@ public class ListTest extends ApplicationTest {
         sleep(500);
     }
 
+    // Table loads the games
     @Test
-    public void test03_TableListsLoaded() {
-        TableView<?> tableLists = lookup("#tableLists").query();
+    public void test03_TableGamesLoaded() {
+        TableView<SelectableVideoGame> tableLists = lookup("#tableLists").query();
         sleep(1000);
 
         assertNotNull(tableLists);
         assertTrue(tableLists.getItems().size() >= 0);
     }
 
+    // Creates new lists
     @Test
-    public void test04_NewListButton() { // Creates new lists
+    public void test04_NewListButton() { 
         VBox vbLists = lookup("#vbLists").query();
+        int elementsQuantity = vbLists.getChildren().size();
+
         // Create Lists
         clickOn("+ New List");
+        elementsQuantity++;
         clickOn("+ New List");
+        elementsQuantity++;
         clickOn("+ New List");
+        elementsQuantity++;
         sleep(1000);
-
-        assertTrue(vbLists.getChildren().size() == 8);
+        
+        assertTrue(vbLists.getChildren().size() == elementsQuantity);
     }
 
+    // Loads the games in the selected list changing the title to the list name
     @Test
-    public void test05_ListButtonsLoad() { // Change table values showing the games in the selected list
+    public void test05_ListButtonsLoad() { 
         Text listName = lookup("#listName").query();
 
         clickOn("Favorites");
@@ -139,17 +150,18 @@ public class ListTest extends ApplicationTest {
         sleep(1000);
     }
 
+    // Rename list with the contextual menu
     @Test
-    public void test06_RenameListName() throws Exception  { // Rename list with the contextual menu
+    public void test06_RenameListName() throws Exception { 
         Text listName = lookup("#listName").query();
         Text txtMessage;
         TextField listNewName;
-        
+
         String buttonName = "New List 1";
         String repeatedName = "Nintendo";
         String longName = "Potential Game of The Year winning Games";
         String newName = "GOTYs";
-        
+
         // Create Lists
         clickOn("+ New List");
         sleep(500);
@@ -160,12 +172,12 @@ public class ListTest extends ApplicationTest {
         txtMessage = lookup("#txtMessage").query();
         listNewName = lookup("#listNewName").query();
         sleep(1000);
-        
+
         // Name can't be empty
         clickOn("#btnConfirm");
         assertEquals("List can't have an empty name.", txtMessage.getText());
         sleep(1000);
-        
+
         // Name can't be repeated
         clickOn("#listNewName");
         write(repeatedName);
@@ -173,15 +185,15 @@ public class ListTest extends ApplicationTest {
         assertEquals("List named " + repeatedName + " already exists.", txtMessage.getText());
         sleep(1000);
         listNewName.clear();
-        
+
         // Name too long
         clickOn("#listNewName");
         write(longName);
         clickOn("#btnConfirm");
-        assertEquals("New name can't have more than 20 characters.", txtMessage.getText());
+        assertEquals("New name can't have more than 10 characters.", txtMessage.getText());
         sleep(1000);
         listNewName.clear();
-        
+
         // Renamed
         clickOn("#listNewName");
         write(newName);
@@ -191,30 +203,39 @@ public class ListTest extends ApplicationTest {
         sleep(1000);
     }
 
+    // Delete list with the contextual menu
     @Test
-    public void test07_DeleteList() { // Delete list with the contextual menu
+    public void test07_DeleteList() { 
         VBox vbLists = lookup("#vbLists").query();
+        int elementsQuantity = vbLists.getChildren().size();
 
         // Create Lists
         clickOn("+ New List");
+        elementsQuantity++;
         clickOn("+ New List");
+        elementsQuantity++;
         clickOn("+ New List");
+        elementsQuantity++;
+        assertTrue(vbLists.getChildren().size() == elementsQuantity);
         sleep(500);
 
         // Delete Lists
         rightClickOn("New List 2");
         clickOn("Delete List");
+        elementsQuantity--;
+        assertTrue(vbLists.getChildren().size() == elementsQuantity);
         sleep(500);
 
         rightClickOn("New List 3");
         clickOn("Delete List");
+        elementsQuantity--;
+        assertTrue(vbLists.getChildren().size() == elementsQuantity);
         sleep(500);
 
         rightClickOn("New List 1");
         clickOn("Delete List");
-        sleep(500);
-
-        assertTrue(vbLists.getChildren().size() == 5);
+        elementsQuantity--;
+        assertTrue(vbLists.getChildren().size() == elementsQuantity);
         sleep(500);
     }
 
@@ -229,10 +250,11 @@ public class ListTest extends ApplicationTest {
         }
     }
 
+    // Deletes the games selected
     @Test
     public void test09_RemoveGames() {
-        // Que al darle a remove se elimine el juego
         Button bttnRemove = lookup("#bttnRemove").query();
+        
         clickOn("#bttnRemove");
         sleep(1000);
         push(KeyCode.ESCAPE);
@@ -255,27 +277,23 @@ public class ListTest extends ApplicationTest {
         sleep(500);
     }
 
+    // Add games to selected list
     @Test
     public void test11_AddGamesGames() {
-        // Que al darle a add se añada el juego
         Button bttnAdd = lookup("#bttnAdd").query();
         ComboBox<String> combLists = lookup("#combLists").query();
 
+        clickOn("#bttnAdd");
+        
         clickOn("#combLists");
         sleep(500);
-
         interact(() -> {
             assertTrue(combLists.getItems().size() > 0);
-            combLists.getSelectionModel().select(0);
+            combLists.getSelectionModel().select(1);
         });
 
         clickOn("#bttnAdd");
         sleep(1000);
-        push(KeyCode.ESCAPE);;
-    }
-
-    @Test
-    public void test12_RenamePrueba() {
-
+        push(KeyCode.ESCAPE);
     }
 }
