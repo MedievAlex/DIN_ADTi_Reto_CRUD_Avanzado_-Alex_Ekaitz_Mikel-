@@ -369,7 +369,7 @@ public class ListWindowController implements Initializable {
      */
     private void addToList() {
         if (combLists.getValue() == null) {
-            showAlert("Error", "[No list selected]", Alert.AlertType.ERROR);
+            showAlert("Error", "No list selected. Select a list first.", Alert.AlertType.ERROR);
         } else if (combLists.getValue() != null) {
             String targetList = combLists.getValue();
 

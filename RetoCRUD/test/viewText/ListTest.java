@@ -3,6 +3,7 @@ package viewText;
 import controller.Controller;
 import controller.ListWindowController;
 import dao.MockClassDAO;
+import java.util.Set;
 import model.Profile;
 import model.User;
 import org.junit.Before;
@@ -11,6 +12,7 @@ import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
 import org.testfx.framework.junit.ApplicationTest;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -103,10 +105,10 @@ public class ListTest extends ApplicationTest {
         sleep(1000);
 
         assertNotNull(tableLists);
-        assertTrue(tableLists.getItems().size() >= 0);
+        assertTrue(tableLists.getItems().size() == 3);
     }
 
-    // The combobox has the lists loades
+    // [The combobox has the lists loades]
     @Test
     public void test104_ComboBoxListsLoaded() { // Lists show in the comboBox
         ComboBox<String> combLists = lookup("#combLists").query();
@@ -142,25 +144,34 @@ public class ListTest extends ApplicationTest {
         assertTrue(vbLists.getChildren().size() == elementsQuantity);
     }
 
-    // Loads the games in the selected list changing the title to the list name
+    // [Loads the games in the selected list changing the title to the list name]
     @Test
     public void test106_ListButtonsLoad() { 
         Text listName = lookup("#listName").query();
+        TableView<SelectableVideoGame> tableLists = lookup("#tableLists").query();
 
         clickOn("Favorites");
         assertEquals("Favorites", listName.getText());
+        assertNotNull(tableLists);
+        assertTrue(tableLists.getItems().size() == 1);
         sleep(1000);
 
         clickOn("Playstation");
         assertEquals("Playstation", listName.getText());
+        assertNotNull(tableLists);
+        assertTrue(tableLists.getItems().isEmpty());
         sleep(1000);
 
         clickOn("Nintendo");
         assertEquals("Nintendo", listName.getText());
+        assertNotNull(tableLists);
+        assertTrue(tableLists.getItems().isEmpty());
         sleep(1000);
 
         clickOn("My Games");
         assertEquals("My Games", listName.getText());
+        assertNotNull(tableLists);
+        assertTrue(tableLists.getItems().size() == 3);
         sleep(1000);
     }
 
@@ -253,44 +264,87 @@ public class ListTest extends ApplicationTest {
         sleep(500);
     }
 
+    
     @Test
     public void test109_SelectGameInTable() {
-        TableView<?> tableLists = lookup("#tableLists").query();
-        sleep(1000);
+        TableView<SelectableVideoGame> tableLists = lookup("#tableLists").query();
 
         if (tableLists.getItems().size() > 0) {
-            clickOn(".table-row-cell");
+            clickOn(".table-cell:last .check-box");
             sleep(500);
+            clickOn(".table-cell:last .check-box");
         }
     }
-
-    // Deletes the games selected
+    // [Deletes the games selected]
     @Test
     public void test110_RemoveGames() {
-        Button bttnRemove = lookup("#bttnRemove").query();
-        
+        TableView<SelectableVideoGame> tableLists = lookup("#tableLists").query();
+
+        // Need to select a game
+        clickOn("Favorites");
+        assertTrue(tableLists.getItems().size() == 1);
+        sleep(1000);
+        clickOn("My Games");
+        sleep(1000);
         clickOn("#bttnRemove");
         sleep(1000);
         push(KeyCode.ESCAPE);
+        
+        // Removes from list
+        if (tableLists.getItems().size() > 0) {
+            clickOn(".table-cell:last .check-box");
+        }
+        clickOn("#bttnRemove");
+        sleep(1000);
+        push(KeyCode.ESCAPE);
+        
+        // Verify
+        clickOn("Favorites");
+        assertTrue(tableLists.getItems().isEmpty());
+        sleep(1000);
     }
 
     // Add games to selected list
     @Test
     public void test111_AddGamesGames() {
-        Button bttnAdd = lookup("#bttnAdd").query();
+        TableView<SelectableVideoGame> tableLists = lookup("#tableLists").query();
         ComboBox<String> combLists = lookup("#combLists").query();
 
-        clickOn("#bttnAdd");
+        clickOn("Nintendo");
+        assertTrue(tableLists.getItems().isEmpty());
+        sleep(1000);
+        clickOn("My Games");
         
+        // Need to select a list
+        clickOn("#bttnAdd");
+        sleep(1000);
+        push(KeyCode.ESCAPE);
+        
+        // Need to select a game
         clickOn("#combLists");
         sleep(500);
         interact(() -> {
             assertTrue(combLists.getItems().size() > 0);
             combLists.getSelectionModel().select(1);
         });
-
+        clickOn("#bttnAdd");
+        sleep(1000);push(KeyCode.ESCAPE);
+        
+        // Add
+        if (tableLists.getItems().size() > 0) {
+            clickOn(".table-cell:0 .check-box");
+        }
         clickOn("#bttnAdd");
         sleep(1000);
         push(KeyCode.ESCAPE);
+        
+        // Changes the selection so the thest can click in the button correctly
+        interact(() -> {
+            combLists.getSelectionModel().select(0);
+        });
+        
+        clickOn("Nintendo");
+        assertTrue(tableLists.getItems().size() == 1);
+        sleep(1000);
     }
 }
