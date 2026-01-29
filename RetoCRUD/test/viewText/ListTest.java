@@ -2,9 +2,7 @@ package viewText;
 
 import controller.Controller;
 import controller.ListWindowController;
-import controller.RenameListWindowController;
 import dao.MockClassDAO;
-import javafx.collections.ObservableList;
 import model.Profile;
 import model.User;
 import org.junit.Before;
@@ -13,14 +11,12 @@ import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
 import org.testfx.framework.junit.ApplicationTest;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.SelectableVideoGame;
 
@@ -61,7 +57,7 @@ public class ListTest extends ApplicationTest {
     }
 
     @Test
-    public void test01_AllComponentsAreLoaded() {
+    public void test101_AllComponentsAreLoaded() {
         MenuButton menuButton = lookup("#menu").query();
         Text listName = lookup("#listName").query();
         TableView<SelectableVideoGame> tableLists = lookup("#tableLists").query();
@@ -80,9 +76,9 @@ public class ListTest extends ApplicationTest {
         assertNotNull(combLists);
     }
 
-    // Menu has other windows
+    // [Menu has other windows]
     @Test
-    public void test02_MenuButtonActions() { 
+    public void test102_MenuButtonActions() { 
         MenuButton menuButton = lookup("#menu").query();
         assertNotNull(menuButton);
 
@@ -102,7 +98,7 @@ public class ListTest extends ApplicationTest {
 
     // Table loads the games
     @Test
-    public void test03_TableGamesLoaded() {
+    public void test103_TableGamesLoaded() {
         TableView<SelectableVideoGame> tableLists = lookup("#tableLists").query();
         sleep(1000);
 
@@ -110,9 +106,27 @@ public class ListTest extends ApplicationTest {
         assertTrue(tableLists.getItems().size() >= 0);
     }
 
-    // Creates new lists
+    // The combobox has the lists loades
     @Test
-    public void test04_NewListButton() { 
+    public void test104_ComboBoxListsLoaded() { // Lists show in the comboBox
+        ComboBox<String> combLists = lookup("#combLists").query();
+
+        clickOn("#combLists");
+        sleep(500);
+
+        interact(() -> {
+            assertTrue(combLists.getItems().size() == 3);
+            assertEquals("Favorites", combLists.getItems().get(0));
+            assertEquals("Nintendo", combLists.getItems().get(1));
+            assertEquals("Playstation", combLists.getItems().get(2));
+        });
+        push(KeyCode.ESCAPE);
+        sleep(500);
+    }
+
+    // [Creates new lists]
+    @Test
+    public void test105_NewListButton() { 
         VBox vbLists = lookup("#vbLists").query();
         int elementsQuantity = vbLists.getChildren().size();
 
@@ -130,7 +144,7 @@ public class ListTest extends ApplicationTest {
 
     // Loads the games in the selected list changing the title to the list name
     @Test
-    public void test05_ListButtonsLoad() { 
+    public void test106_ListButtonsLoad() { 
         Text listName = lookup("#listName").query();
 
         clickOn("Favorites");
@@ -150,9 +164,9 @@ public class ListTest extends ApplicationTest {
         sleep(1000);
     }
 
-    // Rename list with the contextual menu
+    // [Rename list with the contextual menu]
     @Test
-    public void test06_RenameListName() throws Exception { 
+    public void test107_RenameListName() throws Exception { 
         Text listName = lookup("#listName").query();
         Text txtMessage;
         TextField listNewName;
@@ -203,9 +217,9 @@ public class ListTest extends ApplicationTest {
         sleep(1000);
     }
 
-    // Delete list with the contextual menu
+    // [Delete list with the contextual menu]
     @Test
-    public void test07_DeleteList() { 
+    public void test108_DeleteList() { 
         VBox vbLists = lookup("#vbLists").query();
         int elementsQuantity = vbLists.getChildren().size();
 
@@ -240,7 +254,7 @@ public class ListTest extends ApplicationTest {
     }
 
     @Test
-    public void test08_SelectGameInTable() {
+    public void test109_SelectGameInTable() {
         TableView<?> tableLists = lookup("#tableLists").query();
         sleep(1000);
 
@@ -252,7 +266,7 @@ public class ListTest extends ApplicationTest {
 
     // Deletes the games selected
     @Test
-    public void test09_RemoveGames() {
+    public void test110_RemoveGames() {
         Button bttnRemove = lookup("#bttnRemove").query();
         
         clickOn("#bttnRemove");
@@ -260,26 +274,9 @@ public class ListTest extends ApplicationTest {
         push(KeyCode.ESCAPE);
     }
 
-    @Test
-    public void test10_ComboBoxListsLoaded() { // Lists show in the comboBox
-        ComboBox<String> combLists = lookup("#combLists").query();
-
-        clickOn("#combLists");
-        sleep(500);
-
-        interact(() -> {
-            assertTrue(combLists.getItems().size() == 3);
-            assertEquals("Favorites", combLists.getItems().get(0));
-            assertEquals("Nintendo", combLists.getItems().get(1));
-            assertEquals("Playstation", combLists.getItems().get(2));
-        });
-        push(KeyCode.ESCAPE);
-        sleep(500);
-    }
-
     // Add games to selected list
     @Test
-    public void test11_AddGamesGames() {
+    public void test111_AddGamesGames() {
         Button bttnAdd = lookup("#bttnAdd").query();
         ComboBox<String> combLists = lookup("#combLists").query();
 
