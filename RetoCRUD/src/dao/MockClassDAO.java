@@ -49,6 +49,8 @@ public class MockClassDAO implements ClassDAO
         ArrayList<String> defaultLists = new ArrayList<>();
         defaultLists.add("My Games");
         defaultLists.add("Favorites");
+        defaultLists.add("Nintendo");
+        defaultLists.add("Playstation");
         userLists.put("testuser", defaultLists);
 
         Map<String, ArrayList<VideoGame>> testUserLists = new HashMap<>();
