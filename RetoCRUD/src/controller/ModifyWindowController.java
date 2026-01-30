@@ -12,6 +12,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import logger.GeneraLog;
 import model.Profile;
@@ -176,9 +178,11 @@ public class ModifyWindowController implements Initializable {
             controllerWindow.setCont(this.cont);
 
             Stage stage = new Stage();
+            stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
             stage.setScene(new javafx.scene.Scene(root));
             stage.setTitle("PROFILE MENU");
             stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);
             stage.show();
 
             Stage currentStage = (Stage) Button_Cancel.getScene().getWindow();

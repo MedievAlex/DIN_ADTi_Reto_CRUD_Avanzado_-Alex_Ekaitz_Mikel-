@@ -13,6 +13,8 @@ import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.stage.Modality;
 
 /**
  * Controller for the Delete Account window for regular Users. This controller
@@ -85,9 +87,11 @@ public class DeleteAccountController implements Initializable
             controllerWindow.setParentStage(parentStage);
 
             javafx.stage.Stage stage = new javafx.stage.Stage();
+            stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
             stage.setScene(new javafx.scene.Scene(root));
             stage.setTitle("PROFILE MENU");
             stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);
             stage.show();
 
             Stage currentStage = (Stage) Button_Cancel.getScene().getWindow();
@@ -154,6 +158,7 @@ public class DeleteAccountController implements Initializable
                         controllerWindow.setCont(cont);
 
                         javafx.stage.Stage stage = new javafx.stage.Stage();
+                        stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
                         stage.setScene(new javafx.scene.Scene(root));
                         stage.setTitle("LOGIN");
                         stage.show();

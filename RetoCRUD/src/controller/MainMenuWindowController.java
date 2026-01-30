@@ -2,8 +2,6 @@ package controller;
 
 import exception.OurException;
 import static exception.ShowAlert.showAlert;
-import java.awt.Desktop;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -23,8 +21,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.beans.value.ChangeListener;
+import javafx.scene.image.Image;
 import model.*;
-import javafx.scene.web.WebView;
 import logger.GeneraLog;
 
 /**
@@ -143,6 +141,7 @@ public class MainMenuWindowController implements Initializable
                 controllerWindow.setParentStage(mainStage);
 
                 Stage stage = new Stage();
+                stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
                 stage.setScene(new Scene(root));
                 stage.setTitle("PROFILE MENU");
                 stage.setResizable(false);
@@ -171,6 +170,7 @@ public class MainMenuWindowController implements Initializable
                 controllerWindow.setComboBox();
 
                 Stage stage = (Stage) menu.getScene().getWindow();
+                stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
                 stage.setScene(new Scene(root));
                 stage.setTitle("LISTS");
             }
@@ -194,8 +194,8 @@ public class MainMenuWindowController implements Initializable
                 controllerWindow.setComboBox();
                 controllerWindow.loadReview();
                 
-
                 Stage stage = (Stage) menu.getScene().getWindow();
+                stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
                 stage.setScene(new Scene(root));
                 stage.setTitle("REVIEWS");
             }

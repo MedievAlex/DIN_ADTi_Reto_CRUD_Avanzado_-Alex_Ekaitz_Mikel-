@@ -2,8 +2,6 @@ package controller;
 
 import exception.OurException;
 import static exception.ShowAlert.showAlert;
-import java.awt.Desktop;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -28,10 +26,10 @@ import model.VideoGame;
 import javafx.scene.control.ContextMenu;
 import javafx.event.EventHandler;
 import javafx.scene.control.TableRow;
+import javafx.scene.image.Image;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.web.WebView;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import logger.GeneraLog;
@@ -151,6 +149,7 @@ public class ReviewsWindowController implements Initializable {
             controllerWindow.setAvailableGames();
 
             Stage stage = new Stage();
+            stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
             stage.setScene(new Scene(root));
             stage.setTitle("NEW REVIEW");
             stage.setResizable(false);
@@ -377,6 +376,7 @@ public class ReviewsWindowController implements Initializable {
                 controllerWindow.setParentStage(mainStage);
 
                 Stage stage = new Stage();
+                stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
                 stage.setScene(new Scene(root));
                 stage.setTitle("PROFILE MENU");
                 stage.setResizable(false);
@@ -402,6 +402,7 @@ public class ReviewsWindowController implements Initializable {
                 controllerWindow.setComboBox();
 
                 Stage stage = (Stage) menu.getScene().getWindow();
+                stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
                 stage.setScene(new Scene(root));
                 stage.setTitle("LISTS");
             } catch (IOException ex) {
@@ -430,6 +431,7 @@ public class ReviewsWindowController implements Initializable {
                     contextMenu.show(root, events.getScreenX(), events.getScreenY());
                 });
 
+                stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
                 stage.setScene(new Scene(root));
                 stage.setTitle("MAIN MENU");
             } catch (IOException ex) {

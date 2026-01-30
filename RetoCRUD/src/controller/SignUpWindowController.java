@@ -3,8 +3,6 @@ package controller;
 import javafx.scene.control.ToggleGroup;
 import exception.OurException;
 import static exception.ShowAlert.showAlert;
-import java.awt.Desktop;
-import java.io.File;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
@@ -20,7 +18,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.web.WebView;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import logger.GeneraLog;
 import model.Profile;
@@ -69,6 +67,7 @@ public class SignUpWindowController implements Initializable {
             controllerWindow.setCont(this.cont);
             
             Stage stage = new Stage();
+            stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
             stage.setScene(new Scene(root));
             stage.setTitle("LOGIN");
             stage.show();
@@ -289,6 +288,7 @@ public class SignUpWindowController implements Initializable {
                         contextMenu.show(root, event.getScreenX(), event.getScreenY());
                     });
                     
+                    stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
                     stage.setScene(new Scene(root));
                     stage.setTitle("MAIN MENU");
                     stage.show();

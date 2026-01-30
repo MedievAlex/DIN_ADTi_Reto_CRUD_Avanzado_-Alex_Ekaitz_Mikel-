@@ -13,6 +13,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.image.Image;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import logger.GeneraLog;
 import model.*;
@@ -95,9 +97,11 @@ public class MenuWindowController implements Initializable {
             controllerWindow.setCont(this.cont);
 
             Stage stage = new Stage();
+            stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
             stage.setScene(new Scene(root));
             stage.setTitle("MODIFY");
             stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);
             stage.show();
 
             Stage currentStage = (Stage) Button_Modify.getScene().getWindow();
@@ -127,9 +131,11 @@ public class MenuWindowController implements Initializable {
                 controllerWindow.setParentStage(parentStage);
 
                 Stage stage = new Stage();
+                stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
                 stage.setScene(new Scene(root));
                 stage.setTitle("DELETE");
                 stage.setResizable(false);
+                stage.initModality(Modality.APPLICATION_MODAL);
                 stage.show();
 
                 Stage currentStage = (Stage) Button_Delete.getScene().getWindow();
@@ -144,9 +150,11 @@ public class MenuWindowController implements Initializable {
                 controllerWindow.setComboBoxUser();
 
                 Stage stage = new Stage();
+                stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
                 stage.setScene(new Scene(root));
                 stage.setTitle("DELETE");
                 stage.setResizable(false);
+                stage.initModality(Modality.APPLICATION_MODAL);
                 stage.show();
 
                 Stage currentStage = (Stage) Button_Delete.getScene().getWindow();

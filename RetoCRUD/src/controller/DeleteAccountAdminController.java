@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import javafx.stage.Stage;
 import model.Profile;
 import javafx.scene.control.ComboBox;
+import javafx.scene.image.Image;
+import javafx.stage.Modality;
 import logger.GeneraLog;
 
 /**
@@ -93,9 +95,11 @@ public class DeleteAccountAdminController implements Initializable
             controllerWindow.setCont(this.cont);
 
             javafx.stage.Stage stage = new javafx.stage.Stage();
+            stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
             stage.setScene(new javafx.scene.Scene(root));
             stage.setTitle("PROFILE MENU");
             stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);
             stage.show();
 
             Stage currentStage = (Stage) Button_Cancel.getScene().getWindow();
@@ -158,6 +162,7 @@ public class DeleteAccountAdminController implements Initializable
                         controllerWindow.setUsuario(profile);
                         controllerWindow.setCont(this.cont);
                         javafx.stage.Stage stage = new javafx.stage.Stage();
+                        stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
                         stage.setScene(new javafx.scene.Scene(root));
                         stage.setTitle("PROFILE MENU");
                         stage.setResizable(false);

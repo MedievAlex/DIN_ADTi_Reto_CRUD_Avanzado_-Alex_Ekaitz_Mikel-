@@ -2,8 +2,6 @@ package controller;
 
 import exception.OurException;
 import static exception.ShowAlert.showAlert;
-import java.awt.Desktop;
-import java.io.File;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -19,7 +17,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
-import javafx.scene.web.WebView;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import logger.GeneraLog;
 import model.Profile;
@@ -67,6 +65,7 @@ public class LogInWindowController implements Initializable {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/SignUpWindow.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = new Stage();
+            stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
             stage.setScene(new Scene(root));
             stage.setTitle("SIGN UP");
             stage.show();
@@ -120,6 +119,7 @@ public class LogInWindowController implements Initializable {
                             contextMenu.show(root, event.getScreenX(), event.getScreenY());
                         });
 
+                        stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
                         stage.setScene(new Scene(root));
                         stage.setTitle("MAIN MENU");
                         stage.show();

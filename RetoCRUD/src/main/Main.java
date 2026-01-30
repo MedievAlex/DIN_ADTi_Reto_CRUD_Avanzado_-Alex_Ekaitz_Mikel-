@@ -9,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import dao.HibernateUtil;
+import javafx.scene.image.Image;
 import logger.GeneraLog;
 
 /**
@@ -39,21 +40,22 @@ public class Main extends Application
         
         try
         {
-        dao = new HibernateImplementation();
-        
-        dao.initializeDefault();
-        
-        Controller controller = new Controller(dao);
-        
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/LogInWindow.fxml"));
-        Parent root = fxmlLoader.load();
-        
-        LogInWindowController loginController = fxmlLoader.getController();
-        loginController.setCont(controller);
-        
-        stage.setTitle("LOGIN");
-        stage.setScene(new Scene(root));
-        stage.show();
+            dao = new HibernateImplementation();
+
+            dao.initializeDefault();
+
+            Controller controller = new Controller(dao);
+
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/LogInWindow.fxml"));
+            Parent root = fxmlLoader.load();
+
+            LogInWindowController loginController = fxmlLoader.getController();
+            loginController.setCont(controller);
+
+            stage.setTitle("LOGIN");
+            stage.setScene(new Scene(root));
+            stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
+            stage.show();
         }
         catch (Exception e)
         {
