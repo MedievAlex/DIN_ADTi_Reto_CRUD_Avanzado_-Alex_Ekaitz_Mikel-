@@ -21,13 +21,25 @@ import static org.junit.Assert.*;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
 
+/**
+ * Test class for SignUpWindow view.
+ * Tests user registration functionality including field validation, email format,
+ * password matching, and successful account creation.
+ *
+ * @author ema
+ */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SignUpTest extends ApplicationTest {
-
     private SignUpWindowController controller;
     private Controller realController;
     private MockClassDAO mockDAO;
 
+    /**
+     * Initializes the JavaFX stage and loads the SignUpWindow view.
+     *
+     * @param stage The primary stage for this test
+     * @throws Exception if FXML loading fails
+     */
     @Override
     public void start(Stage stage) throws Exception {
         mockDAO = new MockClassDAO();
@@ -43,11 +55,18 @@ public class SignUpTest extends ApplicationTest {
         stage.show();
     }
 
+    /**
+     * Sets up the test environment before each test method.
+     * Resets the mock DAO to not throw exceptions.
+     */
     @Before
     public void setUp() {
         mockDAO.setShouldThrowException(false, null);
     }
 
+    /**
+     * Verifies that all UI components are properly loaded.
+     */
     @Test
     public void test1_AllComponentsAreLoaded() {
         TextField emailField = lookup("#textFieldEmail").query();
@@ -79,6 +98,10 @@ public class SignUpTest extends ApplicationTest {
         assertNotNull(loginButton);
     }
 
+    /**
+     * Tests text input functionality in all registration fields.
+     * Verifies that all fields accept input and gender selection works.
+     */
     @Test
     public void test2_TextFieldWriting() {
         clickOn("#textFieldEmail");
@@ -111,6 +134,10 @@ public class SignUpTest extends ApplicationTest {
         assertTrue(maleButton.isSelected());
     }
 
+    /**
+     * Tests sign up attempt with empty fields.
+     * Should display an error message requesting field completion.
+     */
     @Test
     public void test3_SignUpWithEmptyFields() {
         clickOn("#buttonSignUp");
@@ -118,6 +145,10 @@ public class SignUpTest extends ApplicationTest {
         pressEscape();
     }
 
+    /**
+     * Tests sign up attempt with invalid email format.
+     * Should display an error message about email validation.
+     */
     @Test
     public void test4_SignUpWithInvalidEmail() {
         clickOn("#textFieldEmail");
@@ -151,6 +182,10 @@ public class SignUpTest extends ApplicationTest {
         pressEscape();
     }
 
+    /**
+     * Tests sign up attempt with mismatched passwords.
+     * Should display an error message about password mismatch.
+     */
     @Test
     public void test5_SignUpWithPasswordMismatch() {
         clickOn("#textFieldEmail");
@@ -184,6 +219,10 @@ public class SignUpTest extends ApplicationTest {
         pressEscape();
     }
 
+    /**
+     * Tests sign up behavior when a database exception occurs.
+     * Should handle the exception gracefully and display an error.
+     */
     @Test
     public void test6_SignUpWithException() {
         mockDAO.setShouldThrowException(true, new OurException("Database error"));
@@ -219,6 +258,10 @@ public class SignUpTest extends ApplicationTest {
         pressEscape();
     }
     
+    /**
+     * Tests navigation from sign up to login screen.
+     * Verifies that the login window opens correctly.
+     */
     @Test
     public void test7_NavigateToLogin() {
         clickOn("#buttonLogIn");
@@ -228,6 +271,10 @@ public class SignUpTest extends ApplicationTest {
         assertNotNull(loginButton);
     }
 
+    /**
+     * Tests successful user registration with valid data.
+     * Verifies that the main menu is displayed after successful sign up.
+     */
     @Test
     public void test8_SuccessfulSignUp() {
         Profile newUser = new User("MALE", "ZA9081726354891027364512", "testuser", "pass123",
@@ -266,6 +313,9 @@ public class SignUpTest extends ApplicationTest {
         assertTrue(lookup("#menuBar").query().isVisible());
     }
 
+    /**
+     * Helper method to press the Escape key and dismiss dialogs.
+     */
     private void pressEscape() {
         sleep(500);
         push(javafx.scene.input.KeyCode.ESCAPE);

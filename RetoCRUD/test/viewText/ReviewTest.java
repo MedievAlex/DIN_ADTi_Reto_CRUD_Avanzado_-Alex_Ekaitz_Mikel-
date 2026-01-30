@@ -2,11 +2,8 @@ package viewText;
 
 import controller.Controller;
 import controller.ReviewsWindowController;
-import exception.OurException;
 import dao.MockClassDAO;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import model.Profile;
 import model.User;
 import model.Review;
@@ -16,7 +13,6 @@ import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
 import org.testfx.framework.junit.ApplicationTest;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -25,18 +21,29 @@ import javafx.stage.Stage;
 import model.Pegi;
 import model.Platform;
 import model.VideoGame;
-
 import static org.junit.Assert.*;
 
+/**
+ * Test class for ReviewsWindow view.
+ * Tests review management functionality including browsing reviews, filtering,
+ * creating new reviews, and deleting reviews.
+ *
+ * @author ema
+ */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ReviewTest extends ApplicationTest {
-
     private ReviewsWindowController controller;
     private Controller realController;
     private MockClassDAO mockDAO;
     private Profile testUser;
     private Profile adminUser;
 
+    /**
+     * Initializes the JavaFX stage and loads the ReviewsWindow view.
+     *
+     * @param stage The primary stage for this test
+     * @throws Exception if FXML loading fails
+     */
     @Override
     public void start(Stage stage) throws Exception {
         mockDAO = new MockClassDAO();
@@ -61,11 +68,18 @@ public class ReviewTest extends ApplicationTest {
         controller.setComboBox();
     }
 
+    /**
+     * Sets up the test environment before each test method.
+     * Resets the mock DAO to not throw exceptions.
+     */
     @Before
     public void setUp() {
         mockDAO.setShouldThrowException(false, null);
     }
 
+    /**
+     * Verifies that all UI components are properly loaded.
+     */
     @Test
     public void test1_AllComponentsAreLoaded() {
         MenuButton menuButton = lookup("#menu").query();
@@ -80,6 +94,9 @@ public class ReviewTest extends ApplicationTest {
         assertNotNull(btnNewReview);
     }
 
+    /**
+     * Tests menu button actions and verifies menu items are correctly loaded.
+     */
     @Test
     public void test2_MenuButtonActions() {
         MenuButton menuButton = lookup("#menu").query();
@@ -99,6 +116,9 @@ public class ReviewTest extends ApplicationTest {
         sleep(500);
     }
 
+    /**
+     * Verifies that reviews are properly loaded into the table view.
+     */
     @Test
     public void test3_TableReviewsLoaded() {
         TableView<Review> tableReview = lookup("#tableReview").query();
@@ -108,6 +128,9 @@ public class ReviewTest extends ApplicationTest {
         assertTrue(tableReview.getItems().size() >= 0);
     }
 
+    /**
+     * Tests search bar text input functionality.
+     */
     @Test
     public void test4_SearchBarFunctionality() {
         TextField searchBar = lookup("#searchBar").query();
@@ -118,6 +141,9 @@ public class ReviewTest extends ApplicationTest {
         assertEquals("Zelda", searchBar.getText());
     }
 
+    /**
+     * Verifies that list filter options are properly loaded into the combo box.
+     */
     @Test
     public void test5_ComboBoxListsLoaded() {
         ComboBox<String> combLists = lookup("#combLists").query();
@@ -134,6 +160,9 @@ public class ReviewTest extends ApplicationTest {
         sleep(500);
     }
 
+    /**
+     * Tests selecting a review in the table view.
+     */
     @Test
     public void test6_SelectReviewInTable() {
         TableView<Review> tableReview = lookup("#tableReview").query();
@@ -146,6 +175,10 @@ public class ReviewTest extends ApplicationTest {
         }
     }
 
+    /**
+     * Tests new review button functionality.
+     * Verifies that clicking the button opens the new review window.
+     */
     @Test
     public void test7_NewReviewButton() {
         Button btnNewReview = lookup("#btnNewReview").query();
@@ -156,6 +189,10 @@ public class ReviewTest extends ApplicationTest {
         assertNotNull(controller);
     }
 
+    /**
+     * Tests filtering reviews by list selection.
+     * Verifies that the table updates when a list filter is applied.
+     */
     @Test
     public void test8_FilterByListSelection() {
         ComboBox<String> combLists = lookup("#combLists").query();
@@ -176,6 +213,10 @@ public class ReviewTest extends ApplicationTest {
         assertNotNull("Table should not be null after filtering", tableReview);
     }
 
+    /**
+     * Tests deleting a review as an admin user.
+     * Creates a mock review if none exists, then verifies deletion through context menu.
+     */
     @Test
     public void test9_BorrarPrimeraReviewDirecto() {
         Profile admin = new User("MALE", "ES9876543210987654321098","asanchez", "Ab123456", "admin@example.com", "Admin", "987654321", "User");

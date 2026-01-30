@@ -20,14 +20,26 @@ import static org.junit.Assert.*;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
 
+/**
+ * Test class for ModifyWindow view.
+ * Tests user profile modification functionality including field validation,
+ * successful updates, and error handling.
+ *
+ * @author ema
+ */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ModifyTest extends ApplicationTest {
-
     private ModifyWindowController controller;
     private Controller realController;
     private MockClassDAO mockDAO;
     private Profile testUser;
 
+    /**
+     * Initializes the JavaFX stage and loads the ModifyWindow view.
+     *
+     * @param stage The primary stage for this test
+     * @throws Exception if FXML loading fails
+     */
     @Override
     public void start(Stage stage) throws Exception {
         mockDAO = new MockClassDAO();
@@ -47,12 +59,20 @@ public class ModifyTest extends ApplicationTest {
         stage.show();
     }
 
+    /**
+     * Sets up the test environment before each test method.
+     * Resets the mock DAO and dismisses any open dialogs.
+     */
     @Before
     public void setUp() {
         mockDAO.setShouldThrowException(false, null);
         pressEscape();
     }
 
+    /**
+     * Verifies that all UI components are properly loaded.
+     * Checks that user information is correctly displayed in labels.
+     */
     @Test
     public void test1_AllComponentsAreLoaded() {
         Label usernameLabel = lookup("#LabelUsername").query();
@@ -75,6 +95,10 @@ public class ModifyTest extends ApplicationTest {
         assertEquals("jlopez@example.com", emailLabel.getText());
     }
 
+    /**
+     * Tests text input functionality in modification fields.
+     * Verifies that user can enter and modify name, surname, and telephone.
+     */
     @Test
     public void test2_TextFieldWriting() {
         clickOn("#TextField_Name");
@@ -95,6 +119,10 @@ public class ModifyTest extends ApplicationTest {
         assertEquals("666777888", telephoneField.getText());
     }
 
+    /**
+     * Tests modification behavior when a database exception occurs.
+     * Should handle the exception gracefully and display an error.
+     */
     @Test
     public void test3_ModifyWithException() {
         mockDAO.setShouldThrowException(true, new OurException("Database error"));
@@ -114,6 +142,10 @@ public class ModifyTest extends ApplicationTest {
         pressEscape();
     }
 
+    /**
+     * Tests successful user profile modification.
+     * Verifies that changes are saved correctly.
+     */
     @Test
     public void test4_SuccessfulModify() {
         clickOn("#TextField_Name");
@@ -131,6 +163,9 @@ public class ModifyTest extends ApplicationTest {
         pressEscape();
     }
 
+    /**
+     * Helper method to press the Escape key and dismiss dialogs.
+     */
     private void pressEscape() {
         sleep(500);
         push(javafx.scene.input.KeyCode.ESCAPE);

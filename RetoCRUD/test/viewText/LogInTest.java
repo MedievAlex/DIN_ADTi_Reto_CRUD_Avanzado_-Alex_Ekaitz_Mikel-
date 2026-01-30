@@ -23,6 +23,13 @@ import org.junit.runners.MethodSorters;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.control.TextInputControlMatchers.hasText;
 
+/**
+ * Test class for LogInWindow view.
+ * Tests login functionality including field validation, authentication,
+ * and navigation to sign up screen.
+ *
+ * @author ema
+ */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class LogInTest extends ApplicationTest {
     private LogInWindowController loginController;
@@ -30,6 +37,12 @@ public class LogInTest extends ApplicationTest {
     private MockClassDAO mockDAO;
     private Profile mockUser;
 
+    /**
+     * Initializes the JavaFX stage and loads the LogInWindow view.
+     *
+     * @param stage The primary stage for this test
+     * @throws Exception if FXML loading fails
+     */
     @Override
     public void start(Stage stage) throws Exception {
         mockDAO = new MockClassDAO();
@@ -48,12 +61,19 @@ public class LogInTest extends ApplicationTest {
         stage.show();
     }
 
+    /**
+     * Sets up the test environment before each test method.
+     * Resets the mock profile and disables exception throwing.
+     */
     @Before
     public void setUp() {
         mockDAO.setMockProfile(null);
         mockDAO.setShouldThrowException(false, null);
     }
 
+    /**
+     * Verifies that all UI components are properly loaded.
+     */
     @Test
     public void test1_AllComponentsAreLoaded() {
         TextField usernameField = lookup("#TextField_Username").query();
@@ -69,6 +89,9 @@ public class LogInTest extends ApplicationTest {
         assertNotNull(errorLabel);
     }
 
+    /**
+     * Tests text input functionality in username and password fields.
+     */
     @Test
     public void test2_TextFieldWriting() {
         clickOn("#TextField_Username");
@@ -80,6 +103,10 @@ public class LogInTest extends ApplicationTest {
         verifyThat("#PasswordField_Password", hasText("mypassword123"));
     }
 
+    /**
+     * Tests login attempt with empty fields.
+     * Should display an error message requesting field completion.
+     */
     @Test
     public void test3_LoginWithEmptyFields() {
         clickOn("#Button_LogIn");
@@ -89,6 +116,10 @@ public class LogInTest extends ApplicationTest {
         assertTrue(errorLabel.getText().contains("Please fill in both fields"));
     }
     
+    /**
+     * Tests login attempt with invalid credentials.
+     * Should display an error or alert dialog.
+     */
     @Test
     public void test4_LoginWithInvalidCredentials() {
         mockDAO.setMockProfile(null);
@@ -103,6 +134,10 @@ public class LogInTest extends ApplicationTest {
         pressEscape();
     }
     
+    /**
+     * Tests login behavior when a database exception occurs.
+     * Should handle the exception gracefully and display an error.
+     */
     @Test
     public void test5_LoginWithException() {
         mockDAO.setShouldThrowException(true, new OurException("Database error"));
@@ -117,6 +152,10 @@ public class LogInTest extends ApplicationTest {
         pressEscape();
     }
     
+    /**
+     * Tests navigation from login to sign up screen.
+     * Verifies that the sign up window opens and can navigate back.
+     */
     @Test
     public void test6_NavigateToSignUp() {
         clickOn("#Button_SignUp");
@@ -130,6 +169,10 @@ public class LogInTest extends ApplicationTest {
         clickOn("#buttonLogIn");
     }
     
+    /**
+     * Tests successful login with valid credentials.
+     * Verifies that the main menu is displayed after login.
+     */
     @Test
     public void test7_SuccessfulLogin() {
         mockDAO.setMockProfile(mockUser);
@@ -146,6 +189,9 @@ public class LogInTest extends ApplicationTest {
         assertTrue(lookup("#menuBar").query().isVisible());
     }
 
+    /**
+     * Helper method to press the Escape key and dismiss dialogs.
+     */
     private void pressEscape() {
         sleep(500);
         push(javafx.scene.input.KeyCode.ESCAPE);

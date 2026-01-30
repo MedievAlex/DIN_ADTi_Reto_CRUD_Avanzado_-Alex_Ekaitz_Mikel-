@@ -17,14 +17,26 @@ import static org.junit.Assert.*;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
 
+/**
+ * Test class for MainMenuWindow view.
+ * Tests main menu functionality including game browsing, filtering by platform,
+ * search functionality, and navigation options.
+ *
+ * @author ema
+ */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MainMenuTest extends ApplicationTest {
-
     private MainMenuWindowController controller;
     private Controller realController;
     private MockClassDAO mockDAO;
     private Profile testUser;
 
+    /**
+     * Initializes the JavaFX stage and loads the MainMenuWindow view.
+     *
+     * @param stage The primary stage for this test
+     * @throws Exception if FXML loading fails
+     */
     @Override
     public void start(Stage stage) throws Exception {
         mockDAO = new MockClassDAO();
@@ -54,11 +66,18 @@ public class MainMenuTest extends ApplicationTest {
         stage.show();
     }
 
+    /**
+     * Sets up the test environment before each test method.
+     * Resets the mock DAO to not throw exceptions.
+     */
     @Before
     public void setUp() {
         mockDAO.setShouldThrowException(false, null);
     }
 
+    /**
+     * Verifies that all UI components are properly loaded.
+     */
     @Test
     public void test1_AllComponentsAreLoaded() {
         MenuButton menuButton = lookup("#menu").query();
@@ -80,6 +99,9 @@ public class MainMenuTest extends ApplicationTest {
         assertNotNull(chkPC);
     }
 
+    /**
+     * Tests search bar text input functionality.
+     */
     @Test
     public void test2_SearchBarFunctionality() {
         TextField searchBar = lookup("#searchBar").query();
@@ -90,6 +112,10 @@ public class MainMenuTest extends ApplicationTest {
         assertEquals("Zelda", searchBar.getText());
     }
 
+    /**
+     * Tests toggling the visibility of platform filters.
+     * Verifies that the button text changes and filters become visible.
+     */
     @Test
     public void test3_ToggleFilters() {
         Button toggleButton = lookup("#toggleFiltersButton").query();
@@ -109,6 +135,10 @@ public class MainMenuTest extends ApplicationTest {
         assertEquals("+", toggleButton.getText());
     }
 
+    /**
+     * Tests selecting platform filter checkboxes.
+     * Verifies that checkboxes can be selected and maintain their state.
+     */
     @Test
     public void test4_CheckboxSelection() {
         clickOn("#toggleFiltersButton");
@@ -127,6 +157,9 @@ public class MainMenuTest extends ApplicationTest {
         assertTrue(chkXbox.isSelected());
     }
 
+    /**
+     * Verifies that games are properly loaded into the table view.
+     */
     @Test
     public void test5_TableGamesLoaded() {
         TableView<?> tableGames = lookup("#tableGames").query();
@@ -135,6 +168,9 @@ public class MainMenuTest extends ApplicationTest {
         assertTrue(tableGames.getItems().size() > 0);
     }
 
+    /**
+     * Tests menu button actions and verifies menu items are correctly loaded.
+     */
     @Test
     public void test6_MenuButtonActions() {
         MenuButton menuButton = lookup("#menu").query();
@@ -155,6 +191,9 @@ public class MainMenuTest extends ApplicationTest {
         sleep(500);
     }
 
+    /**
+     * Tests selecting a game row in the table view.
+     */
     @Test
     public void test7_SelectGameInTable() {
         TableView<?> tableGames = lookup("#tableGames").query();
@@ -166,6 +205,10 @@ public class MainMenuTest extends ApplicationTest {
         }
     }
 
+    /**
+     * Tests filtering games by platform selection.
+     * Verifies that the table updates when a platform filter is applied.
+     */
     @Test
     public void test8_FilterByPlatform() {
         clickOn("#toggleFiltersButton");
@@ -178,6 +221,9 @@ public class MainMenuTest extends ApplicationTest {
         assertTrue(tableGames.getItems().size() >= 0);
     }
     
+    /**
+     * Tests checkbox functionality within the game table.
+     */
     @Test
     public void test9_CheckboxInTable() {
         sleep(1000);
@@ -191,6 +237,9 @@ public class MainMenuTest extends ApplicationTest {
         }
     }
     
+    /**
+     * Tests context menu functionality for fullscreen mode.
+     */
     @Test
     public void test10_ContextMenu() {
         sleep(1000);
@@ -202,6 +251,9 @@ public class MainMenuTest extends ApplicationTest {
         sleep(500);
     }
 
+    /**
+     * Helper method to press the Escape key and dismiss dialogs.
+     */
     private void pressEscape() {
         sleep(500);
         push(javafx.scene.input.KeyCode.ESCAPE);

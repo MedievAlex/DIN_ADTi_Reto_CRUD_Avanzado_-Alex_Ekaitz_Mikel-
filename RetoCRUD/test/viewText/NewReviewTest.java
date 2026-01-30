@@ -17,12 +17,24 @@ import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import static org.junit.Assert.*;
 
+/**
+ * Test class for NewReviewWindow view.
+ * Tests review creation and modification functionality including platform selection,
+ * game filtering, rating input, and review text editing.
+ *
+ * @author ema
+ */
 public class NewReviewTest extends ApplicationTest {
-
     private NewReviewWindowController controller;
     private MockClassDAO mockDAO;
     private Profile testUser;
 
+    /**
+     * Initializes the JavaFX stage and loads the NewReviewWindow view.
+     *
+     * @param stage The primary stage for this test
+     * @throws Exception if FXML loading fails
+     */
     @Override
     public void start(Stage stage) throws Exception {
         mockDAO = new MockClassDAO();
@@ -41,6 +53,10 @@ public class NewReviewTest extends ApplicationTest {
         sleep(1000);
     }
 
+    /**
+     * Sets up the test environment before each test method.
+     * Adds mock video games for testing.
+     */
     @Before
     public void setUp() {
         interact(() -> {
@@ -53,6 +69,9 @@ public class NewReviewTest extends ApplicationTest {
         });
     }
 
+    /**
+     * Verifies that all UI components exist and are properly loaded.
+     */
     @Test
     public void test1_ComponentesExisten() {
         assertNotNull("Área de texto", lookup("#textAreaReview").query());
@@ -63,6 +82,9 @@ public class NewReviewTest extends ApplicationTest {
         assertNotNull("Botón Cancelar", lookup("#btnCancel").query());
     }
 
+    /**
+     * Verifies that all platforms are properly loaded into the platform combo box.
+     */
     @Test
     public void test2_ListaPlataformasCargada() {
         ComboBox<String> plataformas = lookup("#comboBoxPlatForm").query();
@@ -76,6 +98,10 @@ public class NewReviewTest extends ApplicationTest {
         });
     }
 
+    /**
+     * Tests that selecting a platform enables the games combo box.
+     * Verifies that games are filtered by the selected platform.
+     */
     @Test
     public void test3_SeleccionarPlataformaHabilitaJuegos() {
         ComboBox<String> juegos = lookup("#comboBoxGame").query();
@@ -93,6 +119,10 @@ public class NewReviewTest extends ApplicationTest {
         });
     }
 
+    /**
+     * Tests all rating spinner functionality including value limits and manual input.
+     * Verifies that rating values are constrained between 0 and 10.
+     */
     @Test
     public void test4_TodoSobreLaPuntuacion() {
         Spinner<Integer> puntuacion = lookup("#spinnerRating").query();
@@ -131,6 +161,9 @@ public class NewReviewTest extends ApplicationTest {
         assertTrue(puntuacion.isEditable());
     }
 
+    /**
+     * Tests writing review text in the text area.
+     */
     @Test
     public void test5_EscribirReview() {
         TextArea areaTexto = lookup("#textAreaReview").query();
@@ -140,6 +173,10 @@ public class NewReviewTest extends ApplicationTest {
         assertEquals("Este juego es increíble!", areaTexto.getText());
     }
 
+    /**
+     * Tests creating a complete review with all fields filled.
+     * Verifies that platform, game, rating, and text are correctly set.
+     */
     @Test
     public void test6_CrearReviewCompleta() {
         clickOn("#comboBoxPlatForm");
@@ -169,6 +206,9 @@ public class NewReviewTest extends ApplicationTest {
         });
     }
 
+    /**
+     * Tests cancel button functionality.
+     */
     @Test
     public void test7_BotonCancelar() {
         Button cancelar = lookup("#btnCancel").query();
@@ -177,6 +217,10 @@ public class NewReviewTest extends ApplicationTest {
         sleep(500);
     }
 
+    /**
+     * Tests filtering games by platform selection.
+     * Verifies that different platforms show their respective games.
+     */
     @Test
     public void test8_FiltrarJuegosPorPlataforma() {
         clickOn("#comboBoxPlatForm");
@@ -197,6 +241,10 @@ public class NewReviewTest extends ApplicationTest {
         });
     }
 
+    /**
+     * Tests loading and updating an existing review.
+     * Verifies that existing review data is loaded and can be modified.
+     */
     @Test
     public void test9_CargarYActualizarReview() {
         Profile user = new User("MALE", "ES1234567890123456789012", "testuser", "Ab123456","test@example.com", "Test", "123456789", "User");
@@ -230,5 +278,4 @@ public class NewReviewTest extends ApplicationTest {
         assertEquals(Integer.valueOf(9), puntuacion.getValue());
         assertEquals("Review ACTUALIZADA!", texto.getText());
     }
-
 }

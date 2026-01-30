@@ -3,7 +3,6 @@ package viewText;
 import controller.Controller;
 import controller.ListWindowController;
 import dao.MockClassDAO;
-import java.util.Set;
 import model.Profile;
 import model.User;
 import org.junit.Before;
@@ -12,7 +11,6 @@ import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
 import org.testfx.framework.junit.ApplicationTest;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -21,17 +19,28 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.SelectableVideoGame;
-
 import static org.junit.Assert.*;
 
+/**
+ * Test class for ListWindow view.
+ * Tests user list management functionality including creating, renaming, deleting lists,
+ * and adding/removing games from lists.
+ *
+ * @author ema
+ */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ListTest extends ApplicationTest {
-
     private ListWindowController controller;
     private Controller realController;
     private MockClassDAO mockDAO;
     private Profile mockUser;
 
+    /**
+     * Initializes the JavaFX stage and loads the ListWindow view.
+     *
+     * @param stage The primary stage for this test
+     * @throws Exception if FXML loading fails
+     */
     @Override
     public void start(Stage stage) throws Exception {
         mockDAO = new MockClassDAO();
@@ -53,11 +62,18 @@ public class ListTest extends ApplicationTest {
         controller.setComboBox();
     }
 
+    /**
+     * Sets up the test environment before each test method.
+     * Resets the mock DAO to not throw exceptions.
+     */
     @Before
     public void setUp() {
         mockDAO.setShouldThrowException(false, null);
     }
 
+    /**
+     * Verifies that all UI components are properly loaded.
+     */
     @Test
     public void test101_AllComponentsAreLoaded() {
         MenuButton menuButton = lookup("#menu").query();
@@ -78,7 +94,9 @@ public class ListTest extends ApplicationTest {
         assertNotNull(combLists);
     }
 
-    // [Menu has other windows]
+    /**
+     * Tests menu button actions and verifies menu items are correctly loaded.
+     */
     @Test
     public void test102_MenuButtonActions() { 
         MenuButton menuButton = lookup("#menu").query();
@@ -98,7 +116,9 @@ public class ListTest extends ApplicationTest {
         sleep(500);
     }
 
-    // Table loads the games
+    /**
+     * Verifies that games are properly loaded into the table view.
+     */
     @Test
     public void test103_TableGamesLoaded() {
         TableView<SelectableVideoGame> tableLists = lookup("#tableLists").query();
@@ -108,9 +128,11 @@ public class ListTest extends ApplicationTest {
         assertTrue(tableLists.getItems().size() == 3);
     }
 
-    // [The combobox has the lists loades]
+    /**
+     * Verifies that user lists are properly loaded into the combo box.
+     */
     @Test
-    public void test104_ComboBoxListsLoaded() { // Lists show in the comboBox
+    public void test104_ComboBoxListsLoaded() { 
         ComboBox<String> combLists = lookup("#combLists").query();
 
         clickOn("#combLists");
@@ -126,7 +148,9 @@ public class ListTest extends ApplicationTest {
         sleep(500);
     }
 
-    // [Creates new lists]
+    /**
+     * Tests creating new lists using the new list button.
+     */
     @Test
     public void test105_NewListButton() { 
         VBox vbLists = lookup("#vbLists").query();
@@ -144,7 +168,9 @@ public class ListTest extends ApplicationTest {
         assertTrue(vbLists.getChildren().size() == elementsQuantity);
     }
 
-    // [Loads the games in the selected list changing the title to the list name]
+    /**
+     * Tests loading games in selected lists and verifies the list name changes correctly.
+     */
     @Test
     public void test106_ListButtonsLoad() { 
         Text listName = lookup("#listName").query();
@@ -175,7 +201,12 @@ public class ListTest extends ApplicationTest {
         sleep(1000);
     }
 
-    // [Rename list with the contextual menu]
+    /**
+     * Tests renaming a list through the contextual menu.
+     * Validates name constraints: non-empty, non-duplicate, and maximum length.
+     *
+     * @throws Exception if test execution fails
+     */
     @Test
     public void test107_RenameListName() throws Exception { 
         Text listName = lookup("#listName").query();
@@ -228,7 +259,9 @@ public class ListTest extends ApplicationTest {
         sleep(1000);
     }
 
-    // [Delete list with the contextual menu]
+    /**
+     * Tests deleting lists through the contextual menu.
+     */
     @Test
     public void test108_DeleteList() { 
         VBox vbLists = lookup("#vbLists").query();
@@ -264,7 +297,9 @@ public class ListTest extends ApplicationTest {
         sleep(500);
     }
 
-    
+    /**
+     * Tests selecting and deselecting games in the table view.
+     */
     @Test
     public void test109_SelectGameInTable() {
         TableView<SelectableVideoGame> tableLists = lookup("#tableLists").query();
@@ -275,7 +310,11 @@ public class ListTest extends ApplicationTest {
             clickOn(".table-cell:last .check-box");
         }
     }
-    // [Deletes the games selected]
+
+    /**
+     * Tests removing selected games from a list.
+     * Verifies that games cannot be removed without selection.
+     */
     @Test
     public void test110_RemoveGames() {
         TableView<SelectableVideoGame> tableLists = lookup("#tableLists").query();
@@ -304,7 +343,10 @@ public class ListTest extends ApplicationTest {
         sleep(1000);
     }
 
-    // Add games to selected list
+    /**
+     * Tests adding selected games to a list.
+     * Verifies that both a list and games must be selected.
+     */
     @Test
     public void test111_AddGamesGames() {
         TableView<SelectableVideoGame> tableLists = lookup("#tableLists").query();
@@ -338,7 +380,7 @@ public class ListTest extends ApplicationTest {
         sleep(1000);
         push(KeyCode.ESCAPE);
         
-        // Changes the selection so the thest can click in the button correctly
+        // Changes the selection so the test can click in the button correctly
         interact(() -> {
             combLists.getSelectionModel().select(0);
         });
