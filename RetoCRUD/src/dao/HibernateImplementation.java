@@ -10,6 +10,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Logger;
+import logger.GeneraLog;
 import model.*;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -1291,13 +1293,6 @@ public class HibernateImplementation implements ClassDAO {
         return session;
     }
     
-    /**
-     * Generates a PDF report of all reviews using JasperReports.
-     * The report is saved with a timestamp in the reports directory and opened automatically.
-     *
-     * @param name The name of the user generating the report
-     * @throws OurException if report generation fails
-     */
     @Override
     public void generateReport(String name) throws OurException {
         Session session = null;
@@ -1311,27 +1306,27 @@ public class HibernateImplementation implements ClassDAO {
                 try {
                     String reportPath = "/reports/Report.jasper";
                     InputStream reportStream = getClass().getResourceAsStream(reportPath);
-                    
+
                     if (reportStream == null) {
                         throw new SQLException("Report not found: " + reportPath);
                     }
-                    
+
                     JasperPrint jasperPrint = JasperFillManager.fillReport(
                             reportStream,
                             params, 
                             connection
                     );
-                    
-                    File reportsDir = new File("reports");
+
+                    File reportsDir = new File("../reports");
                     if (!reportsDir.exists()) {
                         reportsDir.mkdirs();
                     }
-                    
+
                     String timestamp = new java.text.SimpleDateFormat("yyyyMMdd_HHmmss").format(new java.util.Date());
-                    String pdfPath = "reports/Report_" + timestamp + ".pdf";
-                    
+                    String pdfPath = "../reports/Report_" + timestamp + ".pdf";
+
                     JasperExportManager.exportReportToPdfFile(jasperPrint, pdfPath);
-                    
+
                     File pdfFile = new File(pdfPath);
                     if (java.awt.Desktop.isDesktopSupported()) {
                         java.awt.Desktop.getDesktop().open(pdfFile);

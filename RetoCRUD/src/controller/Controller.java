@@ -2,16 +2,12 @@ package controller;
 
 import dao.ClassDAO;
 import exception.OurException;
-import static exception.ShowAlert.showAlert;
 import java.awt.Desktop;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
-import logger.GeneraLog;
 import model.Profile;
 import model.Review;
 import model.VideoGame;
@@ -366,7 +362,7 @@ public class Controller {
      */
     public void openManual() throws OurException {
         try {
-            File path = new File("user manual/UserManual.pdf");
+            File path = new File("../user manual/UserManual.pdf");
             if (!path.exists()) {
                 throw new OurException("User manual not found at: " + path.getAbsolutePath());
             }

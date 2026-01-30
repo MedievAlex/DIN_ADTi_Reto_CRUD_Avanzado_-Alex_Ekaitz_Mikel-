@@ -33,7 +33,7 @@ public class GeneraLog
 		// Inicializa el logger solo si no se ha inicializado previamente
 		if (logger == null)
 		{
-			File carpeta = new File("./logs"); // Ruta de la carpeta
+			File carpeta = new File("../logs"); // Ruta de la carpeta
 
 			if (!carpeta.exists())
 			{
@@ -46,7 +46,7 @@ public class GeneraLog
 				logger = Logger.getLogger(GeneraLog.class.getName());
 				// A false evita la salida en consola
 				logger.setUseParentHandlers(false);
-				fileHandler = new FileHandler("./logs/ProjectLogs.log", true); // Ruta de la carpeta + nombre archivo .log [true = append mode]
+				fileHandler = new FileHandler(carpeta.getPath() + "/ProjectLogs.log", true); // Ruta de la carpeta + nombre archivo .log [true = append mode]
 
 				SimpleFormatter formatter = new SimpleFormatter();
 				fileHandler.setFormatter(formatter);
