@@ -2,7 +2,16 @@ package controller;
 
 import dao.ClassDAO;
 import exception.OurException;
+import static exception.ShowAlert.showAlert;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.web.WebView;
+import javafx.stage.Stage;
+import logger.GeneraLog;
 import model.Profile;
 import model.Review;
 import model.VideoGame;
@@ -330,12 +339,50 @@ public class Controller {
     }
     
     /**
+     * Show the video of new games.
+     *
+     * @throws exception.OurException
+     */
+    public void openVideo() throws OurException {
+        try {
+            WebView webview = new WebView();
+            webview.getEngine().load("https://youtu.be/phyKDIryZWk?si=ugkWCRi_GpBrg_0z");
+            webview.setPrefSize(640, 390);
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(webview));
+            stage.setTitle("Tutorial Video");
+            stage.setFullScreen(true);
+            stage.show();
+        } catch (Exception ex) {
+            throw new OurException("Failed to open user manual: " + ex.getMessage());
+        }
+    }
+    
+    /**
+     * Show the user manual.
+     *
+     * @throws exception.OurException
+     */
+    public void openManual() throws OurException {
+        try {
+            File path = new File("user manual/UserManual.pdf");
+            if (!path.exists()) {
+                throw new OurException("User manual not found at: " + path.getAbsolutePath());
+            }
+            Desktop.getDesktop().open(path);
+        } catch (Exception ex) {
+            throw new OurException("Failed to open user manual");
+        }
+    }
+    
+    /**
      * Generates a report with the specified name.
      *
      * @param name The name for the report
      * @throws exception.OurException
      */
-    public void generateReport(String name) throws OurException{
+    public void generateReport(String name) throws OurException {
         DAO.generateReport(name);
     }
 }

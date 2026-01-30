@@ -15,7 +15,6 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import org.hibernate.Session;
-import org.hibernate.jdbc.Work;
 import threads.SessionThread;
 
 /**
@@ -55,8 +54,7 @@ public class HibernateImplementation implements ClassDAO {
         for (SessionThread t : activeThreads) {
             try {
                 t.join();
-            } catch (InterruptedException e) {
-            }
+            } catch (InterruptedException e) {}
         }
         activeThreads.clear();
     }
@@ -1152,11 +1150,9 @@ public class HibernateImplementation implements ClassDAO {
     @Override
     public void initializeDefault() throws OurException {
         Session session = null;
-
         try {
             session = HibernateUtil.getSession();
             session.beginTransaction();
-
             String[][] users = {
                 {"User", "jlopez", "Masculino", "AB1234567890123456789012", "pass123", "jlopez@example.com", "Juan", "987654321", "Lopez", null},
                 {"User", "mramirez", "Femenino", "ZX9081726354891027364512", "pass456", "mramirez@example.com", "Maria", "912345678", "Ramirez", null},
@@ -1164,7 +1160,6 @@ public class HibernateImplementation implements ClassDAO {
                 {"Admin", "asanchez", "CTA-001", null, "qwerty", "asanchez@example.com", "Ana", "900112233", "Sanchez", null},
                 {"Admin", "rluna", "CTA-002", null, "zxcvbn", "rluna@example.com", "Rosa", "955667788", "Luna", null}
             };
-
             for (String[] userData : users) {
                 boolean exists;
                 if (userData[0].equals("User")) {
@@ -1179,7 +1174,6 @@ public class HibernateImplementation implements ClassDAO {
                     }
                 }
             }
-
             Object[][] games = {
                 {"DEFAULT_GAME", LocalDate.now(), Platform.DEFAULT, Pegi.DEFAULT},
                 {"Owlboy", LocalDate.of(2016, 11, 1), Platform.NINTENDO, Pegi.PEGI3},
@@ -1190,7 +1184,6 @@ public class HibernateImplementation implements ClassDAO {
                 {"Halo Infinite", LocalDate.of(2021, 12, 8), Platform.PC, Pegi.PEGI16},
                 {"Balatro", LocalDate.of(2024, 2, 20), Platform.PC, Pegi.PEGI12}
             };
-
             for (Object[] gameData : games) {
                 VideoGame existing = session.createQuery("FROM VideoGame v WHERE v.v_name = :name", VideoGame.class)
                         .setParameter("name", (String) gameData[0]).uniqueResult();
@@ -1198,7 +1191,6 @@ public class HibernateImplementation implements ClassDAO {
                     session.save(new VideoGame((String) gameData[0], (LocalDate) gameData[1], (Platform) gameData[2], (Pegi) gameData[3]));
                 }
             }
-
             String[][] listEntries = {
                 {"jlopez", "User", "My Games", "1"},
                 {"mramirez", "User", "My Games", "1"},
@@ -1214,7 +1206,6 @@ public class HibernateImplementation implements ClassDAO {
                 {"asanchez", "Admin", "PLAYSTATION", "1"},
                 {"asanchez", "Admin", "PLAYSTATION", "5"}
             };
-
             for (String[] entry : listEntries) {
                 Profile profile;
                 if (entry[1].equals("User")) {
@@ -1230,7 +1221,6 @@ public class HibernateImplementation implements ClassDAO {
                     session.save(new Listed(profile, game, entry[2]));
                 }
             }
-
             Object[][] reviews = {
                 {"asanchez", "Admin", "2", 7, "If Hayao Miyazaki directed it.", Platform.NINTENDO},
                 {"asanchez", "Admin", "3", 2, "Bad experience. Not for me.", Platform.NINTENDO},
@@ -1239,7 +1229,6 @@ public class HibernateImplementation implements ClassDAO {
                 {"cperez", "User", "5", 9, "GOTY.", Platform.PLAYSTATION},
                 {"jlopez", "User", "6", 4, "Mid game.", Platform.PLAYSTATION}
             };
-
             for (Object[] reviewData : reviews) {
                 Profile profile;
                 if (((String) reviewData[1]).equals("User")) {
@@ -1247,7 +1236,6 @@ public class HibernateImplementation implements ClassDAO {
                 } else {
                     profile = session.get(Admin.class, (String) reviewData[0]);
                 }
-
                 VideoGame game = session.get(VideoGame.class, Integer.parseInt((String) reviewData[2]));
                 Review existing = session.createQuery("FROM Review r WHERE r.profile.username = :username AND r.videogame.v_id = :gameId", Review.class)
                         .setParameter("username", (String) reviewData[0]).setParameter("gameId", Integer.parseInt((String) reviewData[2])).uniqueResult();
@@ -1255,7 +1243,6 @@ public class HibernateImplementation implements ClassDAO {
                     session.save(new Review(profile, game, (int) reviewData[3], (String) reviewData[4], LocalDate.now(), (Platform) reviewData[5]));
                 }
             }
-
             session.getTransaction().commit();
         } catch (Exception e) {
             if (session != null && session.getTransaction().isActive()) {
@@ -1320,41 +1307,37 @@ public class HibernateImplementation implements ClassDAO {
             params.put("GENERATED_BY", name);
             params.put("GENERATION_DATE", new java.util.Date());
 
-            session.doWork(new Work() {
-                @Override
-                public void execute(Connection connection) throws SQLException {
-                    try {
-                        String reportPath = "/reports/Report.jasper";
-                        InputStream reportStream = getClass().getResourceAsStream(reportPath);
-
-                        if (reportStream == null) {
-                            throw new SQLException("Report not found: " + reportPath);
-                        }
-
-                        JasperPrint jasperPrint = JasperFillManager.fillReport(
-                            reportStream, 
+            session.doWork((Connection connection) -> {
+                try {
+                    String reportPath = "/reports/Report.jasper";
+                    InputStream reportStream = getClass().getResourceAsStream(reportPath);
+                    
+                    if (reportStream == null) {
+                        throw new SQLException("Report not found: " + reportPath);
+                    }
+                    
+                    JasperPrint jasperPrint = JasperFillManager.fillReport(
+                            reportStream,
                             params, 
                             connection
-                        );
-
-                        File reportsDir = new File("reports");
-                        if (!reportsDir.exists()) {
-                            reportsDir.mkdirs();
-                        }
-
-                        String timestamp = new java.text.SimpleDateFormat("yyyyMMdd_HHmmss").format(new java.util.Date());
-                        String pdfPath = "reports/Report_" + timestamp + ".pdf";
-
-                        JasperExportManager.exportReportToPdfFile(jasperPrint, pdfPath);
-
-                        File pdfFile = new File(pdfPath);
-                        if (java.awt.Desktop.isDesktopSupported()) {
-                            java.awt.Desktop.getDesktop().open(pdfFile);
-                        }
-
-                    } catch (Exception ex) {
-                        throw new SQLException("Error generating PDF: " + ex.getMessage(), ex);
+                    );
+                    
+                    File reportsDir = new File("reports");
+                    if (!reportsDir.exists()) {
+                        reportsDir.mkdirs();
                     }
+                    
+                    String timestamp = new java.text.SimpleDateFormat("yyyyMMdd_HHmmss").format(new java.util.Date());
+                    String pdfPath = "reports/Report_" + timestamp + ".pdf";
+                    
+                    JasperExportManager.exportReportToPdfFile(jasperPrint, pdfPath);
+                    
+                    File pdfFile = new File(pdfPath);
+                    if (java.awt.Desktop.isDesktopSupported()) {
+                        java.awt.Desktop.getDesktop().open(pdfFile);
+                    } 
+                } catch (Exception ex) {
+                    throw new SQLException("Error generating PDF: " + ex.getMessage(), ex);
                 }
             });
         } catch (Exception ex) {

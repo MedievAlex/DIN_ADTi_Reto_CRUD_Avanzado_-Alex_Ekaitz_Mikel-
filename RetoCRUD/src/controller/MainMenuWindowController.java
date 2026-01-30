@@ -447,18 +447,10 @@ public class MainMenuWindowController implements Initializable
     @FXML
     public void handleVideoAction() {
         try {
-            WebView webview = new WebView();
-            webview.getEngine().load("https://youtu.be/phyKDIryZWk?si=ugkWCRi_GpBrg_0z");
-            webview.setPrefSize(640, 390);
-
-            Stage stage = new Stage();
-            stage.setScene(new Scene(webview));
-            stage.setTitle("Tutorial Video");
-            stage.setFullScreen(true);
-            stage.show();
+            cont.openVideo();
         } catch (Exception ex) {
             GeneraLog.getLogger().severe("Failed to load video: " + ex.getMessage());
-            showAlert("Error", "Failed to load video", Alert.AlertType.ERROR);
+            showAlert("Error", "Failed to open user manual", Alert.AlertType.ERROR);
         }
     }
 
@@ -469,15 +461,10 @@ public class MainMenuWindowController implements Initializable
     @FXML
     public void handleHelpAction() {
         try {
-            File path = new File("user manual/UserManual.pdf");
-            if (!path.exists()) {
-                showAlert("File Not Found", "User manual not found at: " + path.getAbsolutePath(), Alert.AlertType.WARNING);
-                return;
-            }
-            Desktop.getDesktop().open(path);
-        } catch (IOException ex) {
-            GeneraLog.getLogger().severe("Failed to open user manual: " + ex.getMessage());
-            showAlert("Error", "Failed to open user manual", Alert.AlertType.ERROR);
+            cont.openManual();
+        } catch (OurException ex) {
+            GeneraLog.getLogger().severe("Erron in user manual: " + ex.getMessage());
+            showAlert("Error", ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
     
