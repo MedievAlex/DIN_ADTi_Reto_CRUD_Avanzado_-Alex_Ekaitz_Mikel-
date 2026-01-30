@@ -1232,11 +1232,12 @@ public class HibernateImplementation implements ClassDAO {
             }
 
             Object[][] reviews = {
-                {"asanchez", "Admin", "2", 7, "Review description", Platform.NINTENDO},
-                {"asanchez", "Admin", "3", 2, "Bad experience", Platform.NINTENDO},
-                {"cperez", "User", "4", 5, "Bad game", Platform.PLAYSTATION},
-                {"cperez", "User", "5", 10, "Great game", Platform.PLAYSTATION},
-                {"jlopez", "User", "6", 6, "Mid game", Platform.PLAYSTATION}
+                {"asanchez", "Admin", "2", 7, "If Hayao Miyazaki directed it.", Platform.NINTENDO},
+                {"asanchez", "Admin", "3", 2, "Bad experience. Not for me.", Platform.NINTENDO},
+                {"asanchez", "Admin", "5", 10, "Graphically stunning.", Platform.PLAYSTATION},
+                {"cperez", "User", "4", 7, "They dont make games like this.", Platform.PLAYSTATION},
+                {"cperez", "User", "5", 9, "GOTY.", Platform.PLAYSTATION},
+                {"jlopez", "User", "6", 4, "Mid game.", Platform.PLAYSTATION}
             };
 
             for (Object[] reviewData : reviews) {

@@ -6,14 +6,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import model.*;
+
 /**
  * Mock implementation of ClassDAO for testing purposes. This class provides a
  * simulated data access layer that can be configured to return predefined
  * responses or throw exceptions for testing various application scenarios
  * without requiring a real database connection.
  */
-public class MockClassDAO implements ClassDAO
-{
+public class MockClassDAO implements ClassDAO {
+
     private Profile mockUser;
     private final ArrayList<VideoGame> mockVideoGames;
     private final ArrayList<Review> mockReviews;
@@ -26,8 +27,7 @@ public class MockClassDAO implements ClassDAO
      * Constructs a new MockClassDAO with default test data. Initializes the
      * mock with sample profiles, video games, and empty exception state.
      */
-    public MockClassDAO()
-    {
+    public MockClassDAO() {
         this.mockUser = new User("MALE", "ES1234567890123456789012", "testuser", "Ab123456",
                 "test@test.com", "Test", "123456789", "User");
 
@@ -40,8 +40,8 @@ public class MockClassDAO implements ClassDAO
                 Platform.XBOX, Pegi.PEGI16));
 
         this.mockReviews = new ArrayList<>();
-        mockReviews.add(new Review(mockUser, mockVideoGames.get(0), 9, "Amazing game!", 
-        LocalDate.now(), Platform.NINTENDO));
+        mockReviews.add(new Review(mockUser, mockVideoGames.get(0), 9, "Amazing game!",
+                LocalDate.now(), Platform.NINTENDO));
 
         this.userLists = new HashMap<>();
         this.userListGames = new HashMap<>();
@@ -49,11 +49,26 @@ public class MockClassDAO implements ClassDAO
         ArrayList<String> defaultLists = new ArrayList<>();
         defaultLists.add("My Games");
         defaultLists.add("Favorites");
+        defaultLists.add("Nintendo");
+        defaultLists.add("Playstation");
         userLists.put("testuser", defaultLists);
 
         Map<String, ArrayList<VideoGame>> testUserLists = new HashMap<>();
-        testUserLists.put("My Games", new ArrayList<>());
-        testUserLists.put("Favorites", new ArrayList<>());
+        
+        ArrayList<VideoGame> allGames = new ArrayList<>();
+        allGames.add(new VideoGame(1, "The Legend of Zelda", LocalDate.of(2017, 3, 3),
+                Platform.NINTENDO, Pegi.PEGI12));
+        allGames.add(new VideoGame(2, "God of War", LocalDate.of(2018, 4, 20),
+                Platform.PLAYSTATION, Pegi.PEGI18));
+        allGames.add(new VideoGame(3, "Halo Infinite", LocalDate.of(2021, 12, 8),
+                Platform.XBOX, Pegi.PEGI16));
+        
+        ArrayList<VideoGame> favouriteGames = new ArrayList<>();
+        favouriteGames.add(new VideoGame(1, "The Legend of Zelda", LocalDate.of(2017, 3, 3),
+                Platform.NINTENDO, Pegi.PEGI12));
+
+        testUserLists.put("My Games", allGames);
+        testUserLists.put("Favorites", favouriteGames);
         userListGames.put("testuser", testUserLists);
 
         this.shouldThrowException = false;
@@ -66,8 +81,7 @@ public class MockClassDAO implements ClassDAO
      * specified exception
      * @param exception the exception to throw when shouldThrow is true
      */
-    public void setShouldThrowException(boolean shouldThrow, OurException exception)
-    {
+    public void setShouldThrowException(boolean shouldThrow, OurException exception) {
         this.shouldThrowException = shouldThrow;
         this.exceptionToThrow = exception;
     }
@@ -77,8 +91,7 @@ public class MockClassDAO implements ClassDAO
      *
      * @param profile the Profile object to set as the mock response
      */
-    public void setMockProfile(Profile profile)
-    {
+    public void setMockProfile(Profile profile) {
         this.mockUser = profile;
     }
 
@@ -87,8 +100,7 @@ public class MockClassDAO implements ClassDAO
      *
      * @param game the VideoGame to add
      */
-    public void addMockVideoGame(VideoGame game)
-    {
+    public void addMockVideoGame(VideoGame game) {
         this.mockVideoGames.add(game);
     }
 
@@ -97,38 +109,35 @@ public class MockClassDAO implements ClassDAO
      *
      * @param review the Review to add
      */
-    public void addMockReview(Review review)
-    {
+    public void addMockReview(Review review) {
         this.mockReviews.add(review);
     }
 
     // ==================== USERS ====================
     /**
-     * Authenticates a user with the provided credentials.
-     * Returns the mock user if credentials match "testuser"/"Ab123456".
+     * Authenticates a user with the provided credentials. Returns the mock user
+     * if credentials match "testuser"/"Ab123456".
      *
      * @param username The username to authenticate
      * @param password The password to verify
      * @return Profile object if authentication succeeds
-     * @throws OurException If credentials are invalid or shouldThrowException is true
+     * @throws OurException If credentials are invalid or shouldThrowException
+     * is true
      */
     @Override
-    public Profile logIn(String username, String password) throws OurException
-    {
-        if (shouldThrowException)
-        {
+    public Profile logIn(String username, String password) throws OurException {
+        if (shouldThrowException) {
             throw exceptionToThrow;
         }
-        if (mockUser != null && mockUser.getUsername().equals(username) && mockUser.getPassword().equals(password))
-        {
+        if (mockUser != null && mockUser.getUsername().equals(username) && mockUser.getPassword().equals(password)) {
             return mockUser;
         }
         throw new OurException("Invalid credentials");
     }
 
     /**
-     * Simulates user registration.
-     * Always returns true unless configured to throw an exception.
+     * Simulates user registration. Always returns true unless configured to
+     * throw an exception.
      *
      * @param gender The user's gender
      * @param cardNumber The user's card number
@@ -143,18 +152,16 @@ public class MockClassDAO implements ClassDAO
      */
     @Override
     public boolean signUp(String gender, String cardNumber, String username, String password,
-            String email, String name, String telephone, String surname) throws OurException
-    {
-        if (shouldThrowException)
-        {
+            String email, String name, String telephone, String surname) throws OurException {
+        if (shouldThrowException) {
             throw exceptionToThrow;
         }
         return true;
     }
 
     /**
-     * Simulates user account deletion.
-     * Always returns true unless configured to throw an exception.
+     * Simulates user account deletion. Always returns true unless configured to
+     * throw an exception.
      *
      * @param username The username of the account to delete
      * @param password The password for verification
@@ -162,18 +169,16 @@ public class MockClassDAO implements ClassDAO
      * @throws OurException If shouldThrowException is true
      */
     @Override
-    public boolean dropOutUser(String username, String password) throws OurException
-    {
-        if (shouldThrowException)
-        {
+    public boolean dropOutUser(String username, String password) throws OurException {
+        if (shouldThrowException) {
             throw exceptionToThrow;
         }
         return true;
     }
 
     /**
-     * Simulates admin account deletion.
-     * Always returns true unless configured to throw an exception.
+     * Simulates admin account deletion. Always returns true unless configured
+     * to throw an exception.
      *
      * @param usernameToDelete The username of the account to delete
      * @param adminUsername The administrator's username
@@ -182,18 +187,16 @@ public class MockClassDAO implements ClassDAO
      * @throws OurException If shouldThrowException is true
      */
     @Override
-    public boolean dropOutAdmin(String usernameToDelete, String adminUsername, String adminPassword) throws OurException
-    {
-        if (shouldThrowException)
-        {
+    public boolean dropOutAdmin(String usernameToDelete, String adminUsername, String adminPassword) throws OurException {
+        if (shouldThrowException) {
             throw exceptionToThrow;
         }
         return true;
     }
 
     /**
-     * Simulates user information modification.
-     * Always returns true unless configured to throw an exception.
+     * Simulates user information modification. Always returns true unless
+     * configured to throw an exception.
      *
      * @param password The new password (or existing if unchanged)
      * @param email The user's email address
@@ -207,10 +210,8 @@ public class MockClassDAO implements ClassDAO
      */
     @Override
     public boolean modifyUser(String password, String email, String name, String telephone,
-            String surname, String username, String gender) throws OurException
-    {
-        if (shouldThrowException)
-        {
+            String surname, String username, String gender) throws OurException {
+        if (shouldThrowException) {
             throw exceptionToThrow;
         }
         return true;
@@ -223,10 +224,8 @@ public class MockClassDAO implements ClassDAO
      * @throws OurException If shouldThrowException is true
      */
     @Override
-    public ArrayList<String> comboBoxInsert() throws OurException
-    {
-        if (shouldThrowException)
-        {
+    public ArrayList<String> comboBoxInsert() throws OurException {
+        if (shouldThrowException) {
             throw exceptionToThrow;
         }
         ArrayList<String> users = new ArrayList<>();
@@ -237,22 +236,19 @@ public class MockClassDAO implements ClassDAO
     }
 
     /**
-     * Finds a mock profile by username.
-     * Returns the mock user if username is "testuser".
+     * Finds a mock profile by username. Returns the mock user if username is
+     * "testuser".
      *
      * @param username The username to search for
      * @return Profile object if found
      * @throws OurException If user not found or shouldThrowException is true
      */
     @Override
-    public Profile findProfileByUsername(String username) throws OurException
-    {
-        if (shouldThrowException)
-        {
+    public Profile findProfileByUsername(String username) throws OurException {
+        if (shouldThrowException) {
             throw exceptionToThrow;
         }
-        if ("testuser".equals(username))
-        {
+        if ("testuser".equals(username)) {
             return mockUser;
         }
         throw new OurException("User not found");
@@ -266,18 +262,16 @@ public class MockClassDAO implements ClassDAO
      * @throws OurException If shouldThrowException is true
      */
     @Override
-    public ArrayList<VideoGame> getAllVideoGames() throws OurException
-    {
-        if (shouldThrowException)
-        {
+    public ArrayList<VideoGame> getAllVideoGames() throws OurException {
+        if (shouldThrowException) {
             throw exceptionToThrow;
         }
         return new ArrayList<>(mockVideoGames);
     }
 
     /**
-     * Returns games from a user's list.
-     * Returns empty list if user or list doesn't exist.
+     * Returns games from a user's list. Returns empty list if user or list
+     * doesn't exist.
      *
      * @param username The username
      * @param listName The name of the list
@@ -285,14 +279,11 @@ public class MockClassDAO implements ClassDAO
      * @throws OurException If shouldThrowException is true
      */
     @Override
-    public ArrayList<VideoGame> getGamesFromList(String username, String listName) throws OurException
-    {
-        if (shouldThrowException)
-        {
+    public ArrayList<VideoGame> getGamesFromList(String username, String listName) throws OurException {
+        if (shouldThrowException) {
             throw exceptionToThrow;
         }
-        if (userListGames.containsKey(username) && userListGames.get(username).containsKey(listName))
-        {
+        if (userListGames.containsKey(username) && userListGames.get(username).containsKey(listName)) {
             return new ArrayList<>(userListGames.get(username).get(listName));
         }
         return new ArrayList<>();
@@ -308,14 +299,11 @@ public class MockClassDAO implements ClassDAO
      * @throws OurException If shouldThrowException is true
      */
     @Override
-    public boolean verifyGameInList(String username, String listName, int gameId) throws OurException
-    {
-        if (shouldThrowException)
-        {
+    public boolean verifyGameInList(String username, String listName, int gameId) throws OurException {
+        if (shouldThrowException) {
             throw exceptionToThrow;
         }
-        if (userListGames.containsKey(username) && userListGames.get(username).containsKey(listName))
-        {
+        if (userListGames.containsKey(username) && userListGames.get(username).containsKey(listName)) {
             return userListGames.get(username).get(listName).stream()
                     .anyMatch(game -> game.getV_id() == gameId);
         }
@@ -331,10 +319,8 @@ public class MockClassDAO implements ClassDAO
      * @throws OurException If game not found or shouldThrowException is true
      */
     @Override
-    public void addGameToList(String username, String listName, int gameId) throws OurException
-    {
-        if (shouldThrowException)
-        {
+    public void addGameToList(String username, String listName, int gameId) throws OurException {
+        if (shouldThrowException) {
             throw exceptionToThrow;
         }
         VideoGame gameToAdd = mockVideoGames.stream()
@@ -342,12 +328,10 @@ public class MockClassDAO implements ClassDAO
                 .findFirst()
                 .orElseThrow(() -> new OurException("Game not found"));
 
-        if (!userListGames.containsKey(username))
-        {
+        if (!userListGames.containsKey(username)) {
             userListGames.put(username, new HashMap<>());
         }
-        if (!userListGames.get(username).containsKey(listName))
-        {
+        if (!userListGames.get(username).containsKey(listName)) {
             userListGames.get(username).put(listName, new ArrayList<>());
         }
         userListGames.get(username).get(listName).add(gameToAdd);
@@ -362,14 +346,11 @@ public class MockClassDAO implements ClassDAO
      * @throws OurException If shouldThrowException is true
      */
     @Override
-    public void addGamesToList(String username, String listName, ArrayList<VideoGame> games) throws OurException
-    {
-        if (shouldThrowException)
-        {
+    public void addGamesToList(String username, String listName, ArrayList<VideoGame> games) throws OurException {
+        if (shouldThrowException) {
             throw exceptionToThrow;
         }
-        for (VideoGame game : games)
-        {
+        for (VideoGame game : games) {
             addGameToList(username, listName, game.getV_id());
         }
     }
@@ -383,14 +364,11 @@ public class MockClassDAO implements ClassDAO
      * @throws OurException If shouldThrowException is true
      */
     @Override
-    public void removeGameFromList(String username, String listName, int gameId) throws OurException
-    {
-        if (shouldThrowException)
-        {
+    public void removeGameFromList(String username, String listName, int gameId) throws OurException {
+        if (shouldThrowException) {
             throw exceptionToThrow;
         }
-        if (userListGames.containsKey(username) && userListGames.get(username).containsKey(listName))
-        {
+        if (userListGames.containsKey(username) && userListGames.get(username).containsKey(listName)) {
             userListGames.get(username).get(listName).removeIf(game -> game.getV_id() == gameId);
         }
     }
@@ -404,14 +382,11 @@ public class MockClassDAO implements ClassDAO
      * @throws OurException If shouldThrowException is true
      */
     @Override
-    public void removeGamesFromList(String username, String listName, ArrayList<VideoGame> games) throws OurException
-    {
-        if (shouldThrowException)
-        {
+    public void removeGamesFromList(String username, String listName, ArrayList<VideoGame> games) throws OurException {
+        if (shouldThrowException) {
             throw exceptionToThrow;
         }
-        for (VideoGame game : games)
-        {
+        for (VideoGame game : games) {
             removeGameFromList(username, listName, game.getV_id());
         }
     }
@@ -424,10 +399,8 @@ public class MockClassDAO implements ClassDAO
      * @throws OurException If game not found or shouldThrowException is true
      */
     @Override
-    public VideoGame findVideoGameByName(String gameName) throws OurException
-    {
-        if (shouldThrowException)
-        {
+    public VideoGame findVideoGameByName(String gameName) throws OurException {
+        if (shouldThrowException) {
             throw exceptionToThrow;
         }
         return mockVideoGames.stream()
@@ -445,10 +418,8 @@ public class MockClassDAO implements ClassDAO
      * @throws OurException If shouldThrowException is true
      */
     @Override
-    public ArrayList<String> getUserLists(String username) throws OurException
-    {
-        if (shouldThrowException)
-        {
+    public ArrayList<String> getUserLists(String username) throws OurException {
+        if (shouldThrowException) {
             throw exceptionToThrow;
         }
         return new ArrayList<>(userLists.getOrDefault(username, new ArrayList<>()));
@@ -462,15 +433,12 @@ public class MockClassDAO implements ClassDAO
      * @throws OurException If shouldThrowException is true
      */
     @Override
-    public void newList(Profile profile, String listName) throws OurException
-    {
-        if (shouldThrowException)
-        {
+    public void newList(Profile profile, String listName) throws OurException {
+        if (shouldThrowException) {
             throw exceptionToThrow;
         }
         String username = profile.getUsername();
-        if (!userLists.containsKey(username))
-        {
+        if (!userLists.containsKey(username)) {
             userLists.put(username, new ArrayList<>());
             userListGames.put(username, new HashMap<>());
         }
@@ -486,14 +454,11 @@ public class MockClassDAO implements ClassDAO
      * @throws OurException If shouldThrowException is true
      */
     @Override
-    public void deleteList(String username, String listName) throws OurException
-    {
-        if (shouldThrowException)
-        {
+    public void deleteList(String username, String listName) throws OurException {
+        if (shouldThrowException) {
             throw exceptionToThrow;
         }
-        if (userLists.containsKey(username))
-        {
+        if (userLists.containsKey(username)) {
             userLists.get(username).remove(listName);
             userListGames.get(username).remove(listName);
         }
@@ -508,10 +473,8 @@ public class MockClassDAO implements ClassDAO
      * @throws OurException If shouldThrowException is true
      */
     @Override
-    public boolean verifyListName(String username, String listName) throws OurException
-    {
-        if (shouldThrowException)
-        {
+    public boolean verifyListName(String username, String listName) throws OurException {
+        if (shouldThrowException) {
             throw exceptionToThrow;
         }
         return userLists.containsKey(username) && userLists.get(username).contains(listName);
@@ -526,14 +489,11 @@ public class MockClassDAO implements ClassDAO
      * @throws OurException If shouldThrowException is true
      */
     @Override
-    public void renameList(String username, String listName, String listNewName) throws OurException
-    {
-        if (shouldThrowException)
-        {
+    public void renameList(String username, String listName, String listNewName) throws OurException {
+        if (shouldThrowException) {
             throw exceptionToThrow;
         }
-        if (userLists.containsKey(username) && userLists.get(username).contains(listName))
-        {
+        if (userLists.containsKey(username) && userLists.get(username).contains(listName)) {
             int index = userLists.get(username).indexOf(listName);
             userLists.get(username).set(index, listNewName);
 
@@ -552,10 +512,8 @@ public class MockClassDAO implements ClassDAO
      * @throws OurException If shouldThrowException is true
      */
     @Override
-    public Review findReview(String username, int gameId) throws OurException
-    {
-        if (shouldThrowException)
-        {
+    public Review findReview(String username, int gameId) throws OurException {
+        if (shouldThrowException) {
             throw exceptionToThrow;
         }
         return mockReviews.stream()
@@ -573,17 +531,13 @@ public class MockClassDAO implements ClassDAO
      * @throws OurException If shouldThrowException is true
      */
     @Override
-    public ArrayList<Review> findReviews(int gameId) throws OurException
-    {
-        if (shouldThrowException)
-        {
+    public ArrayList<Review> findReviews(int gameId) throws OurException {
+        if (shouldThrowException) {
             throw exceptionToThrow;
         }
         ArrayList<Review> gameReviews = new ArrayList<>();
-        for (Review review : mockReviews)
-        {
-            if (review.getVideogame().getV_id() == gameId)
-            {
+        for (Review review : mockReviews) {
+            if (review.getVideogame().getV_id() == gameId) {
                 gameReviews.add(review);
             }
         }
@@ -597,28 +551,24 @@ public class MockClassDAO implements ClassDAO
      * @throws OurException If shouldThrowException is true
      */
     @Override
-    public ArrayList<Review> getAllReviews() throws OurException
-    {
-        if (shouldThrowException)
-        {
+    public ArrayList<Review> getAllReviews() throws OurException {
+        if (shouldThrowException) {
             throw exceptionToThrow;
         }
         return new ArrayList<>(mockReviews);
     }
 
     /**
-     * Saves a new review or updates an existing one.
-     * Replaces existing review if one exists for same user and game.
+     * Saves a new review or updates an existing one. Replaces existing review
+     * if one exists for same user and game.
      *
      * @param review The Review object to save or update
      * @return true if the operation succeeds
      * @throws OurException If shouldThrowException is true
      */
     @Override
-    public boolean saveOrUpdateReview(Review review) throws OurException
-    {
-        if (shouldThrowException)
-        {
+    public boolean saveOrUpdateReview(Review review) throws OurException {
+        if (shouldThrowException) {
             throw exceptionToThrow;
         }
         mockReviews.removeIf(r -> r.getProfile().getUsername().equals(review.getProfile().getUsername())
@@ -634,10 +584,8 @@ public class MockClassDAO implements ClassDAO
      * @throws OurException If shouldThrowException is true
      */
     @Override
-    public void deleteReview(Review review) throws OurException
-    {
-        if (shouldThrowException)
-        {
+    public void deleteReview(Review review) throws OurException {
+        if (shouldThrowException) {
             throw exceptionToThrow;
         }
         mockReviews.remove(review);
@@ -645,31 +593,28 @@ public class MockClassDAO implements ClassDAO
 
     // ==================== OTHER ====================
     /**
-     * Initializes the mock database.
-     * No operation performed unless configured to throw an exception.
+     * Initializes the mock database. No operation performed unless configured
+     * to throw an exception.
      *
      * @throws OurException If shouldThrowException is true
      */
     @Override
-    public void initializeDefault() throws OurException
-    {
-        if (shouldThrowException)
-        {
+    public void initializeDefault() throws OurException {
+        if (shouldThrowException) {
             throw exceptionToThrow;
         }
     }
 
     /**
-     * Generates a mock report.
-     * No operation performed unless configured to throw an exception.
+     * Generates a mock report. No operation performed unless configured to
+     * throw an exception.
      *
      * @param name The name for the report
      * @throws OurException If shouldThrowException is true
      */
     @Override
     public void generateReport(String name) throws OurException {
-        if (shouldThrowException)
-        {
+        if (shouldThrowException) {
             throw exceptionToThrow;
         }
     }
