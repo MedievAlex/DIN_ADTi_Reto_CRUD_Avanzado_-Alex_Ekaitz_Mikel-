@@ -2,6 +2,8 @@ GitHub -> https://github.com/MedievAlex/DIN_ADTi_Reto_CRUD_Avanzado_-Alex_Ekaitz
 
 Database -> crud
 
+Ejecutable -> RetoCRUD.bat en la raíz del proyecto
+
 Changes -> 
   - General style of the windows.
   - Menu window is now a modal.
