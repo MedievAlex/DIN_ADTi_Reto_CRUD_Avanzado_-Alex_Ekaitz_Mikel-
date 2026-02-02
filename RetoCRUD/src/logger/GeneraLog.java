@@ -33,7 +33,7 @@ public class GeneraLog
 		// Inicializa el logger solo si no se ha inicializado previamente
 		if (logger == null)
 		{
-			File carpeta = new File("../logs"); // Ruta de la carpeta
+			File carpeta = new File("logs"); // Ruta de la carpeta
 
 			if (!carpeta.exists())
 			{

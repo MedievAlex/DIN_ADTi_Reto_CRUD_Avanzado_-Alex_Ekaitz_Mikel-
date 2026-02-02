@@ -362,7 +362,7 @@ public class Controller {
      */
     public void openManual() throws OurException {
         try {
-            File path = new File("../user manual/UserManual.pdf");
+            File path = new File("user manual/UserManual.pdf");
             if (!path.exists()) {
                 throw new OurException("User manual not found at: " + path.getAbsolutePath());
             }

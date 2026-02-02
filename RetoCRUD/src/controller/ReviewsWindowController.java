@@ -152,6 +152,7 @@ public class ReviewsWindowController implements Initializable {
             stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
             stage.setScene(new Scene(root));
             stage.setTitle("NEW REVIEW");
+            stage.initModality(Modality.APPLICATION_MODAL);
             stage.setResizable(false);
             stage.show();
         } catch (IOException ex) {

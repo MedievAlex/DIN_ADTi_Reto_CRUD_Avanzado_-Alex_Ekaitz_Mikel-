@@ -1317,13 +1317,13 @@ public class HibernateImplementation implements ClassDAO {
                             connection
                     );
 
-                    File reportsDir = new File("../reports");
+                    File reportsDir = new File("reports");
                     if (!reportsDir.exists()) {
                         reportsDir.mkdirs();
                     }
 
                     String timestamp = new java.text.SimpleDateFormat("yyyyMMdd_HHmmss").format(new java.util.Date());
-                    String pdfPath = "../reports/Report_" + timestamp + ".pdf";
+                    String pdfPath = reportsDir + "/Report_" + timestamp + ".pdf";
 
                     JasperExportManager.exportReportToPdfFile(jasperPrint, pdfPath);
 

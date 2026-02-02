@@ -1,4 +1,16 @@
-ene 30, 2026 8:35:22 PM controller.LogInWindowController logIn
+feb 02, 2026 9:06:57 AM controller.LogInWindowController logIn
 INFORMACIÓN: Logged correctly: asanchez
-ene 30, 2026 8:54:45 PM controller.LogInWindowController logIn
+feb 02, 2026 9:06:59 AM main.Main lambda$start$0
+GRAVE: Error in: JavaFX Application Thread - java.lang.NullPointerException: null
+feb 02, 2026 9:06:59 AM main.Main lambda$start$0
+GRAVE: Error in: JavaFX Application Thread - java.lang.NullPointerException: null
+feb 02, 2026 9:07:21 AM controller.LogInWindowController logIn
 INFORMACIÓN: Logged correctly: jlopez
+feb 02, 2026 9:20:48 AM controller.LogInWindowController logIn
+INFORMACIÓN: Logged correctly: asanchez
+feb 02, 2026 9:23:29 AM controller.LogInWindowController logIn
+INFORMACIÓN: Logged correctly: asanchez
+feb 02, 2026 9:24:03 AM controller.LogInWindowController logIn
+INFORMACIÓN: Logged correctly: asanchez
+feb 02, 2026 9:25:13 AM controller.LogInWindowController logIn
+INFORMACIÓN: Logged correctly: asanchez
